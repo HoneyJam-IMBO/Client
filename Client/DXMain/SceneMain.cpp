@@ -1,0 +1,307 @@
+#include "stdafx.h"
+#include "SceneMain.h"
+
+void CSceneMain::LoadScene(string path){
+	CScene::LoadScene(path);
+}
+bool CSceneMain::Begin() {
+	//m_pPlayer = new CPlayer;
+	//m_pPlayer->Begin();
+	//----------------------------------camera-------------------------------------
+	m_pCamera = m_pFrameWork->GetCamera();
+	UPDATER->SetCamera(m_pCamera);
+	//----------------------------------camera-------------------------------------
+
+	//--------------------------------객체 제작------------------------
+	int nMaxObjects = 1;
+	int space_size = static_cast<int>(UPDATER->GetSpaceContainer()->GetSpaceSize());
+	
+	LoadScene("../outputdata/testScene.scn");
+
+	m_pObject = new CGameObject("testtesttest", TAG_ANIMDYNAMIC_OBJECT);
+	m_pObject ->Begin();
+	m_pObject ->SetPosition(XMVectorSet(500, 0, 500, 0));
+	m_pObject->SetScale(XMVectorSet(10,10, 10, 1));
+	UPDATER->GetSpaceContainer()->AddObject(m_pObject);
+	m_pObject->GetAnimater()->SetCurAnimationIndex(0);
+	//for (int i = 0; i < 10; ++i) {
+	//	for (int j = 0; j < 10; ++j) {
+	//		CTestCube* pCube = new CTestCube();
+	//		pCube->Begin();
+	//		pCube->SetTerrainContainer(m_pTerrainContainer);
+	//		pCube->SetPosition(XMVectorSet(i * 100, 100, j * 100, 0.f));
+	//		m_pSpaceContainer->AddObject(pCube);
+	//	}
+	//}
+
+	//m_pRotationTestObject = new CTestCube();
+	//m_pRotationTestObject->Begin();
+	//m_pRotationTestObject->SetTerrainContainer(m_pTerrainContainer);
+	//m_pRotationTestObject->SetPosition(XMLoadFloat3(&XMFLOAT3(0, 0, 0)));
+	//m_pSpaceContainer->AddObject(m_pRotationTestObject);
+
+	//fbx mesh
+	//CTestObject* pObject = nullptr;
+	
+	//CBunny* pBunny = new CBunny();
+	//pBunny->Begin();
+	////pBunny->SetTerrainContainer(m_pTerrainContainer);
+	//pBunny->SetPosition(XMLoadFloat3(&XMFLOAT3(SPACE_SIZE / 2.f, 0, SPACE_SIZE / 2.f)));
+	//m_pSpaceContainer->AddObject(pBunny);
+	//fbx mesh
+
+	//CPointLight* pPointLight = nullptr;
+	//int nPointLight = 10;
+	////int nPointLight = 0;
+	//float fStartX = 0;
+	//float fStartZ = 0;
+	//pPointLight = new CPointLight;
+	//pPointLight->Begin(POINT_LIGHT{ 100.f, XMFLOAT3(rand() % 5, rand() % 5, rand() % 5) });
+	//pPointLight->SetTerrainContainer(m_pTerrainContainer);
+	//pPointLight->SetPosition(XMVectorSet(0, 100, 0, 0.f));
+	//m_pSpaceContainer->AddObject(pPointLight);
+	//
+	//for (int i = 0; i < nPointLight; ++i) {
+	//		pPointLight = new CPointLight;
+	//		pPointLight->Begin(POINT_LIGHT{ 100.f, XMFLOAT3(rand() % 5, rand() % 5, rand() % 5) });
+	//		pPointLight->SetTerrainContainer(m_pTerrainContainer);
+	//
+	//		pPointLight->SetPosition(XMVectorSet(rand() % space_size, 100, rand() % space_size, 0.f));
+	//		m_pSpaceContainer->AddObject(pPointLight);
+	//}
+	//
+	//fStartX += 500;
+	//fStartZ += 500;
+	//CCapsuleLight* pCapsuleLight = nullptr;
+	//int nCapsuleLight = 10;
+	//
+	//for (int i = 0; i < nCapsuleLight; ++i) {
+	//	pCapsuleLight = new CCapsuleLight;
+	//	pCapsuleLight->Begin(CAPSULE_LIGHT{ 100.f, XMFLOAT3(rand() % 5, rand() % 5, rand() % 5), 50.f});
+	//	pCapsuleLight->SetTerrainContainer(m_pTerrainContainer);
+	//
+	//	pCapsuleLight->SetPosition(XMVectorSet(rand() % space_size, rand() % 50 + 100, rand() % space_size, 0.f));
+	//	m_pSpaceContainer->AddObject(pCapsuleLight);
+	//}
+	//
+	//fStartX += 500;
+	//fStartZ += 500;
+	//
+	//int nSpotLight = 10;
+	//CSpotLight* pSpotLight = nullptr;
+	//for (int i = 0; i < nSpotLight; ++i) {
+	//		pSpotLight = new CSpotLight;
+	//		pSpotLight->Begin(SPOT_LIGHT{ 100.f, XMFLOAT3(rand() % 100, rand() % 100, rand() % 100), 50.f, 50.f });
+	//		pSpotLight->SetTerrainContainer(m_pTerrainContainer);
+	//
+	//		pSpotLight->SetPosition(XMVectorSet(rand() % space_size, rand()%50+100, rand() % space_size, 0.f));
+	//		m_pSpaceContainer->AddObject(pSpotLight);
+	//}
+
+	//--------------------------전역 객체 제작-------------------------
+
+	/*
+	XMFLOAT4 m_DirToLight;
+	XMFLOAT4 m_DirLightColor;
+	XMFLOAT4 m_DirLightPower;
+
+	XMFLOAT4 m_AmbientDown;
+	XMFLOAT4 m_AmbientRange;
+	XMFLOAT4 m_AmbientUp;
+	XMFLOAT4 m_AmbientColor;
+	*/
+	//m_pDirectionalLight->SetRenderContainer(m_RenderContainerSeller);
+	//directional light
+	//--------------------------전역 객체 제작-------------------------
+	//--------------------------------객체 제작-------------------------
+	//m_space_lv = 3;
+	//
+	//ChangeSceneContainers();
+	return CScene::Begin();
+}
+
+bool CSceneMain::End() {
+	for (auto pObject : m_vpObjectList) {
+		delete pObject;
+	}
+	m_vpObjectList.clear();
+	//m_pPlayer->End();
+	//seller
+	//m_RenderContainerSeller->End();
+	
+	
+
+	//카메라는 Framework에 존재하는 것이기에 End()작업을 진행하지 않는다.
+	return CScene::End();
+}
+
+void CSceneMain::Animate(float fTimeElapsed) {
+	CScene::Animate(fTimeElapsed);
+
+	//--------------------------전역 객체 animate / regist-------------------------
+	UPDATER->SetCamera(m_pCamera);
+	//UPDATER->GetSpaceContainer()->SetSpaceSize(m_space_size);
+	//UPDATER->GetSpaceContainer()->SetSpaceLevel(m_space_lv);
+	//--------------------------전역 객체 animate / regist-------------------------
+}
+
+
+void CSceneMain::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
+	switch (nMessageID)
+	{
+	case WM_LBUTTONDOWN:
+	case WM_RBUTTONDOWN:
+
+		POINT p = INPUTMGR->GetMousePoint();
+		m_pPickingObject = PickObjectPointedByCursor(p.x, p.y);
+		if (m_pPickingObject) {
+			m_pPickingObject->PickingProc();
+		}
+		break;
+	case WM_LBUTTONUP:
+	case WM_RBUTTONUP:
+		
+
+	case WM_MOUSEMOVE:
+		break;
+	default:
+		break;
+	}
+}
+void CSceneMain::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
+	
+	//RCSELLER->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
+	switch (nMessageID)
+	{
+	case WM_KEYUP:
+		
+		switch (wParam)
+		{
+		case VK_F1:
+		case VK_F2:
+		case VK_F3:
+			break;
+		case VK_P:
+
+		default:
+			break;
+		}
+		break;
+	default:
+		break;
+	}
+}
+
+void CSceneMain::ProcessInput(float fTimeElapsed) {
+	if (INPUTMGR->KeyDown(VK_P)) {
+		INPUTMGR->SetDebugMode(static_cast<bool>((INPUTMGR->GetDebugMode() + 1) % 2));
+	}
+
+	if (INPUTMGR->OnlyKeyDown(VK_I)) {
+		m_pObject->Move(m_pObject->GetLook(), 0.5);
+	}
+	if (INPUTMGR->OnlyKeyDown(VK_K)) {
+		m_pObject->Move(-m_pObject->GetLook(), 0.5);
+	}
+	if (INPUTMGR->OnlyKeyDown(VK_L)) {
+		m_pObject->Move(m_pObject->GetRight(), 0.5);
+	}
+	if (INPUTMGR->OnlyKeyDown(VK_J)) {
+		m_pObject->Move(-m_pObject->GetRight(), 0.5);
+	}
+	m_pCamera->ProcessInput(fTimeElapsed);
+}
+
+
+CGameObject* CSceneMain::PickObjectPointedByCursor(int xClient, int yClient){
+
+	if (!m_pCamera) return(NULL);
+
+	//Get screen pos -> Camera pos
+	XMFLOAT4X4 xmf4x4Projection;
+	XMStoreFloat4x4(&xmf4x4Projection, m_pCamera->GetProjectionMtx());
+	D3D11_VIEWPORT d3dViewport = m_pCamera->GetViewport();
+
+	//음 이건 화면을 찍은 점의 카메라 좌표계의 녀석이고
+	XMFLOAT3 xmf3PickPosition;
+	xmf3PickPosition.x = (((2.0f * xClient) / d3dViewport.Width) - 1) / xmf4x4Projection._11;
+	xmf3PickPosition.y = -(((2.0f * yClient) / d3dViewport.Height) - 1) / xmf4x4Projection._22;
+	xmf3PickPosition.z = 1.0f;
+
+	XMVECTOR xmvPickPosition;
+	xmvPickPosition = XMLoadFloat3(&xmf3PickPosition);
+	XMMATRIX xmMtxViewInverse;
+	xmMtxViewInverse = XMMatrixInverse(nullptr, m_pCamera->GetViewMtx());
+	//picking pos에 camera inverse를 곱했으니 이건 picking pos의 world pos!
+	xmvPickPosition = XMVector3TransformCoord(xmvPickPosition, xmMtxViewInverse);
+	XMVECTOR xmvRayDir = xmvPickPosition - m_pCamera->GetPosition();
+	
+	CGameObject* pNearestObject = NULL;
+	float fHitDistance = FLT_MAX;
+	float fNearDistance = FLT_MAX;
+	pNearestObject = UPDATER->GetSpaceContainer()->PickObject(m_pCamera->GetPosition(), XMVector3Normalize(xmvRayDir), fHitDistance);
+	fNearDistance = fHitDistance;
+	
+	return(pNearestObject);
+}
+
+void CSceneMain::CreateControllObject(string path){
+//resource 제작	
+	m_MeshCnt = RESOURCEMGR->CreateMultiMesh(path, "Test");
+	//m_MeshCnt = RESOURCEMGR->CreateMultiMesh("../outputata/text.txt", "Test");
+	RCSELLER->GetRenderContainer("fbx")->ClearMesh();
+	char pName[20];
+	for (int i = 0; i < m_MeshCnt; ++i) {
+		sprintf(pName, "%s%d", "Test", i);
+		RCSELLER->GetRenderContainer("fbx")->AddMesh(RESOURCEMGR->GetMesh(pName, i));
+	}
+	RCSELLER->GetRenderContainer("fbx")->SetAnimater(RESOURCEMGR->GetAnimater("Test"));
+//resource 제작	
+
+
+//객체 제작
+	m_pFBXObject = new CTestObject();
+	m_pFBXObject->Begin();
+	//pObject->SetTerrainContainer(m_pTerrainContainer);
+	m_pFBXObject->SetPosition(XMLoadFloat3(&XMFLOAT3(UPDATER->GetSpaceContainer()->GetSpaceSize() / 2.f, 0, UPDATER->GetSpaceContainer()->GetSpaceSize() / 2.f)));
+	UPDATER->GetSpaceContainer()->AddObject(m_pFBXObject);
+//객체 제작
+	//ui pop up!
+	m_pFBXObject->PickingProc();
+}
+
+void CSceneMain::AddFBXAnimationInfo(string path){
+	if (nullptr == m_pFBXObject) {
+		//wstring ws{ L"" };
+		//ws.assign(path.cbegin(), path.cend());
+		CreateControllObject(path);
+		return;
+	}
+
+	//fbx animation info 추가!
+	string name{ "Test" };
+	FBXIMPORTER->Begin(path);
+	if (FBXIMPORTER->GetHasAnimation()) {
+		CAnimationInfo* pAnimationInfo = CAnimationInfo::CreateAnimationInfoFromFBXFile(RESOURCEMGR->GetAnimater(name));
+	}
+	FBXIMPORTER->End();
+	//fbx animation info 추가!
+
+	m_pFBXObject->PickingProc();
+}
+void CSceneMain::CreateTerrainContainer(){
+	//terrain
+	UPDATER->SetTerrainContainer(CTerrainContainer::CreateTerrainContainer(L"Temp", 256, 256, 0.5, UPDATER->GetSpaceContainer(), true));
+}
+void CSceneMain::CreateSkyBoxContainer(){
+	//skybox
+	UPDATER->SetSkyBoxContainer(CSkyBoxContainer::CreateSkyBoxContainer(L"Temp", 0, UPDATER->GetSpaceContainer()));
+}
+
+CSceneMain::CSceneMain(CDirectXFramework* pFrameWork) : CScene("Main") {
+	m_pFrameWork = pFrameWork;
+}
+CSceneMain::~CSceneMain() {
+
+}
+
