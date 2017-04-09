@@ -10,6 +10,14 @@ bool CObjectRenderer::Begin(){
 		m_mObjectRenderContainer[RenderContainer.first] = RenderContainer.second;
 	}
 
+	for (auto RenderContainer : RCSELLER->GetStempRenderContainer()[tag::TAG_DYNAMIC_OBJECT]) {
+		m_mObjectRenderContainer[RenderContainer.first] = RenderContainer.second;
+	}
+
+	for (auto RenderContainer : RCSELLER->GetStempRenderContainer()[tag::TAG_STATIC_OBJECT]) {
+		m_mObjectRenderContainer[RenderContainer.first] = RenderContainer.second;
+	}
+
 
 	m_pTerrainRenderContainer = RCSELLER->GetTagRenderContainer()[tag::TAG_TERRAIN]["terrain"];
 	m_pSkyBoxRenderContainer = RCSELLER->GetTagRenderContainer()[tag::TAG_SPACE]["skybox"];

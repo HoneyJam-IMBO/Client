@@ -42,11 +42,6 @@ void CDirectXFramework::Begin(HINSTANCE hInstance, HWND hWnd){
 	m_pCamera->SetViewport(0, 0, GLOBALVALUEMGR->GetrcClient().right, GLOBALVALUEMGR->GetrcClient().bottom, 0.0f, 1.0f);
 	//------------------------------------------카메라 제작--------------------------------------
 
-
-	//TwDefine(" GLOBAL help='This example shows how to integrate AntTweakBar into a DirectX11 application.' "); // Message added to the help bar.
-	//int barSize[2] = { 224, 320 };
-	//TwSetParam(bar, NULL, "size", TW_PARAM_INT32, 2, barSize);
-
 }
 
 void CDirectXFramework::End() {
@@ -62,8 +57,6 @@ void CDirectXFramework::End() {
 		delete m_stackScene.top();
 		m_stackScene.pop();
 	}
-
-
 	//singleton End
 	RESOURCEMGR->End();
 	RCSELLER->End();
@@ -85,7 +78,7 @@ void CDirectXFramework::FrameAdvance()
 	Render();
 	//Render2D();
 
-	TIMEMGR->GetFrameRate(m_pszBuffer + 8, 37);
+	TIMEMGR->GetFrameRate(m_pszBuffer + 17, 35);
 	::SetWindowText(GLOBALVALUEMGR->GethWnd(), m_pszBuffer);
 }
 
@@ -122,7 +115,6 @@ void CDirectXFramework::ProcessInput(float fTimeElapsed) {
 	//-----------------------------현재 씬 실행--------------------------------------
 	m_stackScene.top()->ProcessInput(fTimeElapsed);
 	//-----------------------------현재 씬 실행--------------------------------------
-
 }
 
 

@@ -184,6 +184,13 @@ bool CRenderContainerSeller::End(){
 	m_mTagRenderContainer.clear();
 	//render container delete
 
+	for (auto pairTagRenderContainer : m_mStempRenderContainer) {
+		for (auto pairRenderContainer : pairTagRenderContainer.second) {
+			delete pairRenderContainer.second;
+		}
+		pairTagRenderContainer.second.clear();
+	}
+	m_mStempRenderContainer.clear();
 	return true;
 }
 
@@ -193,6 +200,11 @@ CRenderContainer* CRenderContainerSeller::GetRenderContainer(string name) {
 		if (pairTagRenderContainer.second.end() != pairTagRenderContainer.second.find(name))
 			return pairTagRenderContainer.second[name];
 	}
+	for (auto pairTagRenderContainer : m_mStempRenderContainer) {
+		if (pairTagRenderContainer.second.end() != pairTagRenderContainer.second.find(name))
+			return pairTagRenderContainer.second[name];
+	}
+
 	return nullptr;
 }
 
@@ -202,19 +214,21 @@ CRenderContainer * CRenderContainerSeller::GetRenderContainer(tag t, string name
 }
 void CRenderContainerSeller::CreateStempRenderContainer(){
 
-	tag t = tag::TAG_DYNAMIC_OBJECT;
+	//tag t = tag::TAG_DYNAMIC_OBJECT;
 	for (auto vStempMesh : RESOURCEMGR->GetAllStempMesh()) {
 		string name = vStempMesh.second[0]->GetName();
+		tag t = tag::TAG_DYNAMIC_OBJECT;
 		bool bAnimation = true;//vStempMesh.second[0]->GetbAnimation();
-		m_mTagRenderContainer[t][name] = new CRenderContainer;
-		m_mTagRenderContainer[t][name]->SetShader(RESOURCEMGR->GetRenderShader("AnimationObject"));
-		m_mTagRenderContainer[t][name]->AddBuffer(RESOURCEMGR->GetBuffer("FBX"));
-		m_mTagRenderContainer[t][name]->AddMaterial(RESOURCEMGR->GetMaterial("FBX"));
+		
+		m_mStempRenderContainer[t][name] = new CRenderContainer;
+		m_mStempRenderContainer[t][name]->SetShader(RESOURCEMGR->GetRenderShader("AnimationObject"));
+		m_mStempRenderContainer[t][name]->AddBuffer(RESOURCEMGR->GetBuffer("FBX"));
+		m_mStempRenderContainer[t][name]->AddMaterial(RESOURCEMGR->GetMaterial("FBX"));
 		for (auto pStempMesh : vStempMesh.second) {
-			m_mTagRenderContainer[t][name]->AddMesh(pStempMesh);
+			m_mStempRenderContainer[t][name]->AddMesh(pStempMesh);
 		}
 		if (bAnimation) {
-			m_mTagRenderContainer[t][name]->SetAnimater(RESOURCEMGR->GetAnimater(name));
+			m_mStempRenderContainer[t][name]->SetAnimater(RESOURCEMGR->GetAnimater(name));
 		}
 	}
 }

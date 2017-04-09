@@ -63,7 +63,7 @@
 
 //fbx 어차피 이놈은 때어낼꺼야
 #include <fbxsdk.h>
-#include <AntTweakBar.h>
+
 
 using namespace std;
 using namespace std::chrono;
