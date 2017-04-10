@@ -39,12 +39,6 @@
     <Filter Include="소스 파일\03.DXObject\01.Container">
       <UniqueIdentifier>{0d49ad64-37ca-49d4-b98c-f57c62758dd0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\03.DXObject\01.Container\RenderContainer">
-      <UniqueIdentifier>{861eb726-3b23-437c-8286-c03d272fffb5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="소스 파일\03.DXObject\01.Container\RenderContainer\DeBugRenderContainer">
-      <UniqueIdentifier>{c6de3c6a-979c-455c-8703-446cf069e09b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\03.DXObject\02.Mesh">
       <UniqueIdentifier>{6c9ccda0-31e3-46a4-b7dc-c287f5ed474c}</UniqueIdentifier>
     </Filter>
@@ -405,6 +399,18 @@
     <Filter Include="소스 파일\98.SingleTon\-10. SceneMgr">
       <UniqueIdentifier>{81af6fb7-46b0-4bd3-9e8b-ba4185aeeb46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\03.DXObject\01.Container\-00. RenderContainer">
+      <UniqueIdentifier>{861eb726-3b23-437c-8286-c03d272fffb5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\03.DXObject\01.Container\-00. RenderContainer\DeBugRenderContainer">
+      <UniqueIdentifier>{c6de3c6a-979c-455c-8703-446cf069e09b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\03.DXObject\01.Container\-01. UIContainer">
+      <UniqueIdentifier>{c017316b-1724-4eaa-8963-c0d226b29d36}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04.GameObject\99. UI">
+      <UniqueIdentifier>{810a1f3c-40ff-4315-8fbb-cb736140bfbd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectXFramework.h">
@@ -417,7 +423,7 @@
       <Filter>소스 파일\03.DXObject\00.Camera</Filter>
     </ClInclude>
     <ClInclude Include="RenderContainer.h">
-      <Filter>소스 파일\03.DXObject\01.Container\RenderContainer</Filter>
+      <Filter>소스 파일\03.DXObject\01.Container\-00. RenderContainer</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
       <Filter>소스 파일\03.DXObject\02.Mesh</Filter>
@@ -549,7 +555,7 @@
       <Filter>소스 파일\98.SingleTon\-00. Debuger</Filter>
     </ClInclude>
     <ClInclude Include="DebugRenderContainer.h">
-      <Filter>소스 파일\03.DXObject\01.Container\RenderContainer\DeBugRenderContainer</Filter>
+      <Filter>소스 파일\03.DXObject\01.Container\-00. RenderContainer\DeBugRenderContainer</Filter>
     </ClInclude>
     <ClInclude Include="DebugFontData.h">
       <Filter>소스 파일\98.SingleTon\-00. Debuger\DebugData\DebugFontData</Filter>
@@ -710,9 +716,6 @@
     <ClInclude Include="Resource.h">
       <Filter>소스 파일\99.Default</Filter>
     </ClInclude>
-    <ClInclude Include="stdafx.h">
-      <Filter>소스 파일\99.Default</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>소스 파일\99.Default</Filter>
     </ClInclude>
@@ -721,6 +724,15 @@
     </ClInclude>
     <ClInclude Include="Function.h">
       <Filter>소스 파일\99.Default</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\UIRenderCont.h">
+      <Filter>소스 파일\03.DXObject\01.Container\-01. UIContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\UIObject.h">
+      <Filter>소스 파일\04.GameObject\99. UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -749,7 +761,7 @@
       <Filter>소스 파일\02.Scene</Filter>
     </ClCompile>
     <ClCompile Include="RenderContainer.cpp">
-      <Filter>소스 파일\03.DXObject\01.Container\RenderContainer</Filter>
+      <Filter>소스 파일\03.DXObject\01.Container\-00. RenderContainer</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>소스 파일\04.GameObject\Player</Filter>
@@ -860,7 +872,7 @@
       <Filter>소스 파일\98.SingleTon\-00. Debuger</Filter>
     </ClCompile>
     <ClCompile Include="DebugRenderContainer.cpp">
-      <Filter>소스 파일\03.DXObject\01.Container\RenderContainer\DeBugRenderContainer</Filter>
+      <Filter>소스 파일\03.DXObject\01.Container\-00. RenderContainer\DeBugRenderContainer</Filter>
     </ClCompile>
     <ClCompile Include="DebugFontData.cpp">
       <Filter>소스 파일\98.SingleTon\-00. Debuger\DebugData\DebugFontData</Filter>
@@ -1026,6 +1038,12 @@
     </ClCompile>
     <ClCompile Include="SceneMgr.cpp">
       <Filter>소스 파일\98.SingleTon\-10. SceneMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\UIRenderCont.cpp">
+      <Filter>소스 파일\03.DXObject\01.Container\-01. UIContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\UIObject.cpp">
+      <Filter>소스 파일\04.GameObject\99. UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

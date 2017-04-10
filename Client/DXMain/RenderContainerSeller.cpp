@@ -168,7 +168,7 @@ bool CRenderContainerSeller::Begin(){
 	m_mTagRenderContainer[t][object_name]->Begin();
 
 	//자동 rendercontainer제작!
-	CreateStempRenderContainer();
+	//CreateStempRenderContainer();
 
 	return true;
 }

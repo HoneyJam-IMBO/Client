@@ -210,5 +210,7 @@ enum SCENE_ID
 #define			RENDERER    CRenderer::GetInstance()
 #include "Updater.h"
 #define			UPDATER	    CUpdater::GetInstance()
+#include "SceneMgr.h"
+#define			SCENEMGR	CSceneMgr::GetInstance()
 
 #define USE_ANIM

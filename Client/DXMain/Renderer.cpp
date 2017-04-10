@@ -195,6 +195,9 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	//}
 	////POST PROCESSING
 
+	//-----------UI Render------------------------------------------------------------------
+
+
 	//DEBUG
 	if (INPUTMGR->GetDebugMode()) {
 		ID3D11Buffer* pGBufferUnpackingBuffer = pCamera->GetGBufferUnpackingBuffer();

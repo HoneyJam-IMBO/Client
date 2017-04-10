@@ -168,6 +168,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\UIObject.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\UIRenderCont.h" />
     <ClInclude Include="Function.h" />
     <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\Loading.h" />
     <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\SceneMgr.h" />
@@ -276,6 +278,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\Loading.cpp" />
+    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\UIObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\UIRenderCont.cpp" />
     <ClCompile Include="Animater.cpp" />
     <ClCompile Include="AnimationInfo.cpp" />
     <ClCompile Include="AORenderer.cpp" />

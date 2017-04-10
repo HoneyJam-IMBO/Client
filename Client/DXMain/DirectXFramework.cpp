@@ -7,7 +7,7 @@ void CDirectXFramework::Begin(HINSTANCE hInstance, HWND hWnd){
 	GLOBALVALUEMGR->Begin(hInstance, hWnd);
 	RESOURCEMGR->Begin();
 	RCSELLER->Begin();
-	DEBUGER->Begin();    // 27일 여까지봄 
+	DEBUGER->Begin();   
 	INPUTMGR->Begin();
 	RENDERER->Begin();
 	UPDATER->Begin();
@@ -41,7 +41,10 @@ void CDirectXFramework::Begin(HINSTANCE hInstance, HWND hWnd){
 	// RS에 뷰포트 연결
 	m_pCamera->SetViewport(0, 0, GLOBALVALUEMGR->GetrcClient().right, GLOBALVALUEMGR->GetrcClient().bottom, 0.0f, 1.0f);
 	//------------------------------------------카메라 제작--------------------------------------
-
+	UPDATER->SetCamera(m_pCamera);
+	SCENEMGR->Begin(this);
+	//SCENEMGR->ChangeScene(SC_HEROSEL);
+	
 }
 
 void CDirectXFramework::End() {
@@ -64,6 +67,7 @@ void CDirectXFramework::End() {
 	INPUTMGR->End();
 	UPDATER->End();
 	GLOBALVALUEMGR->End();
+	SCENEMGR->End();
 	//singleton End
 
 }
@@ -103,7 +107,9 @@ void CDirectXFramework::Update(float fTimeElapsed) {
 
 	UPDATER->PreUpdate(fTimeElapsed);
 	//-----------------------------현재 씬 실행--------------------------------------
-	m_stackScene.top()->Animate(fTimeElapsed);
+	if (nullptr != SCENEMGR->GetPresentScene())
+		SCENEMGR->GetPresentScene()->Animate(fTimeElapsed);
+	//m_stackScene.top()->Animate(fTimeElapsed);
 	//-----------------------------현재 씬 실행--------------------------------------
 	UPDATER->Update(fTimeElapsed);
 	UPDATER->PhisicsUpdate(fTimeElapsed);
@@ -113,7 +119,9 @@ void CDirectXFramework::ProcessInput(float fTimeElapsed) {
 	INPUTMGR->Update(fTimeElapsed);
 
 	//-----------------------------현재 씬 실행--------------------------------------
-	m_stackScene.top()->ProcessInput(fTimeElapsed);
+	if(nullptr != SCENEMGR->GetPresentScene())
+		SCENEMGR->GetPresentScene()->ProcessInput(fTimeElapsed);
+	//m_stackScene.top()->ProcessInput(fTimeElapsed);
 	//-----------------------------현재 씬 실행--------------------------------------
 }
 

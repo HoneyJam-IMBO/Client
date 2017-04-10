@@ -9,7 +9,7 @@ bool CSceneMain::Begin() {
 	//m_pPlayer->Begin();
 	//----------------------------------camera-------------------------------------
 	m_pCamera = m_pFrameWork->GetCamera();
-	UPDATER->SetCamera(m_pCamera);
+	
 	//----------------------------------camera-------------------------------------
 
 	//--------------------------------°´Ã¼ Á¦ÀÛ------------------------
@@ -18,13 +18,19 @@ bool CSceneMain::Begin() {
 	
 	LoadScene("../outputdata/testScene.scn");
 
-	m_pObject = new CGameObject("testtesttest", TAG_ANIMDYNAMIC_OBJECT);
+	string path = "../outputdata/testtesttest.gjm";
+	string name = GetFileName(path);
+	RESOURCEMGR->CreateMultiMesh(path, name);
+	RCSELLER->CreateStempRenderContainer();
+
+	m_pObject = new CGameObject("testtesttest", TAG_DYNAMIC_OBJECT);
 	m_pObject ->Begin();
 	m_pObject ->SetPosition(XMVectorSet(500, 0, 500, 0));
 	m_pObject->SetScale(XMVectorSet(10,10, 10, 1));
 	UPDATER->GetSpaceContainer()->AddObject(m_pObject);
 	m_pObject->GetAnimater()->SetCurAnimationIndex(0);
 
+	
 	return CScene::Begin();
 }
 

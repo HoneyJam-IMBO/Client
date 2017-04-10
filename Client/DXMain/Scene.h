@@ -37,13 +37,12 @@ protected:
 private:
 
 public:
-	CScene::CScene(SCENE_ID eID):CObject("Scene") { 
-		m_eSceneID = eID;
-	}
+	CScene::CScene(SCENE_ID eID) :CObject("Scene") { m_eSceneID = eID; }
 	~CScene() {}
 
 	//set get
 	void SetFrameWork(CDirectXFramework* pFramework) { m_pFrameWork = pFramework; }
 	CDirectXFramework* GetFrameWork() { return m_pFrameWork; }
 	//set get
+	SCENE_ID	GetSceneID() { return m_eSceneID; }
 };

@@ -16,7 +16,7 @@ public:
 	SCENE_ID	GetSceneID() { return m_eSceneID; }
 
 	//Loading¾À¿¡¼­ ¼Â
-	void		SetPresentScene(SCENE_ID eID, CScene* pScene) {	m_pPresentScene = pScene;	m_eSceneID = eID;}
+	void		SetPresentScene(SCENE_ID eID, CScene* pScene);
 
 	void		ChangeScene(SCENE_ID eID);
 

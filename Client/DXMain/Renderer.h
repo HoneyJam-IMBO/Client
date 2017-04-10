@@ -42,6 +42,7 @@ public:
 
 	CRenderContainer* GetTerrainRenderContainer() { return m_pObjectRenderer->GetTerrainRenderContainer(); }
 	CRenderContainer* GetSkyBoxRenderContainer() { return m_pObjectRenderer->GetSkyBoxRenderContainer(); }
+	CObjectRenderer* GetObjectRenderer() { return m_pObjectRenderer; }
 
 	void SaveEffectInfo();
 	void LoadEffectInfo();

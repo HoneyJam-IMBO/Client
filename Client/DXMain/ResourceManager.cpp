@@ -50,7 +50,7 @@ void CResourceManager::CreateSamplers() {
 
 void CResourceManager::CreateTextures() {
 	//texture
-	CreateTexture("DEFAULT", _T("../../Assets/default.jpg"), PS_TEXTURE, BIND_PS);
+	//CreateTexture("DEFAULT", _T("../../Assets/default.jpg"), PS_TEXTURE, BIND_PS);
 }
 
 void CResourceManager::CreateRenderShaders() {
@@ -239,26 +239,9 @@ void CResourceManager::CreateMeshs() {
 	CreateStempMeshs();
 	//mesh
 }
-string GetFileName(string path) {
-	size_t size = path.size();
-	char name[64];
-	int index{ 0 };
-	for (int i = size - 1; i > 1; i--) {
-		if (path[i] == '\\' | path[i] == '/') {
-			for (int j = i + 1; j < size; ++j) {
-				if (path[j] == '.') break;
-				name[index++] = path[j];
-			}
-			name[index] = '\0';
-			break;
-		}
-	}
-	return name;
-}
+
 void CResourceManager::CreateStempMeshs() {
-	string path = "../outputdata/testtesttest.gjm";
-	string name = GetFileName(path);
-	CreateMultiMesh(path, name);
+	
 	//vector<wstring> vFile;
 	//DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".fbx");
 	//DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".FBX");
