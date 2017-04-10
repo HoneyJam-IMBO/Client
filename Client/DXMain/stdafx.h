@@ -64,6 +64,8 @@
 //fbx 어차피 이놈은 때어낼꺼야
 #include <fbxsdk.h>
 
+//
+#include "Function.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -149,6 +151,17 @@ enum shader_value_num {
 	SVN_DEFAULT,
 	SVN_DEBUG,
 	SVN_END
+};
+
+enum SCENE_ID
+{
+	SC_HEROSEL,
+	SC_ORITOWN,
+	SC_BURNNINGTOWN,
+	SC_REPAIRTOWN,
+	SC_ALDENAD,
+	SC_BOSS,
+	SC_END
 };
 
 

@@ -168,6 +168,9 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Function.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\Loading.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\SceneMgr.h" />
     <ClInclude Include="Animater.h" />
     <ClInclude Include="AnimationInfo.h" />
     <ClInclude Include="AORenderer.h" />
@@ -272,6 +275,7 @@
     <ClInclude Include="SkeletonData.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\Loading.cpp" />
     <ClCompile Include="Animater.cpp" />
     <ClCompile Include="AnimationInfo.cpp" />
     <ClCompile Include="AORenderer.cpp" />
@@ -376,6 +380,7 @@
     <ClCompile Include="Updater.cpp" />
     <ClCompile Include="VertexData.cpp" />
     <ClCompile Include="SkeletonData.cpp" />
+    <ClCompile Include="SceneMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DXMain.rc" />

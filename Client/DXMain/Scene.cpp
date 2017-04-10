@@ -18,11 +18,11 @@ void CScene::Animate(float fTimeElapsed){
 }
 
 CScene * CScene::CreateScene(string name, CDirectXFramework* pFramework){
-	CScene* pScene = new CScene(name);
+	/*CScene* pScene = new CScene(name);
 	pScene->LoadScene(name);
 	pScene->SetFrameWork(pFramework);
-	return pScene;
-	//return nullptr;
+	return pScene;*/
+	return nullptr;
 }
 
 void CScene::LoadScene(string path){

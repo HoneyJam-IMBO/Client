@@ -12,21 +12,16 @@ public:
 	virtual bool Begin() { return true; };
 	virtual bool Begin(string path);
 	virtual bool End();
-	//begin end
 	//animate
 	virtual void Animate(float fTimeElapsed);
-	//animate
 	//input
 	virtual void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {};
 	virtual void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {};
 	virtual void ProcessInput(float fTimeElapsed) {};
-	//input
 	//pick
 	virtual CGameObject* PickObjectPointedByCursor(int xClient, int yClient) { return nullptr; };
-	//pick
 	//create scene
 	static CScene* CreateScene(string name, CDirectXFramework* pFramework);
-	//create scene
 
 	void LoadScene(string path);
 protected:
@@ -37,10 +32,14 @@ protected:
 	shared_ptr<CCamera> m_pCamera{ nullptr };
 	//picking
 	CGameObject* m_pPickingObject{ nullptr };
+
+	SCENE_ID		m_eSceneID{ SC_END };
 private:
 
 public:
-	CScene::CScene(string name):CObject(name) { }
+	CScene::CScene(SCENE_ID eID):CObject("Scene") { 
+		m_eSceneID = eID;
+	}
 	~CScene() {}
 
 	//set get

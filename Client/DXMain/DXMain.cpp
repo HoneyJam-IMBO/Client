@@ -135,7 +135,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 
    framework.Begin(hInst, hWnd);
    //-------------------------------------scene---------------------------
-   framework.ChangeScene(new CSceneMain(&framework));
+   framework.ChangeScene(new CSceneMain(SC_HEROSEL, &framework));
    //framework.ChangeScene(CScene::CreateScene("main",&framework));
    //-------------------------------------scene---------------------------
 

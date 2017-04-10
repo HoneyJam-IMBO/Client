@@ -127,41 +127,31 @@ LRESULT CALLBACK CDirectXFramework::OnProcessingWindowMessage(HWND hWnd, UINT nM
 //--------------------------------------scene-----------------------------------------
 void CDirectXFramework::ChangeScene(CScene* pScene) {
 	//씬을 아예 바꿈 이전의 씬을 pop하고 
-	if (m_nScene != 0) {
-		//기존의 Scene이 존재하면
-
-		PopScene();
-		//기존의 scene을 빼내고
-
-		PushScene(pScene);
-		//새로운 scene을 집어 넣음
+	if (m_nScene != 0) {	//기존의 Scene이 존재하면
+		PopScene();			//기존의 scene을 빼내고
+		PushScene(pScene);	//새로운 scene을 집어 넣음
 	}
 	else {
-		//아니면 처음 넣는 Scene이면 그냥
+		//아니면 처음 넣는 Scene이면 그냥 새로운 scene을 집어 넣음
 		PushScene(pScene);
-		//새로운 scene을 집어 넣음
 	}
 }
 void CDirectXFramework::PopScene() {
 	m_stackScene.top()->End();
 	delete m_stackScene.top();
 
-	m_stackScene.pop();
-	//scene을 빼내고
+	m_stackScene.pop(); //scene을 빼내고
 
-	if (m_stackScene.top())	m_stackScene.top()->Begin();
-	//top이 있으면 begin
+	if (m_stackScene.top())	m_stackScene.top()->Begin(); //top이 있으면 begin
 }
 void CDirectXFramework::PushScene(CScene* pScene) {
 	pScene->Begin();
-	m_stackScene.push(pScene);
-	//새로운 scene을 집어 넣음
+	m_stackScene.push(pScene); //새로운 scene을 집어 넣음
 	++m_nScene;
 }
 //--------------------------------------scene-----------------------------------------
 
 //--------------------------------------deferred rendering func-----------------------------
-
 CDirectXFramework::~CDirectXFramework() {
 
 }

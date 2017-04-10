@@ -65,6 +65,6 @@ private:
 	CPlayer* m_pPlayer{ nullptr };
 	//player
 public:
-	CSceneMain(CDirectXFramework* pFrameWork);
+	CSceneMain(SCENE_ID eID, CDirectXFramework* pFrameWork);
 	~CSceneMain();
 };
