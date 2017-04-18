@@ -1,9 +1,8 @@
 #include "stdafx.h"
 #include "SplattingInfo.h"
 
-bool CSplattingInfo::Begin(){
+void CSplattingInfo::Begin(){
 	
-	return true;
 }
 
 bool CSplattingInfo::End(){

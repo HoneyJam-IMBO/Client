@@ -14,7 +14,6 @@ bool CSkyBox::End() {
 void CSkyBox::Animate(float fTimeElapsed) {
 	//모든 컴포넌트를 돌면서 Update실행
 	if (m_pCamera) SetPosition(m_pCamera->GetPosition());
-	//SetPosition(XMVECTOR(XMLoadFloat3(&XMFLOAT3(0,0,0))));
 }
 
 void CSkyBox::SetCamera(shared_ptr<CCamera> pCamera){

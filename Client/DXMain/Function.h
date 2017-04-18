@@ -1,9 +1,14 @@
 #pragma once
 
-
-template <typename T> void Safe_Delete(T& pointer)
+template<typename Ty, size_t N>
+constexpr size_t GetArraySize(Ty(&)[N]) noexcept
 {
-	if (nullptr != pointer)
+	return N;
+}
+
+template <typename T> void Safe_EndDelete(T& pointer)
+{
+	if (pointer)
 	{
 		pointer->End();
 		delete pointer;
@@ -26,4 +31,25 @@ static std::string GetFileName(std::string path) {
 		}
 	}
 	return name;
+}
+
+static std::string TCHARToString(const TCHAR* ptsz)
+{
+	int len = wcslen((wchar_t*)ptsz);
+	char* psz = new char[2 * len + 1];
+	wcstombs(psz, (wchar_t*)ptsz, 2 * len + 1);
+	std::string s = psz;
+	delete[] psz;
+	return s;
+}
+
+static TCHAR* StringToTCHAR(std::string& s)
+{
+	std::string tstr;
+	const char* all = s.c_str();
+	int len = 1 + strlen(all);
+	wchar_t* t = new wchar_t[len];
+	if (NULL == t) throw std::bad_alloc();
+	mbstowcs(t, all, len);
+	return (TCHAR*)t;
 }

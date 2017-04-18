@@ -82,12 +82,21 @@ void CTwBarManager::AddRotationBar(const char * barName, const char* groupName, 
 	TwAddVarRW(m_mTwBar[barName], menuName, TW_TYPE_QUAT4F, var, buff);
 }
 
-void CTwBarManager::AddColorBar(const char * barName, const char* groupName, const char * menuName, void * var){
+
+void CTwBarManager::AddColorBar4F(const char * barName, const char * groupName, const char * menuName, void * var){
 	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);
 	char buff[256];
-	sprintf(buff, "colormode=hls group=%s", groupName);
+	sprintf(buff, "colormode=rgb group=%s", groupName);
 
 	TwAddVarRW(m_mTwBar[barName], menuName, TW_TYPE_COLOR4F, var, buff);
+}
+
+void CTwBarManager::AddColorBar3F(const char * barName, const char * groupName, const char * menuName, void * var){
+	if (m_mTwBar.end() == m_mTwBar.find(barName)) AddBar(barName);
+	char buff[256];
+	sprintf(buff, "colormode=rgb group=%s", groupName);
+
+	TwAddVarRW(m_mTwBar[barName], menuName, TW_TYPE_COLOR3F, var, buff);
 }
 
 void CTwBarManager::AddBoolBar(const char * barName, const char* groupName, const char * menuName, void * var){

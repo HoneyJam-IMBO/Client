@@ -3,6 +3,14 @@
 #include "SingleTon.h"
 #include "GameObject.h"
 
+enum TOOL_MODE {
+	//TOOL_MODE_ANIMATION,
+	TOOL_MODE_TERRAIN,
+	TOOL_MODE_SPLATTING,
+	TOOL_MODE_OBJECTPOSITIONING,
+	TOOL_MODE_FREECAMERA,
+	TOOL_MODE_CHARACTER
+};
 class CGlobalValueManager : public CSingleTonBase<CGlobalValueManager> {
 
 public:

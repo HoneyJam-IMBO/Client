@@ -6,7 +6,6 @@
 #include "FileBasedMesh.h"
 #include "TerrainContainer.h"
 #include "Animater.h"
-
 bool CGameObject::Begin() {
 
 	XMStoreFloat4x4(&m_xmf4x4World, XMMatrixIdentity());
@@ -26,7 +25,6 @@ bool CGameObject::Begin() {
 	return true;
 }
 bool CGameObject::End() {
-
 	m_vObjectActiveOBBs.clear();
 	//-------------------------------component---------------------------
 	ClearComponents();
@@ -35,9 +33,7 @@ bool CGameObject::End() {
 }
 
 void CGameObject::Animate(float fTimeElapsed) {
-	if (m_pAnimater){
-		m_pAnimater->Update(fTimeElapsed);
-
+	if (m_pAnimater) {
 		//obb animate
 		m_vObjectActiveOBBs.clear();
 		for (auto OBB : m_pAnimater->GetActiveOBBs()) {
@@ -46,6 +42,8 @@ void CGameObject::Animate(float fTimeElapsed) {
 			DEBUGER->RegistOBB(OBB);
 		}
 	}
+
+	DEBUGER->RegistCoordinateSys(GetWorldMtx());
 
 	//모든 컴포넌트를 돌면서 Update실행
 	for (auto i : m_mapComponents) {
@@ -89,7 +87,8 @@ void CGameObject::Rotate(float x, float y, float z) {
 		//SetRotationQuaternion(XMQuaternionRotationAxis(GetLook(), z));
 	}
 	
-	SetQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
+	XMStoreFloat4(&m_xmf4Quaternion, XMQuaternionMultiply(XMQuaternionRotationRollPitchYaw(x, y, z), XMLoadFloat4(&m_xmf4Quaternion)));
+	//SetQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
 }
 
 void CGameObject::RotateWorldAxis(float x, float y, float z) {
@@ -98,25 +97,25 @@ void CGameObject::RotateWorldAxis(float x, float y, float z) {
 	{
 		xmmtxRotate = XMMatrixRotationAxis(XMVectorSet(1.f,0.f,0.f,0.f), (float)XMConvertToRadians(x));
 		XMStoreFloat4x4(&m_xmf4x4World, XMMatrixMultiply(xmmtxRotate, XMLoadFloat4x4(&m_xmf4x4World)));
-		//SetRotationQuaternion(XMQuaternionRotationAxis(GetRight(), x));
+		XMStoreFloat4(&m_xmf4Quaternion, XMQuaternionMultiply(XMQuaternionRotationAxis(GetRight(), x), XMLoadFloat4(&m_xmf4Quaternion)));
 	}
 	if (y != 0.0f)
 	{
 		//플레이어의 로컬 y-축을 기준으로 회전하는 행렬을 생성한다.
 		xmmtxRotate = XMMatrixRotationAxis(XMVectorSet(0.f, 1.f, 0.f, 0.f), (float)XMConvertToRadians(y));
 		XMStoreFloat4x4(&m_xmf4x4World, XMMatrixMultiply(xmmtxRotate, XMLoadFloat4x4(&m_xmf4x4World)));
-		//SetRotationQuaternion(XMQuaternionRotationAxis(GetUp(), y));
+		XMStoreFloat4(&m_xmf4Quaternion, XMQuaternionMultiply(XMQuaternionRotationAxis(GetUp(), y), XMLoadFloat4(&m_xmf4Quaternion)));
 	}
 	if (z != 0.0f)
 	{
 		//플레이어의 로컬 z-축을 기준으로 회전하는 행렬을 생성한다.
 		xmmtxRotate = XMMatrixRotationAxis(XMVectorSet(0.f, 0.f, 1.f, 0.f), (float)XMConvertToRadians(z));
 		XMStoreFloat4x4(&m_xmf4x4World, XMMatrixMultiply(xmmtxRotate, XMLoadFloat4x4(&m_xmf4x4World)));
-		//SetRotationQuaternion(XMQuaternionRotationAxis(GetLook(), z));
+		XMStoreFloat4(&m_xmf4Quaternion, XMQuaternionMultiply(XMQuaternionRotationAxis(GetLook(), z), XMLoadFloat4(&m_xmf4Quaternion)));
 	}
 
 	m_xmf3Rotate = XMFLOAT3{ m_xmf3Rotate.x + x, m_xmf3Rotate.y + y, m_xmf3Rotate.z + z };
-	SetQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
+	//SetQuaternion(XMQuaternionRotationMatrix(GetWorldMtx()));
 }
 void CGameObject::SetPosition(XMVECTOR pos) {
 	XMStoreFloat3(&m_xmf3Position, pos);
@@ -143,6 +142,9 @@ void CGameObject::SetPositionZ(const float pos) {
 }
 void CGameObject::SetWorldMtx(XMMATRIX mtxWorld) {
 	XMStoreFloat4x4(&m_xmf4x4World, mtxWorld);
+	SetQuaternion(XMQuaternionRotationMatrix(mtxWorld));
+	SetPosition(XMVectorSet(m_xmf4x4World._41, m_xmf4x4World._42, m_xmf4x4World._43, 1.0f));
+	//SetScale(XMVectorSet(1.f, 1.f, 1.f, 1.f));
 }
 
 void CGameObject::SetScale(XMVECTOR xmv){
@@ -336,8 +338,28 @@ bool CGameObject::CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvR
 }
 
 void CGameObject::PickingProc(){
-
+	
 }
+
+void CGameObject::LoadInfo(){
+	//tag
+	m_tag = (tag)IMPORTER->ReadUINT();
+
+	//name
+	m_name = IMPORTER->Readstring();
+	
+	//worldmtx
+	m_xmf4x4World = IMPORTER->ReadFloat4x4();
+	SetWorldMtx(XMLoadFloat4x4(&m_xmf4x4World));
+}
+
+CGameObject* CGameObject::CreateObject(string name, tag t, XMMATRIX xmmtxWorld){
+	CGameObject* pObject = new CGameObject(name, t);
+	pObject->Begin();
+	pObject->SetWorldMtx(xmmtxWorld);
+	return pObject;
+}
+
 
 //생성자는 위에서부터 
 CGameObject::CGameObject(string name, tag t) : CObject(name, t) {

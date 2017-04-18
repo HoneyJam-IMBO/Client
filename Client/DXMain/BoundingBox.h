@@ -38,6 +38,8 @@ public:
 	void SetMyIndex(int index) { m_nMyIndex = index; }
 	int GetMyIndex() { return m_nMyIndex; }
 
+	bool GetToolActive() { return m_bToolActive; }
+	void SetToolActive(bool b) { m_bToolActive = b; }
 	//void SetAnimater(CAnimationInfo* pAnimationInfo) { m_pAnimationInfo = pAnimationInfo; }
 private:
 	//test
@@ -47,6 +49,7 @@ private:
 	int m_nMyJointIndex{ 0 };
 	int m_nMyIndex{ 0 };
 
+	bool m_bToolActive{ true };
 	//CAnimationInfo* m_pAnimationInfo;
 public:
 	CBoundingBox();

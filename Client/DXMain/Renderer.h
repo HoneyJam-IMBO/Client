@@ -14,7 +14,10 @@
 #include "Blur.h"
 #include "PostProcessingFinalPass.h"
 #include "SSLR.h"
+
 #include "Shadow.h"
+#include "UIRenderer.h"
+#include "WaterRenderer.h"
 
 class CDirectXFramework;
 
@@ -40,15 +43,13 @@ public:
 	bool ResizeBuffer();
 	void SetFramework(CDirectXFramework* pFramework) { m_pFramework = pFramework; }
 
-	CRenderContainer* GetTerrainRenderContainer() { return m_pObjectRenderer->GetTerrainRenderContainer(); }
-	CRenderContainer* GetSkyBoxRenderContainer() { return m_pObjectRenderer->GetSkyBoxRenderContainer(); }
-	CObjectRenderer* GetObjectRenderer() { return m_pObjectRenderer; }
+	CRenderContainer*	GetTerrainRenderContainer() { return m_pObjectRenderer->GetTerrainRenderContainer(); }
+	CRenderContainer*	GetSkyBoxRenderContainer() { return m_pObjectRenderer->GetSkyBoxRenderContainer(); }
+	CObjectRenderer*	GetObjectRenderer() { return m_pObjectRenderer; }
+	CShadow*			GetShadow() { return m_pShadow; }
+	CUIRenderer*		GetUIRenderer() { return m_pUIRederer; }
 
-	void SaveEffectInfo();
-	void LoadEffectInfo();
-	//void SetTerrainContainer(CTerrainContainer* pTerrainContainer) { m_pTerrainContainer = pTerrainContainer; }
-	//void SetSkyBoxContainer(CSkyBoxContainer* pSkyBoxContainer) { m_pSkyBoxContainer = pSkyBoxContainer; }
-	//void SetDirectionalLight(CDirectionalLight* pDirectionalLight) { m_pDirectionalLIght = pDirectionalLight; }
+	void LoadEffectInfo(wstring wsOutputPath, wstring wsSceneName);
 private:
 	CDirectXFramework* m_pFramework{ nullptr };
 	CRenderContainer* m_pTerrainRenderContainer{ nullptr };
@@ -86,16 +87,19 @@ private:
 	ID3D11RenderTargetView   *m_pd3drtvLight{ nullptr };
 	//--------------------------light render target----------------
 	//-------------------------layer-------------------------
-	CObjectRenderer*			m_pObjectRenderer{ nullptr };
-	CAORenderer*				m_pAORenderer{ nullptr };
-	CLightRenderer*				m_pLightRenderer{ nullptr };
-	CBloomDownScale *			m_pBloomDownScale{ nullptr };
-	CBloom*						m_pBloom{ nullptr };
-	CBlur*						m_p16to1Blur{ nullptr };
-	CBlur*						m_p4to1Blur{ nullptr };
-	CPostProcessingFinalPass*	m_pPostProcessingFinalPass{ nullptr };
-	CSSLR*						m_pSSLR{ nullptr };
-	CShadow*					m_pShadow{ nullptr };
+	CObjectRenderer*	m_pObjectRenderer{ nullptr };
+	CAORenderer*		m_pAORenderer{ nullptr };
+	CLightRenderer*		m_pLightRenderer{ nullptr };
+	CBloomDownScale*	m_pBloomDownScale{ nullptr };
+	CBloom*				m_pBloom{ nullptr };
+	CBlur*				m_p16to1Blur{ nullptr };
+	CBlur*				m_p4to1Blur{ nullptr };
+	CPostProcessingFinalPass* m_pPostProcessingFinalPass{ nullptr };
+	CSSLR*				m_pSSLR{ nullptr };
+	CShadow*			m_pShadow{ nullptr };
+
+	CUIRenderer*		m_pUIRederer{ nullptr };
+	CWaterRenderer*		m_pWaterRenderer{ nullptr };
 	//-------------------------layer-------------------------
 
 	//effects
@@ -109,7 +113,6 @@ private:
 	float m_fBLOOMScale{ 2.0f };
 	//sslr
 	bool m_bSSLROnOff;
-	float m_fSSLROffsetSunPos{ -200.f };
 	float m_fSSLRMaxSunDist{ 1000.f };
 	float m_fSSLRInitDecay{ 0.05f };
 	float m_fSSLRDistDecay{ 0.05f };
@@ -137,8 +140,6 @@ public:
 	//sslr
 	void SetSSLROnOff(bool SSLROnOff) { m_bSSLROnOff = SSLROnOff; }
 	bool GetSSLROnOff() { return m_bSSLROnOff; }
-	void SetSSLROffsetSunPos(float SSLROffsetSunPos) { m_fSSLROffsetSunPos = SSLROffsetSunPos; }
-	float GetSSLROffsetSunPos() { return m_fSSLROffsetSunPos; }
 	void SetSSLRMaxSunDist(float SSLRMaxSunDist) { m_fSSLRMaxSunDist = SSLRMaxSunDist; }
 	float GetSSLRMaxSunDist() { return m_fSSLRMaxSunDist; }
 	void SetSSLRInitDecay(float SSLRInitDecay) { m_fSSLRInitDecay = SSLRInitDecay; }

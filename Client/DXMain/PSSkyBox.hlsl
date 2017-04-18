@@ -1,13 +1,11 @@
 #include "PackGbuffer.hlsli"
 
 TextureCube gtxtSkyBox : register(t13);
-
 SamplerState gssWRAP_LINEAR : register(s0);
 SamplerState gssWRAP_POINT : register(s1);
 SamplerState gssCLAMP_LINEAR : register(s2);
 SamplerState gssCLAMP_POINT : register(s3);
 
-//SamplerState gssSkyBox : register(s0);
 
 struct Material {
 	float3 normal;

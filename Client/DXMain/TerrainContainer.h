@@ -13,18 +13,18 @@ class CSpaceContainer;
 
 class CTerrainContainer : public CObject {
 public:
-	virtual bool Begin();
-	virtual bool End();
+	void Begin();
+	bool End();
 
 	void PrepareRender();
 	float GetHeight(XMVECTOR xmvPos);
 	float GetHeight(XMFLOAT2 xmf2Pos);
-
+	
 	void Update(shared_ptr<CCamera> pCamera);
 	CGameObject* PickObjects(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float& distance);
 	void ReadyHeightMap();
 	void SetBufferInfo();
-
+	
 	void SetBaseTexture(wstring path);
 	void SetHeightMapTexture(wstring path);
 	CTexture* GetBaseTexture() { return m_pBaseTexture.get(); };
@@ -32,8 +32,6 @@ public:
 	void CreateSplattingInfo();
 	CSplattingInfoManager* GetSplattingInfoManager() { return m_pSplattingInfoManager; }
 	//CRenderContainer* GetTerrainRenderContainer() { return m_pTerrainRenderContainer; }
-
-	XMFLOAT2 GetCurPickPos() { return m_xmf2CurPickPos; }
 
 	void CreateNormalMap();
 
@@ -77,8 +75,7 @@ private:
 	bool m_bActive{ true };
 	wstring m_wsSceneName;
 	wstring m_wsOutputPath;
-	XMFLOAT2 m_xmf2CurPickPos{ 0.f, 0.f };
-
+	
 	TERRAIN_GLOBAL_VALUE* m_pGlobalTerrainData{ nullptr };
 	shared_ptr<CBuffer> m_pGlobalTerrainBuffer{ nullptr };
 

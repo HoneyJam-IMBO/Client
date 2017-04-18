@@ -1,7 +1,6 @@
 cbuffer ViewProjectionConstantBuffer : register(b0)
 {
-	matrix gmtxView;
-	matrix gmtxProj;
+	matrix gmtxViewProjection;
 };
 cbuffer GlobalTerrainInfo : register(b10)
 {

@@ -4,6 +4,8 @@
 
 //--------------------------container---------------------------------
 void CDebugRenderContainer::UpdateShaderState(shared_ptr<CCamera> pCamera) {
+	if (m_vpBuffer.empty()) return;
+
 	m_vpMesh[0]->UpdateShaderState();
 	m_pShader->UpdateShaderState();
 	for (auto p : m_vpTexture) {
@@ -19,8 +21,7 @@ void CDebugRenderContainer::UpdateShaderState(shared_ptr<CCamera> pCamera) {
 	//if (m_pGlobalBuffer) m_pGlobalBuffer->UpdateShaderState();
 	//----------------------------update instance buffer--------------------------
 
-	if (m_vpBuffer.empty()) return;
-
+	
 	int nInstance = 0;
 
 	int nBuffer = 0;
@@ -29,11 +30,10 @@ void CDebugRenderContainer::UpdateShaderState(shared_ptr<CCamera> pCamera) {
 		m_ppBufferData[nBuffer++] = p->Map();
 	}
 	for (auto pObject : m_lpObjects) {
-			pObject->SetBufferInfo(m_ppBufferData, nInstance, pCamera);
-			nInstance++;
+		pObject->SetBufferInfo(m_ppBufferData, nInstance, pCamera);
+		nInstance++;
 	}
 
-	m_nInstance = nInstance;
 	//unmap
 	for (auto p : m_vpBuffer) {
 		p->Unmap();

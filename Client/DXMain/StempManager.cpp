@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "StempManager.h"
 
-bool CStempManager::Begin(){
+void CStempManager::Begin(){
 	//모든 stemp제작
 	vector<wstring> vFile;
 	DIRECTORYFINDER->GetFiles(vFile, L"../../Assets/Stemp", true, true, L".bmp");
@@ -17,7 +17,8 @@ bool CStempManager::Begin(){
 	m_pPicposRenderInfo = new TERRAIN_PICPOS_RENDER_INFO;
 	m_pPicposRenderInfo->Extent = 50.f / m_fSpaceSize;
 
-	return true;
+	TWBARMGR->AddMinMaxBarRW("TOOL_MODE", "StempControll", "STEMP_EXTENT", &m_fExtent, 10.f, 256.f, 0.5f);
+	TWBARMGR->AddMinMaxBarRW("TOOL_MODE", "StempControll", "STEMP_INDEX", &m_nCurStemp, 0.f, m_vStemp.size()-1, 1.f);
 }
 
 bool CStempManager::End(){
@@ -50,7 +51,7 @@ void CStempManager::UpdateShaderState(){
 	pPicposRenderInfo->PickPos.x = (m_pPicposRenderInfo->PickPos.x);
 	pPicposRenderInfo->PickPos.y = 1 - (m_pPicposRenderInfo->PickPos.y);
 	pPicposRenderInfo->Extent = m_pPicposRenderInfo->Extent = m_fExtent / m_fSpaceSize;
-	//pPicposRenderInfo->ToolMode = (UINT)GLOBALVALUEMGR->GetToolMode();
+	pPicposRenderInfo->ToolMode = (UINT)GLOBALVALUEMGR->GetToolMode();
 	m_pPicposRenderInfoBuffer->Unmap();
 }
 

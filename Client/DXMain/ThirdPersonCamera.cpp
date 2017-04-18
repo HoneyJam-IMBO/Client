@@ -80,8 +80,7 @@ void CThirdPersonCamera::UpdateShaderState() {
 	UpdateViewMtx();
 	XMMATRIX xmMtxView = XMLoadFloat4x4(&m_xmf4x4View);
 
-	XMStoreFloat4x4(&m_stCameraBufferData.m_xmf4x4View, XMMatrixTranspose(xmMtxView));
-	XMStoreFloat4x4(&m_stCameraBufferData.m_xmf4x4Proj, XMMatrixTranspose(xmMtxProjection));
+	XMStoreFloat4x4(&m_stCameraBufferData.m_xmf4x4ViewProjection, XMMatrixTranspose(XMMatrixMultiply(xmMtxView, xmMtxProjection)));
 	//정보 갱신
 
 	//상수버퍼 업데이트

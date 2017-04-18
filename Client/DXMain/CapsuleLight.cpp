@@ -85,6 +85,13 @@ CCapsuleLight * CCapsuleLight::CreateCapsuleLight(float CapsuleLightLen, XMFLOAT
 	pLight->Begin();
 	return pLight;
 }
+void CCapsuleLight::PickingProc(){
+	CGameObject::PickingProc();
+}
+
+void CCapsuleLight::LoadInfo(){
+
+}
 
 
 CCapsuleLight::CCapsuleLight() : CLight("capsulelight") {

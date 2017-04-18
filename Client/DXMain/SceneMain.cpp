@@ -1,49 +1,25 @@
 #include "stdafx.h"
 #include "SceneMain.h"
 
-void CSceneMain::LoadScene(string path){
-	CScene::LoadScene(path);
-}
+
 bool CSceneMain::Begin() {
-	//m_pPlayer = new CPlayer;
-	//m_pPlayer->Begin();
 	//----------------------------------camera-------------------------------------
 	m_pCamera = m_pFrameWork->GetCamera();
-	
-	//----------------------------------camera-------------------------------------
 
-	//--------------------------------객체 제작------------------------
-	int nMaxObjects = 1;
-	int space_size = static_cast<int>(UPDATER->GetSpaceContainer()->GetSpaceSize());
-	
-	LoadScene("../outputdata/testScene.scn");
 
-	string path = "../outputdata/testtesttest.gjm";
-	string name = GetFileName(path);
-	RESOURCEMGR->CreateMultiMesh(path, name);
-	RCSELLER->CreateStempRenderContainer();
-
+	LoadScene("../outputdata/mac_scene/mac_scene.scn");
 	m_pObject = new CGameObject("testtesttest", TAG_DYNAMIC_OBJECT);
-	m_pObject ->Begin();
-	m_pObject ->SetPosition(XMVectorSet(500, 0, 500, 0));
-	m_pObject->SetScale(XMVectorSet(10,10, 10, 1));
+	m_pObject->Begin();
+	m_pObject->SetPosition(XMVectorSet(500, 0, 500, 0));
+	m_pObject->SetScale(XMVectorSet(10, 10, 10, 1));
 	UPDATER->GetSpaceContainer()->AddObject(m_pObject);
 	m_pObject->GetAnimater()->SetCurAnimationIndex(0);
-
+	
 	
 	return CScene::Begin();
 }
 
-bool CSceneMain::End() {
-	for (auto pObject : m_vpObjectList) {
-		delete pObject;
-	}
-	m_vpObjectList.clear();
-	//m_pPlayer->End();
-	//seller
-	//m_RenderContainerSeller->End();
-	
-	
+bool CSceneMain::End() {	
 
 	//카메라는 Framework에 존재하는 것이기에 End()작업을 진행하지 않는다.
 	return CScene::End();
@@ -51,12 +27,8 @@ bool CSceneMain::End() {
 
 void CSceneMain::Animate(float fTimeElapsed) {
 	CScene::Animate(fTimeElapsed);
-
-	//--------------------------전역 객체 animate / regist-------------------------
-	UPDATER->SetCamera(m_pCamera);
-	//UPDATER->GetSpaceContainer()->SetSpaceSize(m_space_size);
-	//UPDATER->GetSpaceContainer()->SetSpaceLevel(m_space_lv);
-	//--------------------------전역 객체 animate / regist-------------------------
+	
+	
 }
 
 
@@ -85,18 +57,14 @@ void CSceneMain::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wPa
 void CSceneMain::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
 	
 	//RCSELLER->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
-	switch (nMessageID)
-	{
+	switch (nMessageID){
 	case WM_KEYUP:
-		
-		switch (wParam)
-		{
+		switch (wParam){
 		case VK_F1:
 		case VK_F2:
 		case VK_F3:
 			break;
 		case VK_P:
-
 		default:
 			break;
 		}
@@ -107,21 +75,9 @@ void CSceneMain::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM 
 }
 
 void CSceneMain::ProcessInput(float fTimeElapsed) {
+	
 	if (INPUTMGR->KeyDown(VK_P)) {
 		INPUTMGR->SetDebugMode(static_cast<bool>((INPUTMGR->GetDebugMode() + 1) % 2));
-	}
-
-	if (INPUTMGR->OnlyKeyDown(VK_I)) {
-		m_pObject->Move(m_pObject->GetLook(), 0.5);
-	}
-	if (INPUTMGR->OnlyKeyDown(VK_K)) {
-		m_pObject->Move(-m_pObject->GetLook(), 0.5);
-	}
-	if (INPUTMGR->OnlyKeyDown(VK_L)) {
-		m_pObject->Move(m_pObject->GetRight(), 0.5);
-	}
-	if (INPUTMGR->OnlyKeyDown(VK_J)) {
-		m_pObject->Move(-m_pObject->GetRight(), 0.5);
 	}
 	m_pCamera->ProcessInput(fTimeElapsed);
 }
@@ -153,7 +109,8 @@ CGameObject* CSceneMain::PickObjectPointedByCursor(int xClient, int yClient){
 	CGameObject* pNearestObject = NULL;
 	float fHitDistance = FLT_MAX;
 	float fNearDistance = FLT_MAX;
-	pNearestObject = UPDATER->GetSpaceContainer()->PickObject(m_pCamera->GetPosition(), XMVector3Normalize(xmvRayDir), fHitDistance);
+	pNearestObject = UPDATER->PickObject(m_pCamera->GetPosition(), XMVector3Normalize(xmvRayDir), fHitDistance);
+
 	fNearDistance = fHitDistance;
 	
 	return(pNearestObject);
@@ -172,7 +129,6 @@ void CSceneMain::CreateControllObject(string path){
 	RCSELLER->GetRenderContainer("fbx")->SetAnimater(RESOURCEMGR->GetAnimater("Test"));
 //resource 제작	
 
-
 //객체 제작
 	m_pFBXObject = new CTestObject();
 	m_pFBXObject->Begin();
@@ -184,32 +140,18 @@ void CSceneMain::CreateControllObject(string path){
 	m_pFBXObject->PickingProc();
 }
 
-void CSceneMain::AddFBXAnimationInfo(string path){
-	if (nullptr == m_pFBXObject) {
-		//wstring ws{ L"" };
-		//ws.assign(path.cbegin(), path.cend());
-		CreateControllObject(path);
-		return;
-	}
-
-	//fbx animation info 추가!
-	string name{ "Test" };
-	FBXIMPORTER->Begin(path);
-	if (FBXIMPORTER->GetHasAnimation()) {
-		CAnimationInfo* pAnimationInfo = CAnimationInfo::CreateAnimationInfoFromFBXFile(RESOURCEMGR->GetAnimater(name));
-	}
-	FBXIMPORTER->End();
-	//fbx animation info 추가!
-
-	m_pFBXObject->PickingProc();
+void CSceneMain::CreateSceneContainers(){
+	
 }
+
 void CSceneMain::CreateTerrainContainer(){
 	//terrain
 	UPDATER->SetTerrainContainer(CTerrainContainer::CreateTerrainContainer(L"Temp", 256, 256, 0.5, UPDATER->GetSpaceContainer(), true));
 }
+
 void CSceneMain::CreateSkyBoxContainer(){
 	//skybox
-	UPDATER->SetSkyBoxContainer(CSkyBoxContainer::CreateSkyBoxContainer(L"Temp", 0, UPDATER->GetSpaceContainer()));
+//	UPDATER->SetSkyBoxContainer(CSkyBoxContainer::CreateSkyBoxContainer(L"Temp", 0, UPDATER->GetSpaceContainer()));
 }
 
 CSceneMain::CSceneMain(SCENE_ID eID, CDirectXFramework* pFrameWork) : CScene(eID) {

@@ -42,11 +42,16 @@ public:
 	//light info setter
 	void SetCapsuleLightData(CAPSULE_LIGHT data) { m_CapsuleData = data; };
 	virtual void SetLength(float len);
+	float GetLength() { return m_CapsuleData.CapsuleLightLen; }
 	virtual void SetRange(float outer, float inner = 0.0f);
+	float GetRange() { return m_CapsuleData.CapsuleLightRange; }
 	virtual void SetColor(float r, float g, float b);//color
 	virtual XMFLOAT3 GetColor();
 
 	static CCapsuleLight* CreateCapsuleLight(float CapsuleLightLen, XMFLOAT3 CapsuleLightColor,	float CapsuleLightRange);
+	void PickingProc();
+
+	virtual void LoadInfo();
 private:
 	//data
 	CAPSULE_LIGHT m_CapsuleData;

@@ -27,7 +27,7 @@ SamplerState gssCLAMP_POINT : register(s3);
 struct PixelShaderInput
 {
 	float4 position : SV_POSITION;
-	float3 positionV : POSITION;
+	float3 positionW : POSITION;
 	float3 normal : NORMAL;
 	float2 uv : TEXCOORD;
 };
@@ -36,12 +36,14 @@ struct PixelShaderInput
 PS_GBUFFER_OUT main(PixelShaderInput input)
 {
 	PS_GBUFFER_OUT output = (PS_GBUFFER_OUT)0;
+
 	float4 cColor = gtxtDefault.Sample(gssWRAP_LINEAR, input.uv) * gMaterialColor;
 	float4 cSpec = gtxtSpec.Sample(gssWRAP_LINEAR, input.uv);
 
 	float Depth = input.position.z / input.position.w;
-	float lineardepth = input.positionV.z / gFar;
-	return (PackGBuffer(cColor.xyz, float4(normalize(input.normal), lineardepth), cSpec.xyz, gSpecExp));
+
+	return (PackGBuffer(cColor.xyz, normalize(input.normal), cSpec.xyz, gSpecExp));
+
 }
 //float4 main(PixelShaderInput input) : SV_TARGET
 //{

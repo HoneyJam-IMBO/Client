@@ -1,7 +1,7 @@
 
-cbuffer cbWorldMtx : register(b1) {
-	float4x4 mtxWorld : packoffset(c0);
-};
+//cbuffer cbWorldMtx : register(b1) {
+//	float4x4 mtxWorld : packoffset(c0);
+//};
 
 cbuffer cbSkinned : register(b10){
 	// 한 캐릭터당 최대 뼈대 개수는 96
@@ -10,8 +10,7 @@ cbuffer cbSkinned : register(b10){
 
 cbuffer ViewProjectionConstantBuffer : register(b0)
 {
-	matrix gmtxView;
-	matrix gmtxProj;
+	matrix gmtxViewProjection;
 };
 
 struct VS_INPUT
@@ -21,13 +20,14 @@ struct VS_INPUT
 	float2 uv : TEXCOORD;
 	float3 boneWeight : BONE_WEIGHT;
 	float4 boneIndex : BONE_INDEX;
+	float4x4 mtxWorld : INSWORLDMTX;
 };
 
 // 픽셀 셰이더를 통과한 픽셀당 색 데이터입니다.
 struct VS_OUTPUT
 {
 	float4 position : SV_POSITION;
-	float3 positionV : POSITION;
+	float3 positionW : POSITION;
 	float3 normal : NORMAL;
 	float2 uv : TEXCOORD;
 };
@@ -52,11 +52,9 @@ VS_OUTPUT main(VS_INPUT input, uint instanceID : SV_InstanceID)
 	}
 	VS_OUTPUT output = (VS_OUTPUT)0;
 
-	output.positionV	= mul(float4(posL, 1.0f), mtxWorld).xyz;
-	output.position		= mul(float4(output.positionV, 1.0f), gmtxView);
-	output.positionV	= output.position.xyz;
-	output.position		= mul(output.position, gmtxProj);
-	output.normal		= mul(normalL, (float3x3)mtxWorld);
+	output.positionW = mul(float4(posL, 1.0f), input.mtxWorld).xyz;
+	output.position = mul(float4(output.positionW, 1.0f), gmtxViewProjection);
+	output.normal = mul(normalL, (float3x3)input.mtxWorld);
 
 	output.uv = input.uv;
 

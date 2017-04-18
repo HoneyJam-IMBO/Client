@@ -72,7 +72,6 @@ public:
 
 	//자신의 component 실행 + a
 	virtual void Animate(float fTimeElapsed);
-
 	bool SetComponent(CComponent* pComponenet);
 	CComponent* GetComponenet(const component_id& componenetID);
 	const CComponent* GetComponenet(const component_id& componenetID)const;
@@ -103,7 +102,7 @@ public:
 	//ray picking 
 	virtual bool CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float& distance);
 	virtual void PickingProc();
-	
+
 	//world
 	XMFLOAT4X4 m_xmf4x4World;
 	XMFLOAT3 m_xmf3Position{ 0.f, 0.f, 0.f };
@@ -119,32 +118,31 @@ public:
 
 	shared_ptr<CAnimater> GetAnimater() { return m_pAnimater; }
 	vector<BoundingOrientedBox>& GetObjectActiveOBBs() { return m_vObjectActiveOBBs; }
+
+	virtual void LoadInfo();
+
+	static CGameObject* CreateObject(string name, tag t, XMMATRIX xmmtxWorld);
 protected:
 	int m_indexSelectMesh{ 0 };
 
 	BoundingBox m_OriBoundingBox;
-	vector<BoundingOrientedBox> m_vObjectActiveOBBs;
 
 	bool m_bIsVisible{ true }; 
 	bool m_bActive{ true };
 
 	//terrain container
-	CTerrainContainer* m_pTerrainContainer{ nullptr };
+	CTerrainContainer*	m_pTerrainContainer{ nullptr };
 
 	//component
-	mapComponent m_mapComponents;
-
-	CRenderContainer* m_pRenderContainer{ nullptr };
-	//object_id
-	//object_id m_objectID{ object_id::OBJECT_END };
+	mapComponent		m_mapComponents;
+	CRenderContainer*	m_pRenderContainer{ nullptr };
 
 	//space
 	int m_spaceIndex{ 0 };
 	//animater
 	shared_ptr<CAnimater> m_pAnimater{ nullptr };
+	vector<BoundingOrientedBox> m_vObjectActiveOBBs;
 
-	//texture ui를 위한 변수
-	vector<StructLoadTextureFile> m_vStructLoadTextureFile;
 public:
 	CGameObject(string name, tag t = tag::TAG_DEFAULT);
 	virtual ~CGameObject();

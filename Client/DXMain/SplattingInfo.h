@@ -15,7 +15,7 @@ struct LoadFileStructSP {
 };
 class CSplattingInfo : public DXObject{
 public:
-	virtual bool Begin();
+	void Begin();
 	virtual bool End();
 	virtual void SetShaderState();
 	virtual void CleanShaderState();

@@ -13,24 +13,24 @@ bool CTestDeferredMesh::CreateVertexBuffer() {
 	m_nVertices = 4;
 	m_d3dPrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP;
 
-	//화면 좌표계 4개 준다
-	VS_VB_SCREEN v[4];
-	v[0].xmf3Position = XMFLOAT4(-1, -1, 0.5, 1);
-	v[1].xmf3Position = XMFLOAT4(-1, 1, 0.5, 1);
-	v[2].xmf3Position = XMFLOAT4(1, -1, 0.5, 1);
-	v[3].xmf3Position = XMFLOAT4(1, 1, 0.5, 1);
+	////화면 좌표계 4개 준다
+	//VS_VB_SCREEN v[4];
+	//v[0].xmf3Position = XMFLOAT4(-1, -1, 0.5, 1);
+	//v[1].xmf3Position = XMFLOAT4(-1, 1, 0.5, 1);
+	//v[2].xmf3Position = XMFLOAT4(1, -1, 0.5, 1);
+	//v[3].xmf3Position = XMFLOAT4(1, 1, 0.5, 1);
 
-	v[0].xmf3TextCoord = XMFLOAT2(0, 1);
-	v[1].xmf3TextCoord = XMFLOAT2(0, 0);
-	v[2].xmf3TextCoord = XMFLOAT2(1, 1);
-	v[3].xmf3TextCoord = XMFLOAT2(1, 0);
+	//v[0].xmf3TextCoord = XMFLOAT2(0, 1);
+	//v[1].xmf3TextCoord = XMFLOAT2(0, 0);
+	//v[2].xmf3TextCoord = XMFLOAT2(1, 1);
+	//v[3].xmf3TextCoord = XMFLOAT2(1, 0);
 
 
 	m_pVertices = new XMFLOAT3[m_nVertices];
-	m_pVertices[0] = XMFLOAT3(-1.0f, -1.0f, 0.01f);
-	m_pVertices[1] = XMFLOAT3(-1.0f, 1.0f, 0.01f);
-	m_pVertices[2] = XMFLOAT3(1.0f, -1.0f, 0.01f);
-	m_pVertices[3] = XMFLOAT3(1.0f, 1.0f, 0.01f);
+	m_pVertices[0] = XMFLOAT3(-1.0f, -1.0f, 0.f);
+	m_pVertices[1] = XMFLOAT3(-1.0f, 1.0f, 0.f);
+	m_pVertices[2] = XMFLOAT3(1.0f, -1.0f, 0.f);
+	m_pVertices[3] = XMFLOAT3(1.0f, 1.0f, 0.f);
 
 	XMFLOAT2 pxmf2TexCoords[4];
 
@@ -50,7 +50,6 @@ bool CTestDeferredMesh::CreateVertexBuffer() {
 	UINT pnBufferStrides[2] = { sizeof(XMFLOAT3), sizeof(XMFLOAT2) };
 	UINT pnBufferOffsets[2] = { 0, 0 };
 	AssembleToVertexBuffer(2, pd3dBuffers, pnBufferStrides, pnBufferOffsets);
-
 
 	if (m_ppd3dVertexBuffers)	return true;
 

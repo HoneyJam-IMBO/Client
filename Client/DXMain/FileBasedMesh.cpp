@@ -30,6 +30,8 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromFBXFile(string name, UI
 	//set mesh name, index
 	pFileBasedMesh->SetMeshIndex(index);
 	
+	pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULT"));
+	pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
 	//set vertex buffer info
 	if (FBXIMPORTER->GetHasAnimation()) {
 		//1. 전체 정점의 수를 구한다.
@@ -147,11 +149,11 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 	if (bHasAnimation) {
 		//mesh texture
 		int MeshTextureCnt = IMPORTER->ReadInt();
-		if (MeshTextureCnt <= 0) {
+		if (MeshTextureCnt <= 0) {//0이면 set
 			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULT"));
 			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
 		}
-		for (int i = 0; i < MeshTextureCnt; ++i) {
+		for (int i = 0; i < MeshTextureCnt; ++i) {//n 만큼 set
 			//char name[64];
 			//sprintf(name, "Test%d", index);
 			string path;
@@ -162,6 +164,14 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 			sprintf(cName, "%s_%d_%d", name.c_str(), index, i);
 			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->CreateTexture(cName, (WCHAR*)wPath.c_str(), i));
 		}
+		if (MeshTextureCnt == 1) {//만약 1개면 spec map이 없는것 디폴트로 set
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
+		}
+		else if (MeshTextureCnt == 2) {//만약 1개면 spec map이 없는것 디폴트로 set
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
+		}
+		//재질set
 		pFileBasedMesh->SetMeshMaterial(RESOURCEMGR->GetMaterial("DEFAULT"));
 		//mesh texture
 
@@ -218,6 +228,31 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 
 	}
 	else {
+		//mesh texture
+		int MeshTextureCnt = IMPORTER->ReadInt();
+		if (MeshTextureCnt <= 0) {//0이면 set
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULT"));
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
+		}
+		for (int i = 0; i < MeshTextureCnt; ++i) {//n 만큼 set
+			//char name[64];
+			//sprintf(name, "Test%d", index);
+			string path;
+			path = IMPORTER->Readstring();
+			wstring wPath{ L"" };
+			wPath.assign(path.cbegin(), path.cend());
+			char cName[64];
+			sprintf(cName, "%s_%d_%d", name.c_str(), index, i);
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->CreateTexture(cName, (WCHAR*)wPath.c_str(), i));
+		}
+		if (MeshTextureCnt == 1) {//만약 1개면 spec map이 없는것 디폴트로 set
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
+		}
+		else if (MeshTextureCnt == 2) {//만약 1개면 spec map이 없는것 디폴트로 set
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
+		}
 		//1. 전체 정점을 구한다.
 		UINT nVertices = IMPORTER->ReadUINT();
 		pFileBasedMesh->SetnVertices(nVertices);
@@ -245,7 +280,7 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 		nVertex = 0;
 		for (UINT j = 0; j < nVertices; ++j) {
 			pUVs[nVertex].x = IMPORTER->ReadFloat();
-			pUVs[nVertex].y = IMPORTER->ReadFloat();
+			pUVs[nVertex++].y = IMPORTER->ReadFloat();
 		}
 		//4. set
 		pFileBasedMesh->SetpVertices(pVertices);
@@ -278,6 +313,48 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 		pFileBasedMesh->SetpIndices(pnIndices);
 		//index
 	}
+	if (false == bHasAnimation) {
+		XMFLOAT3 xmf3Pos;
+		xmf3Pos.x = IMPORTER->ReadFloat();
+		xmf3Pos.y = IMPORTER->ReadFloat();
+		xmf3Pos.z = IMPORTER->ReadFloat();
+
+		XMFLOAT3 xmf3Scale;
+		xmf3Scale.x = IMPORTER->ReadFloat();
+		xmf3Scale.y = IMPORTER->ReadFloat();
+		xmf3Scale.z = IMPORTER->ReadFloat();
+
+		pFileBasedMesh->GetAABBObject().Begin(XMLoadFloat3(&xmf3Pos), XMVectorSet(xmf3Scale.x, xmf3Scale.y, xmf3Scale.z, 1.0f));
+		pFileBasedMesh->GetAABBObject().SetActive(false);
+
+		int obbCnt = IMPORTER->ReadInt();
+
+		//obb info
+		//WriteWCHAR(L"ObbInfos"); WriteSpace();
+		for (int i = 0; i < obbCnt; ++i) {
+			XMFLOAT3 xmf3Pos;
+			xmf3Pos.x = IMPORTER->ReadFloat();
+			xmf3Pos.y = IMPORTER->ReadFloat();
+			xmf3Pos.z = IMPORTER->ReadFloat();
+
+			XMFLOAT3 xmf3Scale;
+			xmf3Scale.x = IMPORTER->ReadFloat();
+			xmf3Scale.y = IMPORTER->ReadFloat();
+			xmf3Scale.z = IMPORTER->ReadFloat();
+
+			XMFLOAT4 xmf4Quaternion;
+			xmf4Quaternion.x = IMPORTER->ReadFloat();
+			xmf4Quaternion.y = IMPORTER->ReadFloat();
+			xmf4Quaternion.z = IMPORTER->ReadFloat();
+			xmf4Quaternion.w = IMPORTER->ReadFloat();
+
+			CBoundingBox obb;
+			obb.Begin(XMLoadFloat3(&xmf3Pos), XMVectorSet(xmf3Scale.x, xmf3Scale.y, xmf3Scale.z, 1.0f), XMLoadFloat4(&xmf4Quaternion));
+			obb.SetActive(true);
+			pFileBasedMesh->GetvOBBObject().push_back(obb);
+		}//end obb for 
+	}
+
 	pFileBasedMesh->Begin();
 	return pFileBasedMesh;
 

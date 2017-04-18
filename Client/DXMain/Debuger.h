@@ -24,6 +24,7 @@ public:
 	bool End();
 
 	void RegistToDebugRenderContainer(CGameObject* pObject);
+	void RegistCoordinateSys(FXMMATRIX mtx);
 	void RegistAABB(BoundingBox& aabb);
 	void RegistOBB(BoundingOrientedBox& obb);
 
@@ -38,6 +39,7 @@ public:
 	void AddText(float fontSize, float posX, float posY, UINT32 color, TCHAR * msg, ...);
 	void RenderText();
 	void AddTexture(XMFLOAT2 fLeftTop, XMFLOAT2 fRightBottom, ID3D11ShaderResourceView* pSRV);
+	void AddDepthTexture(XMFLOAT2 fLeftTop, XMFLOAT2 fRightBottom, ID3D11ShaderResourceView* pSRV);
 
 	void RenderTexture();
 
@@ -53,7 +55,9 @@ private:
 	//aabb 랜더를 위한 객체.
 	CBoundingBox** m_ppBoundingBox{ nullptr };
 	UINT m_nAABB{ 0 };
-		
+	//CoordinateSys 랜더를 위한 객체.
+	CCoordinateSys** m_ppCoordinateSys{ nullptr };
+	UINT m_nCoordinateSys{ 0 };
 
 	//조명 계산을 위한 블랜드 state.
 	ID3D11BlendState* m_pLightBlendState{ nullptr };
@@ -79,9 +83,11 @@ private:
 
 //debug texture
 	CDebugTexture* m_pDebugTextureObj{ nullptr };
+
 	shared_ptr<CTexture> m_pDebugTexture{ nullptr };
 
 	queue<CDebugTextureData>					m_qDebugTextureData;
+	queue<CDebugTextureData>					m_qDebugDepthTextureData;
 public:
 	CDebuger();
 	virtual ~CDebuger();

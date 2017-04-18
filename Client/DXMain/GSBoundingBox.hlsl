@@ -1,9 +1,7 @@
 #include "Quaternion.hlsli"
 
-cbuffer ViewProjectionConstantBuffer : register(b0)
-{
-	matrix gmtxView;
-	matrix gmtxProj;
+cbuffer ViewProjection {
+	float4x4 gmtxViewProjection : register(b0);
 };
 struct VS_INS_OUTPUT {
 //	float3 size : SIZE;
@@ -43,37 +41,29 @@ void main(point VS_INS_OUTPUT input[1], inout LineStream<GS_INS_OUTPUT> stream) 
 	
 	///////////////////////////////11
 	v[0].positionW = positionW[0];
-	v[0].position = mul(float4(v[0].positionW, 1.0f), gmtxView);
-	v[0].position = mul(v[0].position, gmtxProj);
+	v[0].position = mul(float4(v[0].positionW, 1.0f), gmtxViewProjection);
 
 	v[1].positionW = positionW[1];
-	v[1].position = mul(float4(v[1].positionW, 1.0f), gmtxView);
-	v[1].position = mul(v[1].position, gmtxProj);
+	v[1].position = mul(float4(v[1].positionW, 1.0f), gmtxViewProjection);
 
 	v[2].positionW = positionW[2];
-	v[2].position = mul(float4(v[2].positionW, 1.0f), gmtxView);
-	v[2].position = mul(v[2].position, gmtxProj);
+	v[2].position = mul(float4(v[2].positionW, 1.0f), gmtxViewProjection);
 
 	v[3].positionW = positionW[3];
-	v[3].position = mul(float4(v[3].positionW, 1.0f), gmtxView);
-	v[3].position = mul(v[3].position, gmtxProj);
+	v[3].position = mul(float4(v[3].positionW, 1.0f), gmtxViewProjection);
 
 	///////////////////////////////22
 	v[4].positionW = positionW[4];
-	v[4].position = mul(float4(v[4].positionW, 1.0f), gmtxView);
-	v[4].position = mul(v[4].position, gmtxProj);
+	v[4].position = mul(float4(v[4].positionW, 1.0f), gmtxViewProjection);
 
 	v[5].positionW = positionW[5];
-	v[5].position = mul(float4(v[5].positionW, 1.0f), gmtxView);
-	v[5].position = mul(v[5].position, gmtxProj);
+	v[5].position = mul(float4(v[5].positionW, 1.0f), gmtxViewProjection);
 
 	v[6].positionW = positionW[6];
-	v[6].position = mul(float4(v[6].positionW, 1.0f), gmtxView);
-	v[6].position = mul(v[6].position, gmtxProj);
+	v[6].position = mul(float4(v[6].positionW, 1.0f), gmtxViewProjection);
 
 	v[7].positionW = positionW[7];
-	v[7].position = mul(float4(v[7].positionW, 1.0f), gmtxView);
-	v[7].position = mul(v[7].position, gmtxProj);
+	v[7].position = mul(float4(v[7].positionW, 1.0f), gmtxViewProjection);
 
 	//11
 	stream.Append(v[1]);

@@ -171,6 +171,10 @@ void CMesh::CreateTBFromPoints(XMFLOAT3 * pPositions, XMFLOAT2 * pUVs, XMFLOAT3 
 	XMStoreFloat3(&outT, XMVector3Normalize(e0*x + e1*y));
 	XMStoreFloat3(&outB, XMVector3Normalize(e0*z + e1*w));
 }
+void CMesh::ClearMeshResources(){
+	m_pMeshMaterial = nullptr;
+	m_vMeshTexture.clear();
+}
 void CMesh::AddMeshTexture(shared_ptr<CTexture> pTexture){
 	m_vMeshTexture.emplace_back(pTexture);
 }

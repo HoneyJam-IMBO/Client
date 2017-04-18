@@ -33,32 +33,6 @@ void CSplattingInfoManager::UpdateShaderState(){
 	
 }
 
-void CSplattingInfoManager::CreateSplattingTexture(){
-	if (m_vSplattinfInfo.empty())return;
-
-	m_vSplattinfInfo[m_nCurIndex]->UpdateShaderState();
-
-	if (m_pDetailTextures)m_pDetailTextures->End();
-	m_pDetailTextures = nullptr;
-	if (m_pBlendInfoTextures)m_pBlendInfoTextures->End();
-	m_pBlendInfoTextures = nullptr;
-
-	//detail/ blending info textureÁ¦ÀÛ
-	_TCHAR ppstrBlendInfoTextureNames[MAX_SPLATTINGINFO_NUM][128];
-	_TCHAR ppstrDetailTextureNames[MAX_SPLATTINGINFO_NUM][128];
-	UINT index{ 0 };
-	for (auto pSplattingInfo : m_vSplattinfInfo) {
-		wsprintf(ppstrBlendInfoTextureNames[index], pSplattingInfo->GetBlendInfoTexturePath());
-		wsprintf(ppstrDetailTextureNames[index++], pSplattingInfo->GetDetailTexturePath());
-	}
-	m_pBlendInfoTextures = CTexture::CreateTexture(index, ppstrBlendInfoTextureNames,  2, BIND_PS);
-	m_pDetailTextures = CTexture::CreateTexture(index, ppstrDetailTextureNames,  1, BIND_PS);;
-
-	SPLATTING_INFO* pData = (SPLATTING_INFO*)m_pSplattingInfoBuffer->Map();
-	pData->nSplattingInfo = m_vSplattinfInfo.size();
-	m_pSplattingInfoBuffer->Unmap();
-}
-
 void CSplattingInfoManager::RemoveSplattingInfoByIndex(UINT index){
 	if (m_vSplattinfInfo.empty())return;
 
@@ -125,7 +99,7 @@ void CSplattingInfoManager::CreateSplattingInfo(const WCHAR * pDetailTextureName
 	if (m_vSplattinfInfo.size() >= 10) return;
 	CSplattingInfo* pSplattingInfo = CSplattingInfo::CreateSplattingInfo(this, pDetailTextureName, pBlendInfoTextureName);
 	m_vSplattinfInfo.push_back(pSplattingInfo);
-
+	
 	if (m_pDetailTextures)m_pDetailTextures->End();
 	m_pDetailTextures = nullptr;
 	if (m_pBlendInfoTextures)m_pBlendInfoTextures->End();

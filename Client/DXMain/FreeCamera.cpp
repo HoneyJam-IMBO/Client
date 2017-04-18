@@ -14,43 +14,19 @@ bool CFreeCamera::Begin() {
 }
 bool CFreeCamera::End() {
 	
-	
 	return CCamera::End();
 }
 
 void CFreeCamera::Rotate(float x, float y, float z) {
-	XMMATRIX xmmtxRotate;
-	if (x != 0.0f)
-	{
-		//카메라의 로컬 x-축을 기준으로 회전하는 행렬을 생성한다. 고개를 끄떡이는 동작이다.
-		xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Right), (float)XMConvertToRadians(x));
-		//카메라의 로컬 x-축, y-축, z-축을 회전한다.
-		XMStoreFloat3(&m_xmf3Right, XMVector3TransformNormal(XMLoadFloat3(&m_xmf3Right), xmmtxRotate));
-		XMStoreFloat3(&m_xmf3Up, XMVector3TransformNormal(XMLoadFloat3(&m_xmf3Up), xmmtxRotate));
-		XMStoreFloat3(&m_xmf3Look, XMVector3TransformNormal(XMLoadFloat3(&m_xmf3Look), xmmtxRotate));
-	}
-	if (y != 0.0f)
-	{
-		//플레이어의 로컬 y-축을 기준으로 회전하는 행렬을 생성한다.
-		xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Up), (float)XMConvertToRadians(y));
-		//카메라의 로컬 x-축, y-축, z-축을 회전한다.
-		XMStoreFloat3(&m_xmf3Right, XMVector3TransformNormal(XMLoadFloat3(&m_xmf3Right), xmmtxRotate));
-		XMStoreFloat3(&m_xmf3Up, XMVector3TransformNormal(XMLoadFloat3(&m_xmf3Up), xmmtxRotate));
-		XMStoreFloat3(&m_xmf3Look, XMVector3TransformNormal(XMLoadFloat3(&m_xmf3Look), xmmtxRotate));
-	}
-	if (z != 0.0f)
-	{
-		//플레이어의 로컬 z-축을 기준으로 회전하는 행렬을 생성한다.
-		xmmtxRotate = XMMatrixRotationAxis(XMLoadFloat3(&m_xmf3Look), (float)XMConvertToRadians(z));
-		//카메라의 로컬 x-축, y-축, z-축을 회전한다.
-		XMStoreFloat3(&m_xmf3Right, XMVector3TransformNormal(XMLoadFloat3(&m_xmf3Right), xmmtxRotate));
-		XMStoreFloat3(&m_xmf3Up, XMVector3TransformNormal(XMLoadFloat3(&m_xmf3Up), xmmtxRotate));
-		XMStoreFloat3(&m_xmf3Look, XMVector3TransformNormal(XMLoadFloat3(&m_xmf3Look), xmmtxRotate));
-	}
+
+	m_fAngleX += x;
+	m_fAngleY += y;
+	
+	XMStoreFloat3(&m_xmf3At, XMVector4Transform(XMLoadFloat4(&XMFLOAT4(0.f, 0.f, 1.f, 0.f)), XMMatrixRotationRollPitchYaw(m_fAngleY, m_fAngleX, 0)));
+	XMStoreFloat3(&m_xmf3At, XMVector3Normalize(XMLoadFloat3(&m_xmf3At)));
 }
 
 void CFreeCamera::Update(float fTimeElapsed) {
-
 
 	UpdateShaderState();
 }
@@ -60,17 +36,14 @@ void CFreeCamera::UpdateShaderState() {
 	//정보 갱신
 	XMMATRIX xmMtxProjection = (XMLoadFloat4x4(&m_xmf4x4Projection));
 	UpdateViewMtx();
-
 	XMMATRIX xmMtxView = XMLoadFloat4x4(&m_xmf4x4View);
 
-	XMStoreFloat4x4(&m_stCameraBufferData.m_xmf4x4View, XMMatrixTranspose(xmMtxView));
-	XMStoreFloat4x4(&m_stCameraBufferData.m_xmf4x4Proj, XMMatrixTranspose(xmMtxProjection));
+	XMStoreFloat4x4(&m_stCameraBufferData.m_xmf4x4ViewProjection, XMMatrixTranspose(XMMatrixMultiply(xmMtxView, xmMtxProjection)));
 	m_stCameraBufferData.m_CameraPos = XMFLOAT4(m_xmf3Pos.x, m_xmf3Pos.y, m_xmf3Pos.z, 1.0f);
 	//정보 갱신
 
 	//상수버퍼 업데이트
 	GLOBALVALUEMGR->GetDeviceContext()->UpdateSubresource(m_pViewProjectionBuffer, 0, NULL, &m_stCameraBufferData, 0, 0);
-
 	//--------------------------------deferred lighting--------------------------------
 	XMFLOAT4 xmf4PerspectiveValues;
 	
@@ -81,12 +54,9 @@ void CFreeCamera::UpdateShaderState() {
 
 	XMFLOAT4X4 xmf4x4ViewInverce;
 	XMStoreFloat4x4(&xmf4x4ViewInverce, XMMatrixTranspose(XMMatrixInverse(nullptr, xmMtxView)));
-	XMFLOAT4X4 xmf4x4PerspectiveInverce;
-	XMStoreFloat4x4(&xmf4x4PerspectiveInverce, XMMatrixTranspose(XMMatrixInverse(nullptr, xmMtxProjection)));
 
-	GBUFFER_UNPACKING_DATA data{ xmf4PerspectiveValues , xmf4x4ViewInverce, xmf4x4PerspectiveInverce };
+	GBUFFER_UNPACKING_DATA data{ xmf4PerspectiveValues , xmf4x4ViewInverce };
 	GLOBALVALUEMGR->GetDeviceContext()->UpdateSubresource(m_pGBufferUnpackingBuffer, 0, NULL, &data, 0, 0);
-	//--------------------------------deferred lighting--------------------------------
 }
 
 void CFreeCamera::SetShaderState() {
@@ -112,16 +82,14 @@ void CFreeCamera::ProcessInput(float fTimeElapsed) {
 	if (INPUTMGR->OnlyKeyBoardDown(VK_E))		dwDirection |= DIR_UP;
 	if (INPUTMGR->OnlyKeyBoardDown(VK_Q))		dwDirection |= DIR_DOWN;
 
-	//if (pKeyBuffer[VK_SHIFT] & 0xF0)	iMoveState = RUN;
-	//else								iMoveState = WALK;
-
-	
-
-
 	if (dwDirection)
 	{
-		if (dwDirection & DIR_FORWARD)		xmvShift += XMLoadFloat3(&m_xmf3Look);
-		if (dwDirection & DIR_BACKWARD)		xmvShift -= XMLoadFloat3(&m_xmf3Look);
+
+		XMStoreFloat3(&m_xmf3Right, XMVector3Cross(XMLoadFloat3(&XMFLOAT3(0.f, 1.f, 0.f)), XMLoadFloat3(&m_xmf3At)));
+		XMStoreFloat3(&m_xmf3Right, XMVector3Normalize(XMLoadFloat3(&m_xmf3Right)));
+
+		if (dwDirection & DIR_FORWARD)		xmvShift += XMLoadFloat3(&m_xmf3At);
+		if (dwDirection & DIR_BACKWARD)		xmvShift -= XMLoadFloat3(&m_xmf3At);
 		if (dwDirection & DIR_RIGHT)		xmvShift += XMLoadFloat3(&m_xmf3Right);
 		if (dwDirection & DIR_LEFT)			xmvShift -= XMLoadFloat3(&m_xmf3Right);
 		if (dwDirection & DIR_UP)			xmvShift += XMLoadFloat3(&m_xmf3Up);
@@ -136,13 +104,14 @@ void CFreeCamera::ProcessInput(float fTimeElapsed) {
 
 	if (cxDelta || cyDelta)
 	{
+		cxDelta *= 0.01f;
+		cyDelta *= 0.01f;
 		/*cxDelta는 y-축의 회전을 나타내고 cyDelta는 x-축의 회전을 나타낸다. 오른쪽 마우스 버튼이 눌려진 경우 cxDelta는 z-축의 회전을 나타낸다.*/
 		if (INPUTMGR->MouseRightDown())
 			Rotate(cyDelta, 0.0f, -cxDelta);
 		else
-			Rotate(cyDelta, cxDelta, 0.0f);
+			Rotate(cxDelta, cyDelta, 0.0f);
 	}
-
 }
 
 CFreeCamera::CFreeCamera() : CCamera() {

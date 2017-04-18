@@ -13,9 +13,8 @@ public:
 
 	virtual void UpdateShaderState();
 
-	void CleanVolitileObj();
-	void ExcuteShadowRender(shared_ptr<CCamera> pCamera);
 	void Excute(shared_ptr<CCamera> pCamera);
+	void ExcuteShadowRender(shared_ptr<CCamera> pCamera);
 
 	CRenderContainer* GetSkyBoxRenderContainer() { return m_pSkyBoxRenderContainer; }
 	CRenderContainer* GetTerrainRenderContainer() { return m_pTerrainRenderContainer; }
@@ -29,10 +28,6 @@ private:
 	
 	CRenderContainer* m_pTerrainRenderContainer{ nullptr };
 	CRenderContainer* m_pSkyBoxRenderContainer{ nullptr };
-
-
-
-
 public:
 	CObjectRenderer();
 	virtual ~CObjectRenderer();

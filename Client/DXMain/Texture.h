@@ -38,7 +38,7 @@ public:
 	//완성된 srv set
 	static shared_ptr<CTexture> CreateTexture(ID3D11ShaderResourceView* pShaderResourceView, UINT Slot = 0, UINT BindFlag = BIND_PS, shared_ptr<CBuffer> pConstantBuffer = nullptr);
 
-protected:	
+protected:
 	//texture 1개
 	ID3D11ShaderResourceView*		m_pd3dsrvTexture{ nullptr };
 	UINT							m_TextureStartSlot{ 0 };
@@ -46,10 +46,10 @@ protected:
 
 	string							m_sPath;
 	//이 안에 여러개의 dx객체들이 존재함
-	
+
 	//buffer 여러개
 	shared_ptr<CBuffer>	m_pConstantBuffer{ nullptr };
-	
+
 public:
 	CTexture();
 	virtual ~CTexture();

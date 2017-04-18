@@ -3,7 +3,7 @@
 class CObject {
 public:
 	//----------------------------object-----------------------------
-	virtual bool Begin();
+	bool Begin();
 	virtual bool End();
 	//----------------------------object-----------------------------
 

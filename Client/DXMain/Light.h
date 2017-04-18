@@ -25,6 +25,7 @@ public:
 	virtual XMFLOAT3 GetColor() = 0;
 	light_id GetLightID() { return m_lightid; };
 
+	void PickingProc() = 0;
 
 protected:
 	//light는 버퍼를 따로 가지지 않는다.

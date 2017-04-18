@@ -32,21 +32,17 @@ void CTerrain::SetTerrainContainer(CTerrainContainer * pTerrainContainer){
 	m_pTerrainContainer = pTerrainContainer;
 }
 
-//void CTerrain::RegistToContainer(){
-//	m_bRender = true;
-//}
-//
-//void CTerrain::RegistToContainer2(){
-//	if(m_bRender){
-//		CGameObject::RegistToContainer();
-//	}
-//	m_bRender = false;
-//}
-
 bool CTerrain::CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float & distance){
 	BoundingBox BoundingBox;
 	GetMainBoundingBox(BoundingBox);
 	bool b = BoundingBox.Intersects(xmvWorldCameraStartPos, xmvRayDir, distance);
+	XMFLOAT4 xmf3TerrainPickPos;
+	if (b) {
+		
+	}
+	else {
+
+	}
 	return b;
 }
 
@@ -59,6 +55,10 @@ CTerrain* CTerrain::CreateTerrain(CTerrainContainer * pTerrainContainer, int x, 
 	pTerrainContainer->GetSpaceContainer()->AddObject(pTerrain);
 
 	return pTerrain;
+}
+
+void CTerrain::LoadInfo()
+{
 }
 
 CTerrain::CTerrain() : CGameObject("terrain", tag::TAG_TERRAIN) {

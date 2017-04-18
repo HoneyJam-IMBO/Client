@@ -2,9 +2,8 @@
 #include "Stemp.h"
 #include "StempManager.h"
 
-bool CStemp::Begin(){
+void CStemp::Begin(){
 	m_nIndex = m_pStempManager->GetStemps().size();
-	return true;
 }
 
 bool CStemp::End(){

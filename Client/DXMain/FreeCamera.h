@@ -30,6 +30,9 @@ public:
 	//---------------------------------------카메라 조정---------------------------------
 
 public:
+	float m_fAngleX{ 0.f };
+	float m_fAngleY{ 0.f };
+public:
 	CFreeCamera();
 	virtual ~CFreeCamera();
 

@@ -38,11 +38,18 @@ public:
 	//light info setter
 	void SetSpotLightData(SPOT_LIGHT data) { m_SpotData = data; }
 	virtual void SetLength(float len);
+	float GetLength() { return m_SpotData.SpotLightRange; }
 	virtual void SetRange(float outer, float inner = 0.0f);
+	float GetInner() { return m_SpotData.fInnerAngle; }
+	void SetInner(float inner);
+	float GetOuter() { return m_SpotData.fOuterAngle; }
+	void SetOuter(float outer);
 	virtual void SetColor(float r, float g, float b);//color
 	virtual XMFLOAT3 GetColor();
 	static CSpotLight* CreateSpotLight(float SpotLightRange, XMFLOAT3 SpotLightColor, float fOuterAngle, float fInnerAngle);
 
+	void PickingProc();
+	virtual void LoadInfo();
 private:
 	float m_fSpotLightRangeRcp{ 0.0 };
 	float m_fSpotCosOuterCone{ 0.0 };

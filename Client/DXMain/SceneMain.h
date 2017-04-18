@@ -27,7 +27,9 @@ struct LoadFileStruct {
 class CSceneMain :public CScene{
 
 public:
-	CGameObject* m_pObject{ nullptr };
+	CSceneMain(SCENE_ID eID, CDirectXFramework* pFrameWork);
+	~CSceneMain();
+public:
 	//-----------------------------------scene--------------------------
 	virtual bool Begin();
 	virtual bool End();
@@ -42,29 +44,19 @@ public:
 
 	//animation tool을 위한 함수
 	void CreateControllObject(string path);
-	void AddFBXAnimationInfo(string path);
 	
+	//Container Creater
+	void CreateSceneContainers();
 	void CreateTerrainContainer();
 	void CreateSkyBoxContainer();
-	
-	CTestObject* GetFBXObject() { return m_pFBXObject; }
-	void LoadScene(string path);
-private:
-	//tool 변수
-	//모든 생성 가능한 객체를 벡터로 미리 만들어 둔다.
-	//이 안의 모든 객체를 버튼으로써 제작한다.
-	vector<CGameObject*> m_vpObjectList;
-	vector<LoadFileStruct> m_LoadFileStruct;
 
-	//fbx object
+	CTestObject* GetFBXObject() { return m_pFBXObject; }
+private:
+	CGameObject* m_pObject{ nullptr };
+	
 	CTestObject* m_pFBXObject{ nullptr };
 	int m_MeshCnt{ 0 };
-	//tool 변수
 
-	//player
 	CPlayer* m_pPlayer{ nullptr };
-	//player
-public:
-	CSceneMain(SCENE_ID eID, CDirectXFramework* pFrameWork);
-	~CSceneMain();
+
 };

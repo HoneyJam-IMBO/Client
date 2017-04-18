@@ -2,7 +2,7 @@
 #include "SpaceContainer.h"
 #include "SceneMain.h"
 
-bool CSpaceContainer::Begin(){
+void CSpaceContainer::Begin(){
 
 	//한 사이드에 있는 공간의 개수
 	m_oneSideSpaceNum = static_cast<int>(pow(2, m_level));
@@ -17,26 +17,6 @@ bool CSpaceContainer::Begin(){
 	//공간 할당.
 	m_pStartSpace = new CSpace();
 	m_pStartSpace->Begin(this, m_size, m_level, XMVectorSet(0.f, 0.f, 0.f, 0.f));
-
-	//directional light
-/*	XMFLOAT4 m_DirToLight;
-	XMFLOAT4 m_DirLightColor;
-	XMFLOAT4 m_DirLightPower;
-
-	XMFLOAT4 m_AmbientDown;
-	XMFLOAT4 m_AmbientRange;
-	XMFLOAT4 m_AmbientUp;
-	XMFLOAT4 m_AmbientColor;
-	*/
-	m_pDirectionalLight = new CDirectionalLight;
-	m_pDirectionalLight->Begin(DIRECTIONAL_AMBIENT_LIGHT{
-		XMFLOAT4(1.0f, -1.0f, 1.0f, 0.0f),XMFLOAT4(0.1f, 0.1f, 0.1f, 0.0f) , XMFLOAT4(1.0f, 1.0f, 1.0f, 1.f),//dir
-		XMFLOAT4(0.1f, 0.1f, 0.1f, 1.f), XMFLOAT4(0.1f, 0.1f, 0.1f, 1.f), XMFLOAT4(0.1f, 0.1f, 0.1f, 1.f), XMFLOAT4(0.2f, 0.2f, 0.2f, 1.f)//ambient
-	});
-	m_pDirectionalLight->SetPosition(XMVectorSet(m_size / 2.f, m_size, m_size / 2.f, 0.f));
-	m_pDirectionalLight->Rotate(30.f, 0.f, 0.f);
-
-	return true;
 }
 
 bool CSpaceContainer::End(){
@@ -51,30 +31,15 @@ bool CSpaceContainer::End(){
 	m_pStartSpace->End();
 	m_pStartSpace = nullptr;
 
-	//directional light
-	if (m_pDirectionalLight) {
-		m_pDirectionalLight->End();
-		delete m_pDirectionalLight;
-	}
-	m_pDirectionalLight = nullptr;
-	//directional light
 	delete m_ppSpace;
 	m_ppSpace = nullptr;
 	return false;
 }
 
 void CSpaceContainer::Animate(float fTimeElapsed){
-	//directional light 등록
-	m_pDirectionalLight->RegistToContainer();
-
 	//all space animate
 	m_pStartSpace->Animate(fTimeElapsed);
-
-	//Render 그림그리는 space라는 것 초기화
-	for (int i = 0; i < m_nSpace; ++i) {
-		m_ppSpace[i]->SetbRender(false);
-	}
-
+	
 	//animate 이후에 분명히 block object가 등장한다.
 	if (false == m_lpBlockObject.empty()) {//block object list가 empty가 아니라면
 		for (auto pObject : m_lpBlockObject) {//객체 다시 배치
@@ -84,10 +49,18 @@ void CSpaceContainer::Animate(float fTimeElapsed){
 	}
 }
 
-void CSpaceContainer::PrepareRender(shared_ptr<CCamera> pCamera, bool bShader){
-	//directional light
-	//RENDERER->SetDirectionalLight(m_pDirectionalLight);
-	m_pStartSpace->PrepareRender(pCamera, bShader);
+void CSpaceContainer::PrepareRenderOneSpace(shared_ptr<CCamera> pCamera, UINT renderFlag, int render_space){
+	if (render_space < 0) {
+		PrepareRender(pCamera, renderFlag);
+	}else{
+		for (int i = 0; i < m_nSpace; ++i) {
+			if(render_space == i) m_ppSpace[i]->PrepareRender(renderFlag);
+		}
+	}
+}
+
+void CSpaceContainer::PrepareRender(shared_ptr<CCamera> pCamera, UINT renderFlag){
+	m_pStartSpace->PrepareRender(pCamera, renderFlag);
 }
 
 void CSpaceContainer::AddBlockObjectList(CGameObject * pObject){
@@ -97,8 +70,7 @@ void CSpaceContainer::AddBlockObjectList(CGameObject * pObject){
 void CSpaceContainer::AddObject(CGameObject * pObject){
 	//현재 index 구하기
 	int current_index = SearchSpace(pObject->GetPosition());
-
-
+	
 	if (current_index < 0) {
 		current_index = 0;
 		pObject->SetPosition(XMVectorSet(0.f, 0.f, 0.f, 0.f));
@@ -130,31 +102,22 @@ int CSpaceContainer::SearchSpace(XMVECTOR xmvPos){
 	XMFLOAT3 xmf3Pos;
 	XMStoreFloat3(&xmf3Pos, xmvPos);
 	int x = static_cast<int>(xmf3Pos.x);
-	//int y = xmf3Pos.y;
 	int z = static_cast<int>(xmf3Pos.z);
-
 
 	//자신의 위치를 이용해 인덱스를 얻어옴
 	int indexX = (int)x / m_oneSpaceSize;
-	//int indexY = (int)y / m_oneSpaceSize;
 	int indexZ = (int)z / m_oneSpaceSize;
-
-
 
 	int index = indexX + (indexZ * m_oneSideSpaceNum);
 
 	//예외 처리 범위 밖
 	if (index < 0 || index >= m_nSpace) {
 		return -1;
-		//return 0;
 	}
 	if (x < 0 || z < 0 ||
 		x > m_size || z > m_size) {
 		return -1;
-		//return 0;
 	}
-	//예외 처리 범위 밖
-
 
 	return index;
 }
@@ -164,9 +127,6 @@ void CSpaceContainer::AddSpace(UINT index, CSpace * pSpace){
 }
 
 void CSpaceContainer::ChangeSpaceData(){
-	//directional light
-	m_pDirectionalLight->SetPosition(XMVectorSet(m_size / 2.f, m_size, m_size / 2.f, 0.f));
-
 	//1. space안의 모든 객체 임시 저장
 	vector<CGameObject*> m_vTempObjects;//임시 객체 벡터
 	for (int i = 0; i < m_nSpace; ++i) {//모든 space에 대해서
@@ -218,12 +178,6 @@ CGameObject * CSpaceContainer::PickObject(XMVECTOR xmvWorldCameraStartPos, XMVEC
 		}
 	}
 
-	if (m_pDirectionalLight->CheckPickObject(xmvWorldCameraStartPos, xmvRayDir, fHitDistance)) {
-		if (fNearHitDistance > fHitDistance) {
-			pNearObj = m_pDirectionalLight;
-		}
-	}
-
 	return pNearObj;
 }
 
@@ -234,6 +188,105 @@ CSpaceContainer * CSpaceContainer::CreateSpaceContainer(int size, int lv){
 	pSpaceContainer->Begin();
 	return pSpaceContainer;
 }
+
+void CSpaceContainer::ClearAllObjects(){
+	for (int i = 0; i < m_nSpace; ++i) {//모든 공간의
+		for (auto v : m_ppSpace[i]->GetmlpObject()) {//모든 map의
+			for (auto pObject : v.second) {//모든 vector
+				pObject->End();
+				delete pObject;
+			}
+			v.second.clear();
+		}
+		m_ppSpace[i]->GetmlpObject().clear();
+	}
+	DEBUGER->ClearDebuger();
+}
+
+void CSpaceContainer::SaveObjectInfos(){
+	UINT nObject{ 0 };
+	for (int i = 0; i < m_nSpace; ++i) {//모든 공간의
+		for (auto v : m_ppSpace[i]->GetmlpObject()) {//모든 map의
+			for (auto pObject : v.second) {//모든 vector
+				if (pObject->GetTag() == TAG_TERRAIN) continue;
+				if (pObject->GetTag() == TAG_SPACE) continue;
+
+				//즉 모든 객체
+				nObject++;
+			}
+		}
+	}
+	EXPORTER->WriteUINT(nObject);
+	EXPORTER->WriteEnter();
+	//save
+	for (int i = 0; i < m_nSpace; ++i) {//모든 공간의
+		for (auto v : m_ppSpace[i]->GetmlpObject()) {//모든 map의
+			for (auto pObject : v.second) {//모든 vector
+				if (pObject->GetTag() == TAG_TERRAIN) continue;
+				if (pObject->GetTag() == TAG_SPACE) continue;
+				//즉 모든 객체
+				EXPORTER->WriteEnter();
+			}
+		}
+	}
+	EXPORTER->WriteEnter();
+}
+
+void CSpaceContainer::LoadObjectInfos(){
+	UINT nObject = IMPORTER->ReadUINT();
+	for (int i = 0; i < nObject; ++i) {
+		tag t = (tag)IMPORTER->ReadUINT();
+		string name = IMPORTER->Readstring();
+		XMFLOAT4X4 xmf4x4Wolrd = IMPORTER->ReadFloat4x4();
+
+		switch (t) {
+		case TAG_LIGHT:
+			if (name == "pointlight") {
+				float fRange = IMPORTER->ReadFloat();
+				float r = IMPORTER->ReadFloat();
+				float g = IMPORTER->ReadFloat();
+				float b = IMPORTER->ReadFloat();
+				XMFLOAT3 xmf3Color = XMFLOAT3(r, g, b);
+
+				CPointLight* pLight = CPointLight::CreatePointLight(fRange, xmf3Color);
+				pLight->SetWorldMtx(XMLoadFloat4x4(&xmf4x4Wolrd));
+				AddObject(pLight);
+			}
+			else if (name == "spotlight") {
+				float inner = IMPORTER->ReadFloat();
+				float outer = IMPORTER->ReadFloat();
+
+				float r = IMPORTER->ReadFloat();
+				float g = IMPORTER->ReadFloat();
+				float b = IMPORTER->ReadFloat();
+				XMFLOAT3 xmf3Color = XMFLOAT3(r, g, b);		
+				float fRange = IMPORTER->ReadFloat();
+
+				CSpotLight* pLight = CSpotLight::CreateSpotLight(fRange, xmf3Color, outer, inner);
+				pLight->SetWorldMtx(XMLoadFloat4x4(&xmf4x4Wolrd));
+				AddObject(pLight);
+			}
+			else if (name == "capsulelight") {
+				float r = IMPORTER->ReadFloat();
+				float g = IMPORTER->ReadFloat();
+				float b = IMPORTER->ReadFloat();
+				XMFLOAT3 xmf3Color = XMFLOAT3(r, g, b);
+
+				float fLen = IMPORTER->ReadFloat();
+				float fRange = IMPORTER->ReadFloat();
+
+				CCapsuleLight* pLight = CCapsuleLight::CreateCapsuleLight(fLen, xmf3Color, fRange);
+				pLight->SetWorldMtx(XMLoadFloat4x4(&xmf4x4Wolrd));
+				AddObject(pLight);
+			}
+			break;
+		default:
+			CGameObject* pObject = CGameObject::CreateObject(name, t, XMLoadFloat4x4(&xmf4x4Wolrd));
+			AddObject(pObject);
+		}
+	}
+}
+
 
 CSpaceContainer::CSpaceContainer() : CObject("spacecontainer"){
 

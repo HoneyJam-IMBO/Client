@@ -5,7 +5,6 @@ struct VS_OUTPUT
 {
 	float4 position : SV_POSITION;
 	float4 color : COLOR0;
-	float3 positionV : TEXCOORD0;
 };
 
 // (보간된) 색 데이터에 대한 통과 함수입니다.

@@ -8,12 +8,13 @@
 
 class CSpaceContainer : public CObject {
 public:
-	virtual bool Begin();
-	virtual bool End();
+	void Begin();
+	bool End();
 
 	//space controller
 	void Animate(float fTimeElapsed);
-	void PrepareRender(shared_ptr<CCamera> pCamera, bool bShader = false);
+	void PrepareRenderOneSpace(shared_ptr<CCamera> pCamera, UINT renderFlag = RTAG_TERRAIN | RTAG_STATIC_OBJECT | RTAG_DYNAMIC_OBJECT | RTAG_LIGHT, int render_space = -1);
+	void PrepareRender(shared_ptr<CCamera> pCamera, UINT renderFlag = RTAG_TERRAIN | RTAG_STATIC_OBJECT | RTAG_DYNAMIC_OBJECT | RTAG_LIGHT);
 	//animate하다가 해당 공간을 벗어난 객체 임시 저장소
 	void AddBlockObjectList(CGameObject* pObject);
 	void AddObject(CGameObject* pObject);
@@ -27,17 +28,12 @@ public:
 	CGameObject* PickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float& distanse);
 	//space controller
 
-	//directional light
-	void SetDirectionalLight(CDirectionalLight* pDirectionalLight) { m_pDirectionalLight = pDirectionalLight; }
-	CDirectionalLight* GetDirectionalLight() { return m_pDirectionalLight; }
-	//directional light
-
 	static CSpaceContainer* CreateSpaceContainer(int size, int lv);
-private:
-	//directional light
-	CDirectionalLight* m_pDirectionalLight{ nullptr };
-	//directional light
 
+	void ClearAllObjects();
+	void SaveObjectInfos();
+	void LoadObjectInfos();
+private:
 	//space들을 관리한다.
 	CSpace** m_ppSpace{ nullptr };
 	//쿼드 트리의 루트노드에 해당하는 startSpace 관리
@@ -61,6 +57,7 @@ public:
 	~CSpaceContainer();
 
 	//set get
+	CSpace** GetAllSpace() { return m_ppSpace; }
 	list<CGameObject*>& GetBlockObjectList() { return m_lpBlockObject; }
 	CSpace* GetStartSpace() { return m_pStartSpace; }
 	UINT GetSpaceNum() { return m_nSpace; }

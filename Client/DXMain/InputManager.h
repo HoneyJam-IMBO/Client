@@ -14,7 +14,7 @@
 #define DIR_UP				0x10
 #define DIR_DOWN			0x20
 #define DIR_RUN				0x21
-enum YT_MouseWheel{
+enum YT_MouseWheel {
 	WHEEL_UP = 1,
 	WHEEL_DOWN = -1,
 	WHEEL_NON = 0,

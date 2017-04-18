@@ -23,6 +23,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>DXMain</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>Main</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -76,8 +77,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>..\..\Assets\import\FBXSDK\Lib\debug;..\..\Assets\import\FW1FontWrapper_1_1\x64;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;..\..\Assets\import\AntTweakBar_116\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>..\..\Assets\import\FBXSDK\Include;..\..\Assets\import\FW1FontWrapper_1_1;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;..\..\Assets\import\AntTweakBar_116\AntTweakBar\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\Assets\import\Third;..\..\Assets\import\FBXSDK\Lib\debug;..\..\Assets\import\FW1FontWrapper_1_1\x64;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;..\..\Assets\import\AntTweakBar_116\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\Assets\import\Third;..\..\Assets\import\FBXSDK\Include;..\..\Assets\import\FW1FontWrapper_1_1;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;..\..\Assets\import\AntTweakBar_116\AntTweakBar\include;$(IncludePath)</IncludePath>
     <ReferencePath>$(VC_ReferencesPath_x64);</ReferencePath>
     <ExecutablePath>$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(FxCopDir);$(PATH);</ExecutablePath>
   </PropertyGroup>
@@ -88,10 +89,10 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\..\Assets\import\FBXSDK\Include;..\..\Assets\import\FW1FontWrapper_1_1;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;..\..\Assets\import\AntTweakBar_116\AntTweakBar\include;$(IncludePath)</IncludePath>
-    <LibraryPath>..\..\Assets\import\FBXSDK\\Lib\release;..\..\Assets\import\FW1FontWrapper_1_1\x64;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;..\..\Assets\import\AntTweakBar_116\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>..\..\Assets\import\Third;..\..\Assets\import\FBXSDK\Include;..\..\Assets\import\FW1FontWrapper_1_1;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;..\..\Assets\import\AntTweakBar_116\AntTweakBar\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\..\Assets\import\Third;..\..\Assets\import\FBXSDK\\Lib\release;..\..\Assets\import\FW1FontWrapper_1_1\x64;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;..\..\Assets\import\AntTweakBar_116\AntTweakBar\lib;$(LibraryPath)</LibraryPath>
     <ReferencePath>$(VC_ReferencesPath_x64);</ReferencePath>
-    <ExecutablePath>$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(FxCopDir);$(PATH);</ExecutablePath>
+    <ExecutablePath>$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(MSBuild_ExecutablePath);$(FxCopDir);$(PATH)</ExecutablePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -105,6 +106,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>windowscodecs.lib;dxgi.lib;d3d11.lib;d2d1.lib;dwrite.lib;%(AdditionalDependencies);libfbxsdk.lib;libfbxsdk-md.lib;libfbxsdk-mt.lib;libfbxsdk.lib</AdditionalDependencies>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -119,8 +121,9 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3dx11d.lib;dxgi.lib;d3d11.lib;FW1FontWrapper.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\강지훈\OneDrive\프로젝트\Assets\import\FBXSDK\Lib\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>DirectXTexd.lib;d3dx11d.lib;dxgi.lib;d3d11.lib;FW1FontWrapper.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\Assets\import\FBXSDK\Lib\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(ProjectDir)%(Filename).cso</ObjectFileOutput>
@@ -143,6 +146,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>windowscodecs.lib;dxgi.lib;d3d11.lib;d2d1.lib;dwrite.lib;%(AdditionalDependencies);libfbxsdk.lib;libfbxsdk-md.lib;libfbxsdk-mt.lib;libfbxsdk.lib;libfbxsdk-md.lib;libfbxsdk-mt.lib;libfbxsdk.lib</AdditionalDependencies>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -161,18 +165,26 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3dx11d.lib;dxgi.lib;d3d11.lib;FW1FontWrapper.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>DirectXTex.lib;d3dx11d.lib;dxgi.lib;d3d11.lib;FW1FontWrapper.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <LargeAddressAware>true</LargeAddressAware>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\UIObject.h" />
-    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\UIRenderCont.h" />
-    <ClInclude Include="Function.h" />
-    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\Loading.h" />
-    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\SceneMgr.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\CameraMgr.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\Define.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\Enum.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\Function.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\Loading.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\LoadingBack.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\SceneMgr.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\Struct.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\UIObject.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\UIRenderer.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\WaterMesh.h" />
+    <ClInclude Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\WaterRenderer.h" />
     <ClInclude Include="Animater.h" />
     <ClInclude Include="AnimationInfo.h" />
     <ClInclude Include="AORenderer.h" />
@@ -189,6 +201,7 @@
     <ClInclude Include="ControlPoint.h" />
     <ClInclude Include="CoordinateSys.h" />
     <ClInclude Include="CoordinateSysMesh.h" />
+    <ClInclude Include="dds.h" />
     <ClInclude Include="Debuger.h" />
     <ClInclude Include="DebugFontData.h" />
     <ClInclude Include="DebugRenderContainer.h" />
@@ -225,8 +238,6 @@
     <ClInclude Include="SplattingInfo.h" />
     <ClInclude Include="SplattingInfoManager.h" />
     <ClInclude Include="SSLR.h" />
-    <ClInclude Include="Stemp.h" />
-    <ClInclude Include="StempManager.h" />
     <ClInclude Include="TestCube.h" />
     <ClInclude Include="TxtExporter.h" />
     <ClInclude Include="TxtImporter.h" />
@@ -277,9 +288,14 @@
     <ClInclude Include="SkeletonData.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\Loading.cpp" />
-    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\UIObject.cpp" />
-    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\Client\DXMain\UIRenderCont.cpp" />
+    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\CameraMgr.cpp" />
+    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\Loading.cpp" />
+    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\LoadingBack.cpp" />
+    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\SceneMgr.cpp" />
+    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\UIObject.cpp" />
+    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\UIRenderer.cpp" />
+    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\WaterMesh.cpp" />
+    <ClCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\WaterRenderer.cpp" />
     <ClCompile Include="Animater.cpp" />
     <ClCompile Include="AnimationInfo.cpp" />
     <ClCompile Include="AORenderer.cpp" />
@@ -296,6 +312,7 @@
     <ClCompile Include="ControlPoint.cpp" />
     <ClCompile Include="CoordinateSys.cpp" />
     <ClCompile Include="CoordinateSysMesh.cpp" />
+    <ClCompile Include="dds.cpp" />
     <ClCompile Include="Debuger.cpp" />
     <ClCompile Include="DebugFontData.cpp" />
     <ClCompile Include="DebugRenderContainer.cpp" />
@@ -332,8 +349,6 @@
     <ClCompile Include="SplattingInfo.cpp" />
     <ClCompile Include="SplattingInfoManager.cpp" />
     <ClCompile Include="SSLR.cpp" />
-    <ClCompile Include="Stemp.cpp" />
-    <ClCompile Include="StempManager.cpp" />
     <ClCompile Include="TestCube.cpp" />
     <ClCompile Include="TxtExporter.cpp" />
     <ClCompile Include="TxtImporter.cpp" />
@@ -384,7 +399,6 @@
     <ClCompile Include="Updater.cpp" />
     <ClCompile Include="VertexData.cpp" />
     <ClCompile Include="SkeletonData.cpp" />
-    <ClCompile Include="SceneMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DXMain.rc" />
@@ -395,6 +409,60 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\PSRefraction.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\PSUI.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\PSWater.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\VSRefraction.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\VSUI.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="..\..\..\..\..\0. JH%27s Folder\Study\MainClient\client\DXMain\VSWater.hlsl">
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="CSAONormalDepthDownScale.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
@@ -413,6 +481,34 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="GSDebugDepthTexture.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="PSDebugDepthTexture.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="VSDebugDepthTexture.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Occlussion.hlsl">
@@ -667,8 +763,6 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="PSPointLight.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
@@ -818,6 +912,7 @@
   <ItemGroup>
     <None Include="CalcCapsuleLight.hlsli" />
     <None Include="CalcDirectionalLight.hlsli" />
+    <None Include="CalcDirectionalShadow.hlsli" />
     <None Include="CalcPointLight.hlsli" />
     <None Include="CalcSpotLight.hlsli" />
     <None Include="ClassDiagram.cd" />

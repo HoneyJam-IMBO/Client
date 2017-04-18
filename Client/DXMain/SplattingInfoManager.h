@@ -22,7 +22,6 @@ public:
 	virtual void CleanShaderState();
 	virtual void UpdateShaderState();
 
-	void CreateSplattingTexture();
 	UINT GetCurIndex() { return m_nCurIndex; }
 	void SetCurIndex(UINT index) { m_nCurIndex = index; }
 	vector<CSplattingInfo*>& GetSplattingInfos() { return m_vSplattinfInfo; }

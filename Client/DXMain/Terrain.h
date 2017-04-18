@@ -13,11 +13,12 @@ public:
 	//----------------------------dxobject-----------------------------
 	void SetTerrainContainer(CTerrainContainer* pTerrainContainer);
 
-	//virtual void RegistToContainer();
-	//void RegistToContainer2();
 	virtual void PickingProc() {};
 	virtual bool CheckPickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float& distance);
 	static CTerrain* CreateTerrain(CTerrainContainer* pTerrainContainer, int x, int y);
+
+	virtual void LoadInfo();
+
 private:
 	CTerrainContainer* m_pTerrainContainer{ nullptr };
 

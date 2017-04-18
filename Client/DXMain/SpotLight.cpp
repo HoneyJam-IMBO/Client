@@ -65,7 +65,6 @@ void CSpotLight::SetLength(float len) {
 
 	float SpotLightRange = m_SpotData.SpotLightRange;
 	m_xmmtxScale = XMMatrixScalingFromVector(XMVECTOR(XMVectorSet(SpotLightRange, SpotLightRange, SpotLightRange, 1.0f)));
-
 }
 
 void CSpotLight::SetRange(float outer, float inner) {
@@ -85,13 +84,40 @@ void CSpotLight::SetRange(float outer, float inner) {
 
 }
 
+void CSpotLight::SetInner(float inner){
+	m_SpotData.fInnerAngle = inner;
+
+	float fCosInnerCone = cosf(XM_PI * m_SpotData.fInnerAngle / 180.0f);
+	float fCosOuterCone = cosf(XM_PI * m_SpotData.fOuterAngle / 180.0f);
+	float fSinOuterCone = sinf(XM_PI * m_SpotData.fOuterAngle / 180.0f);
+
+	m_fSpotLightRangeRcp = 1.0f / m_SpotData.SpotLightRange;
+	m_fSpotCosOuterCone = fCosOuterCone;
+	m_fSpotSinOuterCone = fSinOuterCone;
+	m_fSpotCosConeAttRcp = 1.0f / (fCosInnerCone - fCosOuterCone);
+
+}
+
+void CSpotLight::SetOuter(float outer){
+	m_SpotData.fOuterAngle = outer;
+	float fCosInnerCone = cosf(XM_PI * m_SpotData.fInnerAngle / 180.0f);
+	float fCosOuterCone = cosf(XM_PI * m_SpotData.fOuterAngle / 180.0f);
+	float fSinOuterCone = sinf(XM_PI * m_SpotData.fOuterAngle / 180.0f);
+
+	m_fSpotLightRangeRcp = 1.0f / m_SpotData.SpotLightRange;
+	m_fSpotCosOuterCone = fCosOuterCone;
+	m_fSpotSinOuterCone = fSinOuterCone;
+	m_fSpotCosConeAttRcp = 1.0f / (fCosInnerCone - fCosOuterCone);
+
+}
+
 void CSpotLight::SetColor(float r, float g, float b) {
 	m_SpotData.SpotLightColor = XMFLOAT3(r, g, b);
 }
 
 XMFLOAT3 CSpotLight::GetColor()
 {
-	return XMFLOAT3();
+	return m_SpotData.SpotLightColor;
 }
 
 CSpotLight* CSpotLight::CreateSpotLight(float SpotLightRange, XMFLOAT3 SpotLightColor, float fOuterAngle, float fInnerAngle){
@@ -104,6 +130,15 @@ CSpotLight* CSpotLight::CreateSpotLight(float SpotLightRange, XMFLOAT3 SpotLight
 	pLight->SetSpotLightData(data);
 	pLight->Begin();
 	return pLight;
+}
+
+//outter
+void CSpotLight::PickingProc(){
+	CGameObject::PickingProc();
+}
+
+void CSpotLight::LoadInfo(){
+
 }
 
 CSpotLight::CSpotLight() : CLight("spotlight") {

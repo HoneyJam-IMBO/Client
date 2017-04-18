@@ -6,6 +6,7 @@ bool CResourceManager::Begin() {
 	CreateTextures();
 	CreateRenderShaders();
 	CreateBuffers();
+	CreateGlobalBuffers();
 	CreateMaterials();
 	CreateMeshs();
 	CreateAnimaters();
@@ -20,6 +21,7 @@ bool CResourceManager::End() {
 	ReleaseTextures();
 	ReleaseRenderShaders();
 	ReleaseBuffers();
+	ReleaseGlobalBuffers();
 	ReleaseMaterials();
 	ReleaseMeshs();
 	ReleaseStempMeshs();
@@ -40,8 +42,8 @@ void CResourceManager::CreateSamplers() {
 		D3D11_COMPARISON_ALWAYS, 0, D3D11_FLOAT32_MAX);
 	CreateSampler("CLAMP_POINT", 3, BIND_DS | BIND_PS, D3D11_TEXTURE_ADDRESS_CLAMP, D3D11_FILTER_MIN_MAG_MIP_POINT,
 		D3D11_COMPARISON_ALWAYS, 0, D3D11_FLOAT32_MAX);
-	CreateSampler("SHADOW", 4, BIND_PS, D3D11_TEXTURE_ADDRESS_BORDER, D3D11_FILTER_COMPARISON_MIN_MAG_MIP_POINT,
-		D3D11_COMPARISON_LESS_EQUAL, 0, D3D11_FLOAT32_MAX, 1, 0);
+	CreateSampler("SHADOW", 4, BIND_PS, D3D11_TEXTURE_ADDRESS_BORDER, D3D11_FILTER_MIN_MAG_MIP_LINEAR,
+		D3D11_COMPARISON_LESS, 0, D3D11_FLOAT32_MAX, 1);
 
 	for (auto pSampler : m_mSampler) {
 		pSampler.second->SetShaderState();
@@ -50,7 +52,6 @@ void CResourceManager::CreateSamplers() {
 
 void CResourceManager::CreateTextures() {
 	//texture
-	//CreateTexture("DEFAULT", _T("../../Assets/default.jpg"), PS_TEXTURE, BIND_PS);
 }
 
 void CResourceManager::CreateRenderShaders() {
@@ -61,7 +62,7 @@ void CResourceManager::CreateRenderShaders() {
 
 	//animation render shader
 	CreateRenderShader("AnimationObject", TEXT("AnimationObject"),
-		IE_POSITION | IE_NORMAL | IE_TEXCOORD | IE_BONEWEIGHT | IE_BONEINDEX);
+		IE_POSITION | IE_NORMAL | IE_TEXCOORD | IE_BONEWEIGHT | IE_BONEINDEX | IE_INSWORLDMTX);
 	//animation render shader
 
 	//post processing shader
@@ -84,11 +85,18 @@ void CResourceManager::CreateRenderShaders() {
 	CreateRenderShader("DebugTexture", TEXT("DebugTexture"),
 		IE_INSFLOAT_B_A | IE_INSFLOAT_B_B,
 		BIND_VS | BIND_GS | BIND_PS);
-
+	CreateRenderShader("DebugDepthTexture", TEXT("DebugDepthTexture"),
+		IE_INSFLOAT_B_A | IE_INSFLOAT_B_B,
+		BIND_VS | BIND_GS | BIND_PS);
 	//shader
 	CreateRenderShader("SkyBox", TEXT("SkyBox"),
 		IE_POSITION | IE_TEXCOORD | IE_INSWORLDMTX);
 
+	CreateRenderShader("UI", L"UI",
+		IE_POSITION | IE_TEXCOORD);
+
+	//CreateRenderShader("Water", L"Water",
+	//	IE_POSITION | IE_TEXCOORD);
 
 	//coordinatesys render shader
 	CreateRenderShader("CoordinateSys", L"CoordinateSys",
@@ -138,31 +146,6 @@ void CResourceManager::CreateRenderShaders() {
 void CResourceManager::CreateMeshs() {
 	//mesh
 	shared_ptr<CMesh> pMesh;
-
-	pMesh = make_shared<CTestMesh>();
-	pMesh->Begin();
-	m_mvMesh["Rect1"].push_back(pMesh);
-
-	pMesh = make_shared<CTestMesh>();
-	pMesh->Begin();
-	m_mvMesh["Rect2"].push_back(pMesh);
-
-	pMesh = make_shared<CTestMesh>();
-	pMesh->Begin();
-	m_mvMesh["Rect3"].push_back(pMesh);
-
-	pMesh = make_shared<CTestMesh>();
-	pMesh->Begin();
-	m_mvMesh["Rect4"].push_back(pMesh);
-
-	pMesh = make_shared<CTestMesh>();
-	pMesh->Begin();
-	m_mvMesh["Rect5"].push_back(pMesh);
-
-	pMesh = make_shared<CPlaneMesh>();
-	pMesh->Begin();
-	m_mvMesh["Plane"].push_back(pMesh);
-
 	pMesh = make_shared<CDirectionalLightMesh>();
 	pMesh->Begin();
 	m_mvMesh["DirectionalLight"].push_back(pMesh);
@@ -196,89 +179,44 @@ void CResourceManager::CreateMeshs() {
 	pMesh->Begin();
 	m_mvMesh["DebugTexture"].push_back(pMesh);
 
+	//UI
+	pMesh = make_shared<CTestDeferredMesh>();
+	pMesh->Begin();
+	m_mvMesh["UI"].push_back(pMesh);
+
 	pMesh = make_shared<CCoordinateSysMesh>();
 	pMesh->Begin();
 	m_mvMesh["CoordinateSys"].push_back(pMesh);
+
 	//skybox
 	pMesh = make_shared<CSkyBoxMesh>();
 	pMesh->Begin();
 	m_mvMesh["SkyBox"].push_back(pMesh);
 
-	//#ifdef USE_ANIM
-	//	shared_ptr<CFileBasedMesh> pTestFBXMesh = make_shared<CFileBasedMesh>();
-	//#else
-	//	shared_ptr<CUseFBXMesh> pTestFBXMesh = make_shared<CUseFBXMesh>();
-	//#endif
+	//Water
+	pMesh = make_shared<CWaterMesh>();
+	pMesh->Begin();
+	m_mvMesh["Water"].push_back(pMesh); 
 
-
-	//ddd
-	//CreateMultiMesh("../../Assets/Model/fbx/1-2/Die_85.fbx", "Test");
-	//CreateAnimater("../../Assets/Model/fbx/1-1/ATK1_45.fbx");
-
-	//CreateMultiMesh("../../Assets/Model/fbx/Bless_Elf.fbx");
-	//CreateMultiMesh("../../Assets/Model/fbx/2-1/ATK1_45.fbx");
-
-
-	//pTestFBXMesh->Begin("../../Assets/Model/fbx/Bless_Elf.fbx");
-	//pTestFBXMesh->Begin("../../Assets/Model/Test/02_Character_Juno/Juno_idle.fbx");
-	//pTestFBXMesh->Begin("../../Assets/Model/Test/unit04_attack.fbx");
-	//pTestFBXMesh->Begin("../../Assets/Model/Test/assback3_11_attack.fbx");
-	//pTestFBXMesh->Begin("../../Assets/Model/Test/character1_move_r.fbx");
-	//pTestFBXMesh->Begin("../../Assets/Model/Test/humanoid.fbx");
-	//FBXIMPORTER->Begin("../../Assets/Model/Test/03_Monster/Zombunny_running.fbx");
-	//pTestFBXMesh->Begin();
-	//shared_ptr<CAnimater> pAnimater = make_shared<CAnimater>();
-	//pAnimater->Begin();
-	//CAnimationInfo* pAnimationInfo = new CAnimationInfo();
-	//pAnimationInfo->Begin(pAnimater);
-	//m_mAnimater.insert(pairAnimater("BUNNY", pAnimater));
-	//FBXIMPORTER->End();
-	//
-	//m_mMesh.insert(pairMesh("BUNNY", pTestFBXMesh));
-
-	CreateStempMeshs();
-	//mesh
 }
-
 void CResourceManager::CreateStempMeshs() {
 	
-	//vector<wstring> vFile;
-	//DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".fbx");
-	//DIRECTORYFINDER->GetFiles(vFile, L"../inputdata", true, true, L".FBX");
-	//DIRECTORYFINDER->GetFiles(vFile, L"../outputdata", true, true, L".gjm");
-	//DIRECTORYFINDER->GetFiles(vFile, L"../outputdata", true, true, L".GJM");
-	//
-	//int i{ 0 };
-	//string name;
-	//for (auto fileName : vFile) {
-	//	string sPath{ "" };
-	//	sPath.assign(fileName.begin(), fileName.end());
-	//	/*여기서 file 이름을 가지고 name을 정하도록 한다. 
-	//	file 명에서 확장자를 제거하면 될 것이다.
-	//	sprintf(name, "파 일 명", i);*/
-	//	name = GetFileName(sPath);
-	//	//sprintf(name, "StempMesh%d", i++);
-	//	
-	//}
 }
 void CResourceManager::CreateBuffers() {
 	//instance buffer
 	shared_ptr<CBuffer> pConstantBuffer;
-
 	CreateInstancingBuffer("DEFAULTIB", 1000, sizeof(VS_VB_INSTANCE));
-
 	CreateInstancingBuffer("50000IB", 50000, sizeof(VS_VB_INSTANCE));
-
 	CreateInstancingBuffer("ONEIB", 1, sizeof(VS_VB_INSTANCE));
 
-	//CreateInstancingBuffer("SpaceIB", (UINT)SPACE_NUM, sizeof(VS_VB_INSTANCE));
-	//CreateInstancingBuffer("TerrainIB", (UINT)SPACE_NUM, sizeof(VS_VB_INSTANCE));
 
 	CreateInstancingBuffer("BoundingBoxIB", BOUNDINGBOX_NUM, sizeof(VS_VB_BOUNDINGBOX_INSTANCE));
 	CreateInstancingBuffer("CoordinateSysIB", COORD_NUM, sizeof(VS_VB_INSTANCE));
 	//debug texture
 	CreateInstancingBuffer("DebugTextureIB", 1, sizeof(VS_VB_DEBUG_TEXTURE_INSTANCE));
 	//instance buffer
+
+
 	//test fbx
 	CreateConstantBuffer("FBX", 1, sizeof(VS_VB_INSTANCE), VS_CB_MODEL, BIND_VS);
 	//light buffer
@@ -293,6 +231,9 @@ void CResourceManager::CreateBuffers() {
 	CreateConstantBuffer("TerrainCB", 1, sizeof(TERRAIN_GLOBAL_VALUE), VS_GLOBAL_BUFFER_SLOT, BIND_VS | BIND_DS);
 }
 
+void CResourceManager::CreateGlobalBuffers() {
+	
+}
 
 void CResourceManager::CreateMaterials() {
 
@@ -362,8 +303,8 @@ shared_ptr<CTexture> CResourceManager::CreateTexture(string name, ID3D11ShaderRe
 	return m_mTexture[name];
 }
 
-shared_ptr<CSampler> CResourceManager::CreateSampler(string name, UINT Slot, UINT BindFlags, D3D11_TEXTURE_ADDRESS_MODE Mode, D3D11_FILTER Filter, D3D11_COMPARISON_FUNC ComparisionFunc, float MinLOD, float MaxLOD, float BorderColor, UINT MaxAnisotropy) {
-	shared_ptr<CSampler> pSampler = CSampler::CreateSampler(Slot, BindFlags, Mode, Filter, ComparisionFunc, MinLOD, MaxLOD, BorderColor, MaxAnisotropy);
+shared_ptr<CSampler> CResourceManager::CreateSampler(string name, UINT Slot, UINT BindFlags, D3D11_TEXTURE_ADDRESS_MODE Mode, D3D11_FILTER Filter, D3D11_COMPARISON_FUNC ComparisionFunc, float MinLOD, float MaxLOD, float BorderColor) {
+	shared_ptr<CSampler> pSampler = CSampler::CreateSampler(Slot, BindFlags, Mode, Filter, ComparisionFunc, MinLOD, MaxLOD, BorderColor);
 	if (m_mSampler.find(name) != m_mSampler.end()) {
 		m_mSampler[name]->End();
 		m_mSampler.erase(name);
@@ -405,6 +346,15 @@ shared_ptr<CBuffer> CResourceManager::CreateInstancingBuffer(string name, UINT n
 	return m_mBuffer[name];
 }
 
+shared_ptr<CBuffer> CResourceManager::CreateGlobalBuffer(string name, UINT nObject, UINT BufferStride, UINT Slot, UINT BindFlag, UINT Offset) {
+	shared_ptr<CBuffer> pBuffer = CBuffer::CreateConstantBuffer(nObject, BufferStride, Slot, BindFlag, Offset);
+	if (m_mGlobalBuffer.find(name) != m_mGlobalBuffer.end()) {
+		m_mGlobalBuffer[name]->End();
+		m_mGlobalBuffer.erase(name);
+	}
+	m_mGlobalBuffer.insert(pairBuffer(name, pBuffer));
+	return m_mGlobalBuffer[name];
+}
 
 shared_ptr<CMaterial> CResourceManager::CreateMaterial(string name, XMFLOAT4 color, float specExp, float specIntensity) {
 	shared_ptr<CMaterial> pMaterial = CMaterial::CreateMaterial(color, specExp, specIntensity);;
@@ -448,10 +398,12 @@ UINT CResourceManager::CreateGJMResource(string path, string name) {
 
 	shared_ptr<CMesh> pMesh;
 	UINT nMeshCnt = IMPORTER->ReadUINT();
+	tag t = (tag)IMPORTER->ReadUINT();
 	for (UINT i = 0; i < nMeshCnt; ++i) {
-		//sprintf(pName, "%s%d", name.c_str(), i);
-		pMesh = CFileBasedMesh::CreateMeshFromGJMFile(name, i, bHasAnimation);
-		m_mvStempMesh[name].push_back(pMesh);
+		sprintf(pName, "%s", name.c_str());
+		pMesh = CFileBasedMesh::CreateMeshFromGJMFile(pName, i, bHasAnimation);
+		pMesh->SetTag(t);
+		m_mvStempMesh[name.c_str()].push_back(pMesh);
 	}
 	if (false == bHasAnimation) {
 		IMPORTER->End();
@@ -471,6 +423,7 @@ UINT CResourceManager::CreateGJMResource(string path, string name) {
 
 	IMPORTER->End();
 	return nMeshCnt;
+
 }
 UINT CResourceManager::CreateFBXResource(string path, string name) {
 	string sPath{ "" };
@@ -487,11 +440,12 @@ UINT CResourceManager::CreateFBXResource(string path, string name) {
 		for (UINT i = 0; i < FBXIMPORTER->GetMeshCnt(); ++i) {
 			sprintf(pName, "%s%d", name.c_str(), i);
 			pFBXMesh = CFileBasedMesh::CreateMeshFromFBXFile(name, i);
-			m_mvStempMesh[pName].push_back(pFBXMesh);
+			pFBXMesh->SetTag(TAG_DYNAMIC_OBJECT);
+			m_mvStempMesh[name.c_str()].push_back(pFBXMesh);
 		}
 
 		sprintf(pName, "%s", name.c_str());
-		shared_ptr<CAnimater> pAnimater = CAnimater::CreateAnimaterFromFBXFile();
+		shared_ptr<CAnimater> pAnimater = CAnimater::CreateAnimaterFromFBXFile(true);
 		CAnimationInfo* pAnimationInfo = CAnimationInfo::CreateAnimationInfoFromFBXFile(pAnimater);
 		m_mAnimater.insert(pairAnimater(pName, pAnimater));
 	}
@@ -499,7 +453,8 @@ UINT CResourceManager::CreateFBXResource(string path, string name) {
 		for (UINT j = 0; j < FBXIMPORTER->GetMeshCnt(); ++j) {
 			sprintf(pName, "%s%d", name.c_str(), j);
 			pFBXMesh = CFileBasedMesh::CreateMeshFromFBXFile(name, j);
-			m_mvStempMesh[pName].push_back(pFBXMesh);
+			pFBXMesh->SetTag(TAG_STATIC_OBJECT);
+			m_mvStempMesh[name.c_str()].push_back(pFBXMesh);
 		}
 	}
 
@@ -563,6 +518,13 @@ void CResourceManager::ReleaseStempMeshs() {
 	m_mvStempMesh.clear();
 }
 
+void CResourceManager::ReleaseAllResource()
+{
+	ReleaseTextures();
+	ReleaseStempMeshs();		//gjm
+	ReleaseAnimaters();
+}
+
 void CResourceManager::ReleaseMesh(string name) {
 	map<string, vector<shared_ptr<CMesh>>> ::iterator iter = m_mvMesh.find(name);
 	if (iter != m_mvMesh.end()) {
@@ -600,6 +562,13 @@ void CResourceManager::ReleaseBuffers() {
 	m_mBuffer.clear();
 }
 
+void CResourceManager::ReleaseGlobalBuffers() {
+	for (auto data : m_mGlobalBuffer) {
+		if (data.second)data.second->End();
+	}
+	m_mGlobalBuffer.clear();
+}
+
 void CResourceManager::ReleaseMaterials() {
 	for (auto data : m_mMaterial) {
 		if (data.second)data.second->End();
@@ -613,15 +582,6 @@ void CResourceManager::ReleaseAnimaters() {
 	}
 	m_mAnimater.clear();
 }
-void CResourceManager::ReleaseAllResource()
-{
-	//추후 수정
-	ReleaseTextures();
-	ReleaseStempMeshs();		//gjm
-	ReleaseAnimaters();
-}
-//Release
-//Release
 CResourceManager::CResourceManager() :CSingleTonBase<CResourceManager>("resourcemanager") {
 
 }

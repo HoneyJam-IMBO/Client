@@ -25,7 +25,7 @@ float4 main(DS_OUTPUT input) : SV_TARGET
 	mat.diffuseColor.xyz = gbd.Color;
 	mat.diffuseColor.w = 1.0f;
 	mat.specExp = g_SpecPowerRange.x + g_SpecPowerRange.y + gbd.SpecPow;
-	mat.specIntensity = gbd.SpecPow;
+	mat.specIntensity = gbd.SpecInt;
 
 	//월드 위치 복원
 	float3 positionW = CalcWorldPos(input.cpPos, gbd.LinearDepth);

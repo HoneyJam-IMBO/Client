@@ -6,6 +6,8 @@ bool CCamera::Begin() {
 
 	//변수 초기화
 	XMStoreFloat4x4(&m_xmf4x4View, XMMatrixIdentity());
+	XMStoreFloat4x4(&m_xmf4x4ReflectionView, XMMatrixIdentity());
+	
 	////ProjectionMtx 제작
 	//GenerateProjectionMatrix(fFov, fWidth / fHeight, fNear, fFar);
 	
@@ -41,9 +43,9 @@ void CCamera::SetPosition(XMVECTOR pos) {
 }
 XMMATRIX CCamera::GetWorldMtx() {
 	XMFLOAT4X4 xmf4x4World{
-		m_xmf3Right.x, m_xmf3Right.y, m_xmf3Right.z, 0,
-		m_xmf3Up.x, m_xmf3Up.y, m_xmf3Up.z, 0,
-		m_xmf3Look.x, m_xmf3Look.y, m_xmf3Look.z, 0,
+		m_xmf4x4View._11, m_xmf4x4View._21, m_xmf4x4View._31, 0,
+		m_xmf4x4View._12, m_xmf4x4View._22, m_xmf4x4View._32, 0,
+		m_xmf4x4View._13, m_xmf4x4View._23, m_xmf4x4View._33, 0,
 		m_xmf3Pos.x, m_xmf3Pos.y, m_xmf3Pos.z, 1
 	};
 	return XMLoadFloat4x4(&xmf4x4World);
@@ -61,49 +63,44 @@ void CCamera::GenerateProjectionMatrix(float fFov, float fRatio, float fNear, fl
 }
 //viewmtx 갱신
 void CCamera::UpdateViewMtx() {
-	XMStoreFloat3(&m_xmf3Look, XMVector3Normalize(XMLoadFloat3(&m_xmf3Look)));
-	XMStoreFloat3(&m_xmf3Right, XMVector3Cross(XMLoadFloat3(&m_xmf3Up), XMLoadFloat3(&m_xmf3Look)));
-	XMStoreFloat3(&m_xmf3Right, XMVector3Normalize(XMLoadFloat3(&m_xmf3Right)));
-	XMStoreFloat3(&m_xmf3Up, XMVector3Cross(XMLoadFloat3(&m_xmf3Look), XMLoadFloat3(&m_xmf3Right)));
-	XMStoreFloat3(&m_xmf3Up, XMVector3Normalize(XMLoadFloat3(&m_xmf3Up)));
 
-	m_xmf4x4View._11 = m_xmf3Right.x;
-	m_xmf4x4View._12 = m_xmf3Up.x;
-	m_xmf4x4View._13 = m_xmf3Look.x;
-
-	m_xmf4x4View._21 = m_xmf3Right.y;
-	m_xmf4x4View._22 = m_xmf3Up.y;
-	m_xmf4x4View._23 = m_xmf3Look.y;
-
-	m_xmf4x4View._31 = m_xmf3Right.z;
-	m_xmf4x4View._32 = m_xmf3Up.z;
-	m_xmf4x4View._33 = m_xmf3Look.z;
-
-	XMFLOAT3 xmfPos;
-	XMStoreFloat3(&xmfPos, XMVector3Dot(XMLoadFloat3(&m_xmf3Pos), XMLoadFloat3(&m_xmf3Right)));
-	m_xmf4x4View._41 = -xmfPos.x;
-
-	XMStoreFloat3(&xmfPos, XMVector3Dot(XMLoadFloat3(&m_xmf3Pos), XMLoadFloat3(&m_xmf3Up)));
-	m_xmf4x4View._42 = -xmfPos.x;
-
-	XMStoreFloat3(&xmfPos, XMVector3Dot(XMLoadFloat3(&m_xmf3Pos), XMLoadFloat3(&m_xmf3Look)));
-	m_xmf4x4View._43 = -xmfPos.x;
+	XMStoreFloat4x4(&m_xmf4x4View,
+		XMMatrixLookAtLH(XMLoadFloat3(&m_xmf3Pos),
+			XMVectorAdd(XMLoadFloat3(&m_xmf3Pos), XMLoadFloat3(&m_xmf3At)),
+			XMLoadFloat3(&m_xmf3UpDefault)));
 
 	//update frustum
 	m_OriBoundingFrustum.Transform(m_BoundingFrustum, GetWorldMtx());
 }
 
+void CCamera::UpdateReflectionViewMtx()
+{
+	XMFLOAT3 xmReflePos = { m_xmf3Pos.x, -m_xmf3Pos.y, m_xmf3Pos.z };
+	XMFLOAT3 xmRefleAt = { m_xmf3At.x, -m_xmf3At.y, m_xmf3At.z };
+	XMStoreFloat4x4(&m_xmf4x4ReflectionView,
+		XMMatrixLookAtLH(XMLoadFloat3(&xmReflePos),
+		XMVectorAdd(XMLoadFloat3(&xmReflePos), XMLoadFloat3(&xmRefleAt)),
+		XMLoadFloat3(&m_xmf3UpDefault)));
+}
+
 bool CCamera::IsInFrustum(BoundingBox& boundingBox){
+	//if (DISJOINT == m_BoundingFrustum.Contains(boundingBox)) return false;
+	//return true;
 	bool result = m_BoundingFrustum.Intersects(boundingBox);
 	return result;
 	//return true;
 }
 
-void CCamera::SetLookAt(XMVECTOR& xmvPos, XMVECTOR& xmvLookAt, XMVECTOR& xmvUp)
+void CCamera::SetLookAt(XMVECTOR xmvPos, XMVECTOR xmvLookAt, XMVECTOR xmvUp)
 {
-	XMStoreFloat4x4(&m_xmf4x4View, XMMatrixLookAtLH(xmvPos, xmvLookAt, xmvUp));
+	XMVECTOR vATpos = XMVectorAdd(xmvPos, xmvLookAt);
+
+	XMStoreFloat4x4(&m_xmf4x4View, XMMatrixLookAtLH(xmvPos, vATpos, xmvUp));
 
 	XMStoreFloat3(&m_xmf3Pos, xmvPos);
+	XMStoreFloat3(&m_xmf3At, xmvLookAt);
+	//XMStoreFloat3(&m_xmf3Pos, xmvPos);
+	
 	m_xmf3Right = XMFLOAT3(m_xmf4x4View._11, m_xmf4x4View._21, m_xmf4x4View._31);
 	m_xmf3Up = XMFLOAT3(m_xmf4x4View._12, m_xmf4x4View._22, m_xmf4x4View._32);
 	m_xmf3Look = XMFLOAT3(m_xmf4x4View._13, m_xmf4x4View._23, m_xmf4x4View._33);
@@ -131,8 +128,7 @@ void CCamera::UpdateShaderState() {
 	UpdateViewMtx();
 	XMMATRIX xmMtxView = XMLoadFloat4x4(&m_xmf4x4View);
 
-	XMStoreFloat4x4(&m_stCameraBufferData.m_xmf4x4View, XMMatrixTranspose(xmMtxView));
-	XMStoreFloat4x4(&m_stCameraBufferData.m_xmf4x4Proj, XMMatrixTranspose(xmMtxProjection));
+	XMStoreFloat4x4(&m_stCameraBufferData.m_xmf4x4ViewProjection, XMMatrixTranspose(XMMatrixMultiply(xmMtxView, xmMtxProjection)));
 	//정보 갱신
 
 	//상수버퍼 업데이트

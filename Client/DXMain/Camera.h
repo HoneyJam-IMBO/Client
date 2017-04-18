@@ -4,18 +4,14 @@
 struct GBUFFER_UNPACKING_DATA {
 	XMFLOAT4 PerspectiveValues;
 	XMFLOAT4X4 ViewInv;
-	XMFLOAT4X4 PerspectiveInv;
 };
 
 struct stCameraBuffer {
-	XMFLOAT4X4 m_xmf4x4View;
-	XMFLOAT4X4 m_xmf4x4Proj;
-	//directional
-	XMFLOAT4 m_CameraPos;
+	XMFLOAT4X4	m_xmf4x4ViewProjection;
+	XMFLOAT4	m_CameraPos;
 };
 
 class CPlayer;
-
 class CCamera :public DXObject{
 public:
 	//----------------------------dxobject-----------------------------
@@ -33,7 +29,7 @@ public:
 	bool IsInFrustum(BoundingBox& boundingBox);
 	//---------------------------------------카메라 조정---------------------------------
 	//lookat
-	void SetLookAt(XMVECTOR& xmvPos, XMVECTOR& xmvLookAt, XMVECTOR& xmvUp);
+	void SetLookAt(XMVECTOR xmvPos, XMVECTOR xmvLookAt, XMVECTOR xmvUp);
 	//position 강제 지정
 	virtual void SetPosition(XMVECTOR pos);
 	//회전
@@ -61,6 +57,7 @@ public:
 	void GenerateProjectionMatrix(float fFov, float fRatio, float fNear, float fFar);
 	//viewmtx 갱신
 	void UpdateViewMtx();
+	void UpdateReflectionViewMtx();
 	//버퍼는 아니지만 viewport
 	void SetViewport(DWORD xTopLeft, DWORD yTopLeft, DWORD nWidth, DWORD nHeight, float fMinZ, float fMaxZ);
 	//---------------------------------------카메라 버퍼 ------------------------------
@@ -73,6 +70,7 @@ public:
 	ID3D11Buffer* GetViewProjectionBuffer() { return m_pViewProjectionBuffer; }
 	ID3D11Buffer* GetGBufferUnpackingBuffer() { return m_pGBufferUnpackingBuffer; }
 	XMMATRIX GetViewMtx() { return XMLoadFloat4x4(&m_xmf4x4View); }
+	XMMATRIX GetReflectionViewMtx() { return XMLoadFloat4x4(&m_xmf4x4ReflectionView); }
 	XMMATRIX GetProjectionMtx() { return XMLoadFloat4x4(&m_xmf4x4Projection); }
 	XMFLOAT4X4& GetProjectionFloat4x4() { return m_xmf4x4Projection; }
 
@@ -101,6 +99,7 @@ protected:
 	stCameraBuffer m_stCameraBufferData;
 	ID3D11Buffer* m_pViewProjectionBuffer;
 	XMFLOAT4X4 m_xmf4x4View;
+	XMFLOAT4X4 m_xmf4x4ReflectionView;
 	XMFLOAT4X4 m_xmf4x4Projection;
 
 	//viewport
@@ -111,6 +110,9 @@ protected:
 	XMFLOAT3 m_xmf3Up;
 	XMFLOAT3 m_xmf3Look;
 	XMFLOAT3 m_xmf3Pos;
+
+	XMFLOAT3 m_xmf3At{ 0.f, 0.f, 1.f };
+	XMFLOAT3 m_xmf3UpDefault{ 0.f, 1.f, 0.f };
 
 	//-----------------------------------deferred light test--------------------
 	GBUFFER_UNPACKING_DATA m_GBufferUnpackingData;

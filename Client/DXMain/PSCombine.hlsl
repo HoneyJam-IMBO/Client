@@ -14,6 +14,7 @@ SamplerState gssWRAP_POINT : register(s1);
 SamplerState gssCLAMP_LINEAR : register(s2);
 SamplerState gssCLAMP_POINT : register(s3);
 
+
 struct VS_OUTPUT {
 	float4 position : SV_POSITION;
 	float2 UV : TEXCOORD0;
@@ -21,7 +22,7 @@ struct VS_OUTPUT {
 
 float4 main(VS_OUTPUT In) : SV_TARGET
 {
-	float rayIntensity = IntensityTex.Sample(gssCLAMP_LINEAR, In.UV);
+	float rayIntensity = IntensityTex.Sample(gssWRAP_LINEAR, In.UV);
 
 	return float4(RayColor * rayIntensity, 1.0f);
 }

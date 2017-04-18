@@ -3,19 +3,19 @@
 #include "InputManager.h"
 
 bool CInputManager::Begin() {
-//	m_stHashTable.clear();
-//
-//	//Pad Connect
-//	m_bConnect = false;
-//
-//	//Vibe State
-//	m_fVibrateionFrame = 0.0f;
-//	m_fVibrateDuringTime = GPAD_DURING_VIVERATE;
-//	m_bVibrate = false;
-//
-//
-//	m_bKeyState = new bool[YK_END];
-//
+	//	m_stHashTable.clear();
+	//
+	//	//Pad Connect
+	//	m_bConnect = false;
+	//
+	//	//Vibe State
+	//	m_fVibrateionFrame = 0.0f;
+	//	m_fVibrateDuringTime = GPAD_DURING_VIVERATE;
+	//	m_bVibrate = false;
+	//
+	//
+	//	m_bKeyState = new bool[YK_END];
+	//
 	memset(&m_pKeyBuffers, 0, sizeof(m_pKeyBuffers));
 	memset(&m_bDownCheck, 0, sizeof(m_bDownCheck));
 
@@ -29,7 +29,7 @@ bool CInputManager::End() {
 	return true;
 }
 
-void CInputManager::Update(float fTimeEleasped){
+void CInputManager::Update(float fTimeEleasped) {
 	INPUTMGR->SetWheel(WHEEL_NON);
 
 	//IsGamepadConnected(&m_bConnect);
@@ -38,16 +38,16 @@ void CInputManager::Update(float fTimeEleasped){
 	//if (m_bConnect)
 	//	UpdateGamePoad(fTimeEleasped);
 	//else
-	
+
 	UpdateKeyBoard();
-	if(m_bCapture)
+	if (m_bCapture)
 		UpdateMouse();
 }
-void CInputManager::UpdateKeyBoard(){
+void CInputManager::UpdateKeyBoard() {
 	GetKeyboardState(m_pKeyBuffers);
 }
 
-void CInputManager::UpdateMouse(){
+void CInputManager::UpdateMouse() {
 	POINT ptCursorPos;
 
 	//마우스를 캡쳐했으면 마우스가 얼마만큼 이동하였는 가를 계산한다.
@@ -65,18 +65,18 @@ void CInputManager::UpdateMouse(){
 }
 
 //Key Up
-bool CInputManager::KeyUp(eVK input){
+bool CInputManager::KeyUp(eVK input) {
 	//if (IsGamepadConnected())
 	//	return KeyPadUp(input);
 	return KeyBoardUp(input);
 }
 bool CInputManager::KeyBoardUp(eVK input)
 {
-	if (m_pKeyBuffers[input] & 0xF0){
+	if (m_pKeyBuffers[input] & 0xF0) {
 		m_bUpCheck[input] = true;
 		return false;
 	}
-	else if (m_bUpCheck[input]){
+	else if (m_bUpCheck[input]) {
 		m_bUpCheck[input] = false;
 		return true;
 	}
@@ -91,7 +91,7 @@ bool CInputManager::OnlyKeyDown(eVK input)
 }
 bool CInputManager::OnlyKeyBoardDown(eVK input)
 {
-	if (m_pKeyBuffers[input] & 0xF0){
+	if (m_pKeyBuffers[input] & 0xF0) {
 		return true;
 	}
 	return false;
@@ -112,7 +112,7 @@ BYTE CInputManager::AnyOneKeyDown(int n, eVK ...)
 	return press;
 }
 
-void CInputManager::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam){
+void CInputManager::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
 	switch (nMessageID)
 	{
 		/*윈도우의 크기가 변경될 때(현재는 “Alt+Enter“ 전체 화면 모드와 윈도우 모드로 전환될 때) 스왑 체인의 후면버퍼 크기를 조정하고 후면버퍼에 대한 렌더 타겟 뷰를 다시 생성한다. */
@@ -122,7 +122,7 @@ void CInputManager::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM
 
 		RENDERER->ResizeBuffer();
 
-		if(UPDATER->GetCamera()) UPDATER->GetCamera()->SetViewport(0, 0, GLOBALVALUEMGR->GetrcClient().right, GLOBALVALUEMGR->GetrcClient().bottom, 0.0f, 1.0f);
+		if (UPDATER->GetCamera()) UPDATER->GetCamera()->SetViewport(0, 0, GLOBALVALUEMGR->GetrcClient().right, GLOBALVALUEMGR->GetrcClient().bottom, 0.0f, 1.0f);
 		break;
 	}
 
@@ -144,7 +144,7 @@ void CInputManager::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM
 	}
 }
 
-void CInputManager::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam){
+void CInputManager::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
 	switch (nMessageID)
 	{
 
@@ -195,7 +195,7 @@ void CInputManager::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM 
 	}
 }
 
-void CInputManager::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam){
+void CInputManager::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
 	//m_stackScene.top()->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
 
 	switch (nMessageID)
@@ -217,9 +217,9 @@ bool CInputManager::KeyDown(eVK input)
 	//	return KeyPadDown(input);
 	return KeyBoardDown(input);
 }
-bool CInputManager::KeyBoardDown(eVK input){
-	if (m_pKeyBuffers[input] & 0xF0){
-		if (false == m_bDownCheck[input]){
+bool CInputManager::KeyBoardDown(eVK input) {
+	if (m_pKeyBuffers[input] & 0xF0) {
+		if (false == m_bDownCheck[input]) {
 			m_bDownCheck[input] = true;
 			return true;
 		}
@@ -256,15 +256,15 @@ void CInputManager::MouseWheel()
 		std::cout << "VK_MBUTTON" << std::endl;
 }
 
-void CInputManager::SetMousePoint(int x, int y){
+void CInputManager::SetMousePoint(int x, int y) {
 	pt.x = x; pt.y = y;
 }
 
-bool CInputManager::MouseLeftDown(){
+bool CInputManager::MouseLeftDown() {
 	return m_bLeftCheck;
 }
 
-bool CInputManager::MouseLeftOnlyDown(){
+bool CInputManager::MouseLeftOnlyDown() {
 	if (m_bLeftCheck) {
 		m_bLeftOnlyCheck = true;
 		return false;
@@ -275,27 +275,27 @@ bool CInputManager::MouseLeftOnlyDown(){
 	}
 }
 
-bool CInputManager::MouseRightDown(){
+bool CInputManager::MouseRightDown() {
 	return m_bRightCheck;
 }
 
 //^ 같으면 1, 다르면 0
-bool CInputManager::MouseLeftUp(){
+bool CInputManager::MouseLeftUp() {
 	return (!m_bLeftCheck);
 }
 
-bool CInputManager::MouseRightUp(){
+bool CInputManager::MouseRightUp() {
 	return (!m_bRightCheck);
 }
 
-void CInputManager::SetbCapture(bool b){
+void CInputManager::SetbCapture(bool b) {
 	if (b) SetCapture(GLOBALVALUEMGR->GethWnd());
 	else ReleaseCapture();
 
 	m_bCapture = b;
 }
 
-void CInputManager::ProcDropFile(WPARAM wParam){
+void CInputManager::ProcDropFile(WPARAM wParam) {
 	m_hDropInfo = (HDROP)wParam;
 	DragQueryFileA(m_hDropInfo, 0, m_DropFileNameBuf, m_DropFileBuffSize);
 	m_bCanUseDropFileName = true;
@@ -310,10 +310,10 @@ const char* CInputManager::GetDropFileName() {
 		m_bCanUseDropFileName = false;
 	}
 
-	return returnVal; 
+	return returnVal;
 }
 
-void CInputManager::SetMousePoint(POINT _pt){
+void CInputManager::SetMousePoint(POINT _pt) {
 	pt = _pt;
 }
 

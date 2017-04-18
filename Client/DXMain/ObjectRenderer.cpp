@@ -10,15 +10,6 @@ bool CObjectRenderer::Begin(){
 	//	m_mObjectRenderContainer[RenderContainer.first] = RenderContainer.second;
 	//}
 
-	//for (auto RenderContainer : RCSELLER->GetStempRenderContainer()[tag::TAG_DYNAMIC_OBJECT]) {
-	//	m_mObjectRenderContainer[RenderContainer.first] = RenderContainer.second;
-	//}
-
-	//for (auto RenderContainer : RCSELLER->GetStempRenderContainer()[tag::TAG_STATIC_OBJECT]) {
-	//	m_mObjectRenderContainer[RenderContainer.first] = RenderContainer.second;
-	//}
-
-
 	m_pTerrainRenderContainer = RCSELLER->GetTagRenderContainer()[tag::TAG_TERRAIN]["terrain"];
 	m_pSkyBoxRenderContainer = RCSELLER->GetTagRenderContainer()[tag::TAG_SPACE]["skybox"];
 
@@ -53,9 +44,6 @@ void CObjectRenderer::SetShaderState(){
 }
 
 void CObjectRenderer::CleanShaderState(){
-	//for (auto pRenderContainer : m_mObjectRenderContainer) {
-	//	pRenderContainer.second->ClearObjectList();
-	//}
 	for (auto pRenderContainer : RCSELLER->GetTagRenderContainer()[tag::TAG_DYNAMIC_OBJECT]) {
 		pRenderContainer.second->ClearObjectList();
 	}
@@ -77,24 +65,30 @@ void CObjectRenderer::UpdateShaderState(){
 
 }
 
-void CObjectRenderer::CleanVolitileObj(){
+void CObjectRenderer::Excute(shared_ptr<CCamera> pCamera){
+	//scene의 모든 Part의 rendercontainer안에 part list Render!
+
+	GLOBALVALUEMGR->GetDeviceContext()->OMGetDepthStencilState(&m_pd3dTempDepthStencilState, &m_TempStencil);
+	GLOBALVALUEMGR->GetDeviceContext()->OMSetDepthStencilState(m_pd3dDepthStencilState, 0);
+	m_pSkyBoxRenderContainer->Render(pCamera);
+	GLOBALVALUEMGR->GetDeviceContext()->OMSetDepthStencilState(m_pd3dTempDepthStencilState, m_TempStencil);
+
+	m_pTerrainRenderContainer->Render(pCamera);
 	for (auto pRenderContainer : RCSELLER->GetTagRenderContainer()[tag::TAG_DYNAMIC_OBJECT]) {
-		pRenderContainer.second->ClearVolitileObj();
+		pRenderContainer.second->Render(pCamera);
 	}
 	for (auto pRenderContainer : RCSELLER->GetTagRenderContainer()[tag::TAG_STATIC_OBJECT]) {
-		pRenderContainer.second->ClearVolitileObj();
+		pRenderContainer.second->Render(pCamera);
 	}
 	for (auto pRenderContainer : RCSELLER->GetStempRenderContainer()[tag::TAG_DYNAMIC_OBJECT]) {
-		pRenderContainer.second->ClearVolitileObj();
+		pRenderContainer.second->Render(pCamera);
 	}
 	for (auto pRenderContainer : RCSELLER->GetStempRenderContainer()[tag::TAG_STATIC_OBJECT]) {
-		pRenderContainer.second->ClearVolitileObj();
+		pRenderContainer.second->Render(pCamera);
 	}
 
-	m_pTerrainRenderContainer->ClearVolitileObj();
-	m_pSkyBoxRenderContainer->ClearVolitileObj();
+	CleanShaderState();
 }
-
 void CObjectRenderer::ExcuteShadowRender(shared_ptr<CCamera> pCamera)
 {
 	m_pTerrainRenderContainer->Render(pCamera);
@@ -110,24 +104,6 @@ void CObjectRenderer::ExcuteShadowRender(shared_ptr<CCamera> pCamera)
 	for (auto pRenderContainer : RCSELLER->GetStempRenderContainer()[tag::TAG_STATIC_OBJECT]) {
 		pRenderContainer.second->Render(pCamera);
 	}
-}
-
-void CObjectRenderer::Excute(shared_ptr<CCamera> pCamera){
-	m_pTerrainRenderContainer->Render(pCamera);
-	for (auto pRenderContainer : RCSELLER->GetTagRenderContainer()[tag::TAG_DYNAMIC_OBJECT]) {
-		pRenderContainer.second->Render(pCamera);
-	}
-	for (auto pRenderContainer : RCSELLER->GetTagRenderContainer()[tag::TAG_STATIC_OBJECT]) {
-		pRenderContainer.second->Render(pCamera);
-	}
-	for (auto pRenderContainer : RCSELLER->GetStempRenderContainer()[tag::TAG_DYNAMIC_OBJECT]) {
-		pRenderContainer.second->Render(pCamera);
-	}
-	for (auto pRenderContainer : RCSELLER->GetStempRenderContainer()[tag::TAG_STATIC_OBJECT]) {
-		pRenderContainer.second->Render(pCamera);
-	}
-	
-	CleanShaderState();
 }
 
 CObjectRenderer::CObjectRenderer() : DXObject("objectrenderer"){

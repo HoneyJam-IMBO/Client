@@ -5,7 +5,6 @@
 #include "Buffer.h"
 
 class CAnimater;
-
 class CAnimationInfo :public DXObject {
 public:
 	bool Begin(shared_ptr<CAnimater> pAnimater);
@@ -23,6 +22,7 @@ public:
 	void SetAnimationIndex(UINT index) { m_AnimationIndex = index; }
 	void SetAnimater(shared_ptr<CAnimater> pAnimater) { m_pAnimater = pAnimater; }
 	void SetAnimationData(CAnimationData* pAnimationData) { m_pAnimationData = pAnimationData; }
+
 	//utill 
 	void Reset();
 
@@ -33,10 +33,9 @@ public:
 	CAnimationData* GetAnimationData() { return m_pAnimationData; }
 	//map<UINT, vector<CFbxJointData>>& GetAnimationInfos() { return m_mMeshIndexJoints; }
 	
-	//real
-	vector<BoundingOrientedBox>& GetActiveOBB() { return m_vActiveBoundingBox; }
-	//oriented obb
-	vector<CBoundingBox*>& GetOriActiveOBB() { return m_vOriActiveBoundingBox; }
+	vector<BoundingOrientedBox> GetvActiveOBBs() { return m_vActiveBoundingBox; }
+	vector<CBoundingBox>& GetTempOBB() { return m_vTempBoundingBox; }
+	list<CBoundingBox*>& GetActiveOBB() { return m_lActiveBoundingBox; }
 
 	shared_ptr<CAnimater> GetAnimater() { return m_pAnimater; }
 
@@ -46,9 +45,9 @@ public:
 
 	void SetAnimationSpd(float spd) { m_fAnimationSpd = spd; }
 private:
-	vector<CBoundingBox*> m_vOriActiveBoundingBox;
 	vector<BoundingOrientedBox> m_vActiveBoundingBox;
-
+	vector<CBoundingBox> m_vTempBoundingBox;
+	list<CBoundingBox*> m_lActiveBoundingBox;
 	float m_fAnimationSpd{ 1.0f };
 	//animation 
 	CAnimationData* m_pAnimationData{ nullptr };

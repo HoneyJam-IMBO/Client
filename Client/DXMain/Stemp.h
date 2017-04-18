@@ -12,7 +12,7 @@ class CStempManager;
 
 class CStemp : public DXObject{
 public:
-	virtual bool Begin();
+	void Begin();
 	virtual bool End();
 
 	virtual void SetShaderState();

@@ -9,11 +9,16 @@ public:
 	~CLoading();
 
 public:
-	static DWORD WINAPI FuncThread(LPVOID arg);
+	HANDLE m_hLoadThread;
+	HANDLE m_hRenderThread;
+	static DWORD WINAPI FuncLoadResourceThread(LPVOID arg);
+	static DWORD WINAPI FuncRenderThread(LPVOID arg);
 
+	HANDLE m_hLoadEvent;
 
 private:
 	bool	m_bComplete{ false };
+	vector<CUIObject*>	m_vecUI;
 public:
 	void	SetLoadComplete(bool bCom) { m_bComplete = bCom; }
 	bool	GetLoadComplete() { return m_bComplete; }
@@ -35,5 +40,18 @@ public: //LoadFunc
 	void LoadScene_REPAIRTOWN();
 	void LoadScene_ALDENAD();
 	void LoadScene_BOSS();
+
+
+public:	// Render pipeline
+	ID3D11Texture2D			 *m_pd3dtxtDepthStencil{ nullptr };
+	ID3D11Texture2D			 *m_pd3dtxtColorSpecInt{ nullptr };
+
+	ID3D11DepthStencilView	 *m_pd3ddsvDepthStencil{ nullptr };
+	ID3D11RenderTargetView   *m_pd3drtvColorSpecInt{ nullptr };
+
+	IDXGISwapChain			*m_pdxgiSwapChain{ nullptr };
+
+public:
+	void MakeRenderPipe();
 };
 

@@ -17,6 +17,7 @@ bool CRenderer::Begin() {
 	GLOBALVALUEMGR->GetDevice()->CreateDepthStencilState(&descDepth, &m_pd3dDepthStencilState);
 	if (false == CreateSwapChain()) return false;
 
+
 	//layer
 	m_pObjectRenderer = new CObjectRenderer();
 	m_pObjectRenderer->Begin();
@@ -27,23 +28,23 @@ bool CRenderer::Begin() {
 	m_pLightRenderer->Begin();
 
 	//post processing
-	m_pBloomDownScale	= new CBloomDownScale();
-	m_pBloomDownScale->Begin();
-	m_pBloom			= new CBloom();
-	m_pBloom->Begin();
-	m_p16to1Blur		= new CBlur();
-	m_p16to1Blur->Begin();
-	m_p4to1Blur			= new CBlur();
-	m_p4to1Blur->Begin();
-	m_pPostProcessingFinalPass = new CPostProcessingFinalPass();
-	m_pPostProcessingFinalPass->Begin();
-	m_pSSLR				= new CSSLR();
-	m_pSSLR->Begin();
-
-	m_pShadow			= new CShadow();
-	m_pShadow->Begin();
+	m_pBloomDownScale = new CBloomDownScale();	m_pBloomDownScale->Begin();
+	m_pBloom = new CBloom();					m_pBloom->Begin();
+	m_p16to1Blur = new CBlur();					m_p16to1Blur->Begin();
+	m_p4to1Blur = new CBlur();					m_p4to1Blur->Begin();
+	m_pPostProcessingFinalPass = new CPostProcessingFinalPass();	m_pPostProcessingFinalPass->Begin();
+	m_pSSLR = new CSSLR();						m_pSSLR->Begin();
 	//layer
 
+	//shadow
+	m_pShadow = new CShadow();
+	m_pShadow->Begin();
+
+	//UIRenderer 
+	m_pUIRederer = new CUIRenderer();
+	m_pUIRederer->Initialize();
+	/*m_pWaterRenderer = new CWaterRenderer();
+	m_pWaterRenderer->Begin();*/
 	
 	// render target과 depth-stencil buffer 생성/ deferred texture 생성
 	if (!CreateRenderTargetView()) {
@@ -61,49 +62,24 @@ bool CRenderer::End() {
 	ReleaseForwardRenderTargets();
 
 	//layer
-	if (m_pObjectRenderer) {
-		m_pObjectRenderer->End();
-		delete m_pObjectRenderer;
-	}
-	if (m_pAORenderer) {
-		m_pAORenderer->End();
-		delete m_pAORenderer;
-	}
-	if (m_pLightRenderer) {
-		m_pLightRenderer->End();
-		delete m_pLightRenderer;
-	}
-	if (m_pBloomDownScale) {
-		m_pBloomDownScale->End();
-		delete m_pBloomDownScale;
-	}
-	if (m_pBloom) {
-		m_pBloom->End();
-		delete m_pBloom;
-	}
-	if (m_p16to1Blur) {
-		m_p16to1Blur->End();
-		delete m_p16to1Blur;
-	}
-	if (m_p4to1Blur) {
-		m_p4to1Blur->End();
-		delete m_p4to1Blur;
-	}
-	if (m_pPostProcessingFinalPass) {
-		m_pPostProcessingFinalPass->End();
-		delete m_pPostProcessingFinalPass;
-	}
-	if (m_pSSLR) {
-		m_pSSLR->End();
-		delete m_pSSLR;
-	}
-	if (m_pShadow){
-		m_pShadow->End();
-		delete m_pShadow;
-	}
+	Safe_EndDelete(m_pObjectRenderer);
+	Safe_EndDelete(m_pAORenderer);
+	Safe_EndDelete(m_pLightRenderer);
+	Safe_EndDelete(m_pBloomDownScale);
+	Safe_EndDelete(m_pBloom);
+	Safe_EndDelete(m_p16to1Blur);
+	Safe_EndDelete(m_p4to1Blur);
+	Safe_EndDelete(m_pPostProcessingFinalPass);
+	Safe_EndDelete(m_pSSLR);
+	Safe_EndDelete(m_pShadow);
+	//Safe_Delete(m_pUIRederer);
+
+	if (m_pUIRederer)
+		delete m_pUIRederer;
+
 	return true;
 }
- 
+
 void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	//CLEAR
 	RESOURCEMGR->GetSampler("WRAP_LINEAR")->SetShaderState();
@@ -113,30 +89,29 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	RESOURCEMGR->GetSampler("SHADOW")->SetShaderState();
 	//////
 
+	//shadow render
+	//m_pShadow->RenderShadowMap(pCamera);
 
+	//ID3D11ShaderResourceView* pRFL = m_pWaterRenderer->RenderReflectionMap(pCamera, m_pd3ddsvDepthStencil, m_pObjectRenderer);
 
-	shared_ptr<CCamera>	pLightCam = nullptr;
-	ID3D11ShaderResourceView* pShadow = m_pShadow->RenderShadowMap(pCamera, pLightCam, m_pObjectRenderer);
-	m_pObjectRenderer->CleanShaderState();
-
-	//////
-	UPDATER->GetSkyBoxContainer()->GetSkyBox()->RegistToContainer();
-	
-	//clear dsv,rtv
+	//clear buff
+	//CLEAR
 	ClearDepthStencilView(m_pd3ddsvDepthStencil);
 	SetForwardRenderTargets();//gbuff가 될 rtv/ dsv set
+	GLOBALVALUEMGR->GetDeviceContext()->OMSetDepthStencilState(m_pd3dDepthStencilState, 1);
 
-	UPDATER->GetSpaceContainer()->PrepareRender(pCamera);
-	//pCamera->UpdateShaderState();
-	pCamera->SetShaderState();
+
+	
 	//object
+	pCamera->SetShaderState();
+	UPDATER->GetSpaceContainer()->PrepareRender(pCamera);
+	UPDATER->GetSkyBoxContainer()->GetSkyBox()->RegistToContainer();
 	m_pObjectRenderer->Excute(pCamera);
-	//debuge
-	if (INPUTMGR->GetDebugMode()) {
-		DEBUGER->DebugRender(pCamera);
-	}
-	//OBJECT RENDER
+	
+	//m_pWaterRenderer->RenderWater(pCamera, m_pd3dsrvDepthStencil);
 
+	if (INPUTMGR->GetDebugMode()) {	DEBUGER->DebugRender(pCamera);}
+	
 	//SSAO
 	SetRenderTargetViews(1, &m_pd3drtvLight, m_pd3ddsvReadOnlyDepthStencil);
 	for (auto texture : m_vObjectLayerResultTexture) {
@@ -147,93 +122,77 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	ID3D11ShaderResourceView* pAmbientOcclution = m_pAORenderer->Excute(pCamera, SSAO_OffsetRadius, SSAO_Radius);
 	pAmbientOcclution  = m_p4to1Blur->Excute(pAmbientOcclution);
 	GLOBALVALUEMGR->GetDeviceContext()->PSSetShaderResources(4, 1, &pAmbientOcclution);
-	//SSAO
 
 	//LIGHT RENDER
-	SetMainRenderTargetView();
-	//몇번슬롯 등록 shadow
-	m_pLightRenderer->Excute(pCamera, pLightCam, pShadow);
+	//SetMainRenderTargetView();
+	m_pLightRenderer->Excute(pCamera, m_pShadow);
 	for (auto texture : m_vObjectLayerResultTexture) {
 		texture->CleanShaderState();
 	}
-	//LIGHT RENDER
 
-	////SSLR
-	//if (GLOBALVALUEMGR->GetSSLR()) {
-	//	if (UPDATER->GetSpaceContainer()->GetDirectionalLight()) {
-	//		D3D11_VIEWPORT oldvp;
-	//		UINT num = 1;
-	//		GLOBALVALUEMGR->GetDeviceContext()->RSGetViewports(&num, &oldvp);
-	//		ID3D11RasterizerState* pPrevRSState;
-	//		GLOBALVALUEMGR->GetDeviceContext()->RSGetState(&pPrevRSState);
-	//
-	//		XMVECTOR xmvSunDir = UPDATER->GetSpaceContainer()->GetDirectionalLight()->GetLook();
-	//		XMFLOAT3 xmf3Color = UPDATER->GetSpaceContainer()->GetDirectionalLight()->GetColor();
-	//		float fOffsetSunPos = m_fSSLROffsetSunPos;// m_pFramework->GetCurScene()->GetSSLROffsetSunPos();
-	//		float fMaxSunDist = m_fSSLRMaxSunDist;// m_pFramework->GetCurScene()->GetSSLRMaxSunDist();
-	//		float fInitDecay = m_fSSLRInitDecay;// m_pFramework->GetCurScene()->GetSSLRInitDecay();
-	//		float fDistDecay = m_fSSLRDistDecay;// m_pFramework->GetCurScene()->GetSSLRDistDecay();
-	//		float fMaxDeltaLen = m_fSSLRMaxDeltaLen;//m_pFramework->GetCurScene()->GetSSLRMaxDeltaLen();
-	//
-	//		m_pSSLR->Excute(pCamera, m_pd3drtvLight, pAmbientOcclution, xmvSunDir, xmf3Color,
-	//			fOffsetSunPos, fMaxSunDist, fInitDecay, fDistDecay, fMaxDeltaLen);
-	//
-	//		// Restore the states
-	//		GLOBALVALUEMGR->GetDeviceContext()->RSSetViewports(num, &oldvp);
-	//		GLOBALVALUEMGR->GetDeviceContext()->RSSetState(pPrevRSState);
-	//		if (pPrevRSState)pPrevRSState->Release();
-	//	}
-	//}//sslr 모드가 true이면 sslr 실행 
-	////SSLR
-	//
-	////POST PROCESSING
-	//SetMainRenderTargetView();
-	//m_vLightLayerResultTexture[0]->SetShaderState();
-	//PostProcessing(pCamera);
-	//for (auto texture : m_vLightLayerResultTexture) {
-	//	texture->CleanShaderState();
+	//SSLR
+	if (m_bSSLROnOff) {
+		if (UPDATER->GetDirectionalLight()) {
+			D3D11_VIEWPORT oldvp;
+			UINT num = 1;
+			GLOBALVALUEMGR->GetDeviceContext()->RSGetViewports(&num, &oldvp);
+			ID3D11RasterizerState* pPrevRSState;
+			GLOBALVALUEMGR->GetDeviceContext()->RSGetState(&pPrevRSState);
+	
+			XMVECTOR xmvSunDir = UPDATER->GetDirectionalLight()->GetLook();
+			XMFLOAT3 xmf3Color = UPDATER->GetDirectionalLight()->GetColor();
+			float fOffsetSunPos = UPDATER->GetDirectionalLight()->GetOffsetLength();
+			float fMaxSunDist = m_fSSLRMaxSunDist;// m_pFramework->GetCurScene()->GetSSLRMaxSunDist();
+			float fInitDecay = m_fSSLRInitDecay;// m_pFramework->GetCurScene()->GetSSLRInitDecay();
+			float fDistDecay = m_fSSLRDistDecay;// m_pFramework->GetCurScene()->GetSSLRDistDecay();
+			float fMaxDeltaLen = m_fSSLRMaxDeltaLen;//m_pFramework->GetCurScene()->GetSSLRMaxDeltaLen();
+	
+			m_pSSLR->Excute(pCamera, m_pd3drtvLight, pAmbientOcclution, xmvSunDir, xmf3Color,
+				fOffsetSunPos, fMaxSunDist, fInitDecay, fDistDecay, fMaxDeltaLen);
+	
+			// Restore the states
+			GLOBALVALUEMGR->GetDeviceContext()->RSSetViewports(num, &oldvp);
+			GLOBALVALUEMGR->GetDeviceContext()->RSSetState(pPrevRSState);
+			if (pPrevRSState)pPrevRSState->Release();
+		}
+	}//sslr 모드가 true이면 sslr 실행 
+	
+	//POST PROCESSING
+	SetMainRenderTargetView();
+	m_vLightLayerResultTexture[0]->SetShaderState();
+	PostProcessing(pCamera);
+	for (auto texture : m_vLightLayerResultTexture) {
+		texture->CleanShaderState();
+	}
+	
+	/*if (nullptr != m_pUIRederer){
+		m_pUIRederer->RenderUI();
+	}*/
+
+	////DEBUG
+	//if (INPUTMGR->GetDebugMode()) {
+	//	ID3D11Buffer* pGBufferUnpackingBuffer = pCamera->GetGBufferUnpackingBuffer();
+	//	GLOBALVALUEMGR->GetDeviceContext()->PSSetConstantBuffers(PS_UNPACKING_SLOT, 1, &pGBufferUnpackingBuffer);
+
+	//	DEBUGER->AddDepthTexture(XMFLOAT2(500, 0), XMFLOAT2(750, 150), m_pd3dsrvDepthStencil);
+	//	//DEBUGER->AddTexture(XMFLOAT2(100, 0), XMFLOAT2(350, 250), pRFL);
+	//	
+
+	//	//이건 꼭 여기서 해줘야함.
+	//	DEBUGER->RenderTexture();
+	//	DEBUGER->RenderText();
 	//}
-	////POST PROCESSING
-
-	//-----------UI Render------------------------------------------------------------------
-
-
-	//DEBUG
-	if (INPUTMGR->GetDebugMode()) {
-		ID3D11Buffer* pGBufferUnpackingBuffer = pCamera->GetGBufferUnpackingBuffer();
-		GLOBALVALUEMGR->GetDeviceContext()->PSSetConstantBuffers(PS_UNPACKING_SLOT, 1, &pGBufferUnpackingBuffer);
-
-		//if(testBotton){
-		//DEBUGER->AddTexture(XMFLOAT2(100, 100), XMFLOAT2(250, 250), m_pd3dsrvColorSpecInt);
-		//DEBUGER->AddTexture(XMFLOAT2(500, 0), XMFLOAT2(750, 150), m_pd3dsrvNormal);
-		//DEBUGER->AddTexture(XMFLOAT2(100, 400), XMFLOAT2(250, 550), m_pd3dsrvLight);
-		DEBUGER->AddTexture(XMFLOAT2(300, 0), XMFLOAT2(600, 300), m_pd3dsrvDepthStencil);
-		DEBUGER->AddTexture(XMFLOAT2(0, 0), XMFLOAT2(300, 300), pShadow);//임시
-		//debug
-		//DEBUGER->AddTexture(XMFLOAT2(500, 0), XMFLOAT2(750, 150), pAmbientOcclution);
-		//DEBUGER->AddTexture(XMFLOAT2(0, 0), XMFLOAT2(1000, 500), pAmbientOcclution);
-
-		//이건 꼭 여기서 해줘야함.
-
-		DEBUGER->RenderTexture();
-		DEBUGER->RenderText();
-		//DEBUGER->ClearDebuger();
-	}
-	else {
-		DEBUGER->ClearDebuger();
-	}
-	//DEBUG
-
+	//else {
+	//	DEBUGER->ClearDebuger();
+	//}
+	DEBUGER->ClearDebuger();
 	//PRESENT
-	// If the swap chain already exists, resize it.
 	HRESULT hr = m_pdxgiSwapChain->Present(0, 0);
-	//PRESENT
 	if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 	{
 		DEBUGER->DebugMessageBox("explosion", "d");
 		return;
 	}
-	
 }
 void CRenderer::Update(float fTimeElapsed) {
 	m_pBloomDownScale->SetAdaptation(fTimeElapsed);
@@ -260,7 +219,7 @@ void CRenderer::ClearDepthStencilView(ID3D11DepthStencilView* pDepthStencilView)
 	GLOBALVALUEMGR->GetDeviceContext()->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 void CRenderer::SetForwardRenderTargets() {
-	ID3D11RenderTargetView *pd3dRTVs[RENDER_TARGET_NUMBER] = { m_pd3drtvNormal,  m_pd3drtvColorSpecInt, m_pd3drtvSpecPow };
+	ID3D11RenderTargetView *pd3dRTVs[RENDER_TARGET_NUMBER] = { m_pd3drtvColorSpecInt, m_pd3drtvNormal, m_pd3drtvSpecPow };
 	//float fClearColor[4] = { xmf4Xolor.x, xmf4Xolor.y, xmf4Xolor.z, xmf4Xolor.w };
 	float fClearColor[4] = { 0.f, 0.f, 0.f, 0.f };
 	if (m_pd3drtvColorSpecInt) GLOBALVALUEMGR->GetDeviceContext()->ClearRenderTargetView(m_pd3drtvColorSpecInt, fClearColor);
@@ -438,18 +397,18 @@ bool CRenderer::CreateRenderTargetView() {
 
 		ReleaseForwardRenderTargets();
 
-		//--------------------------------------DSV Create-----------------------------------------//
-		d3dTexture2DDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
-		d3dDepthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		d3dSRVDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+		//--------------------------------------Scene0 DSV Create-----------------------------------------//
+		d3dTexture2DDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+		d3dDepthStencilViewDesc.Format = DXGI_FORMAT_D32_FLOAT;
+		d3dSRVDesc.Format = DXGI_FORMAT_R32_FLOAT;
 		d3dTexture2DDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_DEPTH_STENCIL;
 		GLOBALVALUEMGR->GetDevice()->CreateTexture2D(&d3dTexture2DDesc, nullptr, &m_pd3dtxtDepthStencil);
 		GLOBALVALUEMGR->GetDevice()->CreateDepthStencilView(m_pd3dtxtDepthStencil, &d3dDepthStencilViewDesc, &m_pd3ddsvDepthStencil);
 		GLOBALVALUEMGR->GetDevice()->CreateShaderResourceView(m_pd3dtxtDepthStencil, &d3dSRVDesc, &m_pd3dsrvDepthStencil);
 		//real depth stencil
-		d3dDepthStencilViewDesc.Flags = D3D11_DSV_READ_ONLY_DEPTH | D3D11_DSV_READ_ONLY_STENCIL;
+		d3dDepthStencilViewDesc.Flags = D3D11_DSV_READ_ONLY_DEPTH;
 		if (FAILED(hResult = GLOBALVALUEMGR->GetDevice()->CreateDepthStencilView(m_pd3dtxtDepthStencil, &d3dDepthStencilViewDesc, &m_pd3ddsvReadOnlyDepthStencil))) return(false);
-		//--------------------------------------DSV Create-----------------------------------------//
+		//--------------------------------------Scene0 DSV Create-----------------------------------------//
 		
 		d3dTexture2DDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 		d3dTexture2DDesc.Format = d3dSRVDesc.Format = d3dRTVDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -472,8 +431,10 @@ bool CRenderer::CreateRenderTargetView() {
 		GLOBALVALUEMGR->GetDevice()->CreateShaderResourceView(m_pd3dtxtSpecPow, &d3dSRVDesc, &m_pd3dsrvSpecPow);
 		//--------------------------------------Scene3 RTV Create-----------------------------------------//
 
+		//자기 texture set -> sampler set위함
 		//---------------------make texture---------------------
 		//texture set to light rendercontainer
+		
 		ID3D11ShaderResourceView *pd3dSRV = { m_pd3dsrvDepthStencil};
 		UINT Slot = { 0 };
 		UINT BindFlag = { BIND_PS | BIND_CS };
@@ -519,6 +480,7 @@ bool CRenderer::CreateRenderTargetView() {
 	m_p4to1Blur->ResizeBuffer(2);
 	m_pSSLR->ResizeBuffer();
 	m_pShadow->ResizeBuffer();
+	//m_pWaterRenderer->ResizeBuffer();
 
 	return true;
 }
@@ -584,29 +546,7 @@ bool CRenderer::ResizeBuffer() {
 	return true;
 }
 
-void CRenderer::SaveEffectInfo(){
-	//ssao
-	EXPORTER->WriteFloat(m_fSSAORadius); EXPORTER->WriteSpace();
-	EXPORTER->WriteFloat(m_fSSAOOffsetRadius);
-	EXPORTER->WriteEnter();
-	//bloom
-	EXPORTER->WriteFloat(m_fBLOOMThreshold); EXPORTER->WriteSpace();
-	EXPORTER->WriteFloat(m_fBLOOMMiddleGrey); EXPORTER->WriteSpace();
-	EXPORTER->WriteFloat(m_fBLOOMWhite); EXPORTER->WriteSpace();
-	EXPORTER->WriteFloat(m_fBLOOMScale);
-	EXPORTER->WriteEnter();
-	//sslr
-	EXPORTER->WriteBool(m_bSSLROnOff); EXPORTER->WriteSpace();
-	EXPORTER->WriteFloat(m_fSSLROffsetSunPos); EXPORTER->WriteSpace();
-	EXPORTER->WriteFloat(m_fSSLRMaxSunDist); EXPORTER->WriteSpace();
-	EXPORTER->WriteFloat(m_fSSLRInitDecay); EXPORTER->WriteSpace();
-	EXPORTER->WriteFloat(m_fSSLRDistDecay); EXPORTER->WriteSpace();
-	EXPORTER->WriteFloat(m_fSSLRMaxDeltaLen);
-	EXPORTER->WriteEnter();
-
-}
-
-void CRenderer::LoadEffectInfo(){
+void CRenderer::LoadEffectInfo(wstring wsOutputPath, wstring wsSceneName){
 	//ssao
 	float fSSAORadius = IMPORTER->ReadFloat();
 	SetSSAORadius(fSSAORadius);
@@ -625,8 +565,6 @@ void CRenderer::LoadEffectInfo(){
 	//sslr
 	bool bSSLROnOff = IMPORTER->ReadBool();
 	SetSSLROnOff(bSSLROnOff);
-	float fSSLROffsetSunPos = IMPORTER->ReadFloat();
-	SetSSLROffsetSunPos(fSSLROffsetSunPos);
 	float fSSLRMaxSunDist = IMPORTER->ReadFloat();
 	SetSSLRMaxSunDist(fSSLRMaxSunDist);
 	float fSSLRInitDecay = IMPORTER->ReadFloat();
@@ -635,6 +573,8 @@ void CRenderer::LoadEffectInfo(){
 	SetSSLRDistDecay(fSSLRDistDecay);
 	float fSSLRMaxDeltaLen = IMPORTER->ReadFloat();
 	SetSSLRMaxDeltaLen(fSSLRMaxDeltaLen);
+
+	m_pShadow->LoadShadow(wsOutputPath, wsSceneName);
 }
 
 CRenderer::CRenderer() :CSingleTonBase<CRenderer>("rendereringleton") {

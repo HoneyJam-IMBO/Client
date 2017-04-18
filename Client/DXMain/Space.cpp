@@ -90,82 +90,68 @@ bool CSpace::End(){
 }
 
 void CSpace::Animate(float fTimeElapsed){
-	
-
 	if (m_ppChildSpace) {
 		for (int i = 0; i < 4; ++i) {
 			m_ppChildSpace[i]->Animate(fTimeElapsed);
 		}
 	}
 	else {//leaf space만 animate
-		//dynamic object만 animate 
-		//animate하는데 이전의 space index와 현재 index가 다르다면 
 		int nObject = 0;
 
-		vector<CGameObject*> lpDeleteObject;
-		for (auto pObject : m_mlpObject[tag::TAG_DYNAMIC_OBJECT]) {
-			pObject->Animate(fTimeElapsed);
-			int current_index = m_pSpaceContainer->SearchSpace(pObject->GetPosition());
-			if (pObject->GetSpaceIndex() != current_index) {//이전 공간 index와 현재 index가 다르다면
-				m_pSpaceContainer->AddBlockObjectList(pObject);//block Object list에 등록
-				lpDeleteObject.push_back(pObject);
-			}
-			nObject++;
-		}
-		for (auto pObject : m_mlpObject[tag::TAG_ANIMDYNAMIC_OBJECT]) {
-			pObject->Animate(fTimeElapsed);
-			int current_index = m_pSpaceContainer->SearchSpace(pObject->GetPosition());
-			if (pObject->GetSpaceIndex() != current_index) {//이전 공간 index와 현재 index가 다르다면
-				m_pSpaceContainer->AddBlockObjectList(pObject);//block Object list에 등록
-				lpDeleteObject.push_back(pObject);
-			}
-			nObject++;
-		}
-		for (auto pObject : m_mlpObject[tag::TAG_ANIMSTATIC_OBJECT]) {
-			pObject->Animate(fTimeElapsed);
+		list<CGameObject*>::iterator iter = m_mlpObject[tag::TAG_DYNAMIC_OBJECT].begin();
+		list<CGameObject*>::iterator iter_end = m_mlpObject[tag::TAG_DYNAMIC_OBJECT].end();
+		for(; iter != iter_end; )
+		{
+			(*iter)->Animate(fTimeElapsed);
+			int current_index = m_pSpaceContainer->SearchSpace((*iter)->GetPosition());
+			if ((*iter)->GetSpaceIndex() != current_index)//이전 공간 index와 현재 index가 다르다면
+			{
+				m_pSpaceContainer->AddBlockObjectList((*iter));//block Object list에 등록
+				m_mlpObject[tag::TAG_DYNAMIC_OBJECT].erase(iter);
+			}else
+				++iter;
 			nObject++;
 		}
 
 		if(INPUTMGR->GetDebugMode())
-			DEBUGER->AddText(10.0f, 250.0f, static_cast<float>(m_index * 15.f), YT_Color(255, 255, 255), L"space %d object_num : %d", m_index, nObject);
-
-
-		for (auto pObject : lpDeleteObject) {
-			RemoveObject(pObject);//해당 객체 remove
-		}
-
+			DEBUGER->AddText(40.0f, 250.0f, static_cast<float>(m_index * 25.f), YT_Color(255, 255, 255), L"space %d object_num : %d", m_index, nObject);
+		m_bRender = false;
 	}
 }
 
-void CSpace::PrepareRender(shared_ptr<CCamera> pCamera, bool bShadow){
+void CSpace::PrepareRender(shared_ptr<CCamera> pCamera, UINT renderFlag){
 	
-	if (IsVisible(pCamera)) {//여기에 space 프러스텀 컬링
-		if (nullptr == m_ppChildSpace) {//내 자식이 없으면 나는 leaf node
-			//나는 그리는 space다.
-			SetbRender(true);
-			this->RegistToDebuger();
-			//RegistToContainer();
-//			DEBUGER->RegistToDebugRenderContainer(this);
-			for (auto mlp : m_mlpObject) {//모든 객체에 대해서
+	if (IsVisible(pCamera))
+	{											//여기에	 space 프러스텀 컬링
+		if (nullptr == m_ppChildSpace) {		//내 자식이 없으면 나는 leaf node
+			SetbRender(true);					//나는 그리는 space다.
+
+			if(INPUTMGR->GetDebugMode())
+				this->RegistToDebuger();
+			for (auto mlp : m_mlpObject) {		//모든 객체에 대해서
 				for (auto pObject : mlp.second) {
-					if(true == bShadow && (pObject->GetTag() == tag::TAG_DYNAMIC_OBJECT 
-											|| pObject->GetTag() == tag::TAG_STATIC_OBJECT
-											|| pObject->GetTag() == tag::TAG_ANIMDYNAMIC_OBJECT
-											|| pObject->GetTag() == tag::TAG_ANIMSTATIC_OBJECT
-											|| pObject->GetTag() == tag::TAG_SPACE
-											|| pObject->GetTag() == tag::TAG_TERRAIN))
-						pObject->RegistToContainer();//자신이 속한 rendercontainer에 등록
-					
-					if (false == bShadow) {
-						pObject->RegistToContainer();
+					if (pObject->IsVisible(pCamera)) 
+					{
+						//	pObject->RegistToContainer();
+						if (renderFlag & RTAG_TERRAIN) {
+							if (pObject->GetTag() == TAG_TERRAIN) pObject->RegistToContainer();
+						}
+						if (renderFlag & RTAG_STATIC_OBJECT) {
+							if (pObject->GetTag() == TAG_STATIC_OBJECT) pObject->RegistToContainer();
+						}
+						if (renderFlag & RTAG_DYNAMIC_OBJECT) {
+							if (pObject->GetTag() == TAG_DYNAMIC_OBJECT) pObject->RegistToContainer();
+						}
+						if (renderFlag & RTAG_LIGHT) {
+							if (pObject->GetTag() == TAG_LIGHT) pObject->RegistToContainer();
+						}
 					}
 				}
 			}//end for
 		}//end if
 		else {//leaf가 아니라면
 			for (int i = 0; i < 4; ++i) {
-
-				m_ppChildSpace[i]->PrepareRender(pCamera);//내 자식들 PrePareRender
+				m_ppChildSpace[i]->PrepareRender(pCamera, renderFlag);//내 자식들 PrePareRender
 			}
 		}//end else
 	}
@@ -173,6 +159,31 @@ void CSpace::PrepareRender(shared_ptr<CCamera> pCamera, bool bShadow){
 	return;
 }
 
+
+void CSpace::PrepareRender(UINT renderFlag) {
+	//나는 그리는 space다.
+	SetbRender(true);
+	this->RegistToDebuger();
+	//RegistToContainer();
+	//			DEBUGER->RegistToDebugRenderContainer(this);
+	for (auto mlp : m_mlpObject) {//모든 객체에 대해서
+								  //자신이 속한 rendercontainer에 등록
+		for (auto pObject : mlp.second) {
+			if (renderFlag & RTAG_TERRAIN) {
+				if (pObject->GetTag() == TAG_TERRAIN) pObject->RegistToContainer();
+			}
+			if (renderFlag & RTAG_STATIC_OBJECT) {
+				if (pObject->GetTag() == TAG_STATIC_OBJECT) pObject->RegistToContainer();
+			}
+			if (renderFlag & RTAG_DYNAMIC_OBJECT) {
+				if (pObject->GetTag() == TAG_DYNAMIC_OBJECT) pObject->RegistToContainer();
+			}
+			if (renderFlag & RTAG_LIGHT) {
+				if (pObject->GetTag() == TAG_LIGHT) pObject->RegistToContainer();
+			}
+		}
+	}//end for
+}
 
 void CSpace::SetObejcts(int n, CGameObject** ppObjects) {
 	if (!ppObjects) return;
@@ -197,6 +208,7 @@ void CSpace::RemoveObject(CGameObject* pObject) {
 	m_mlpObject[pObject->GetTag()].remove_if([&pObject](CGameObject* pO) {
 		return pObject == pO;
 	});
+
 }
 
 void CSpace::RemoveObject(string name){

@@ -43,7 +43,7 @@ float4 main(VS_OUTPUT In) : SV_TARGET
 	for (int i = 0; i < NUM_STEPS; i++){
 		// Sample at the current location
 		float2 sampPos = In.UV + rayOffset;
-		float fCurIntensity = OcclusionTex.Sample(gssCLAMP_LINEAR, sampPos);
+		float fCurIntensity = OcclusionTex.Sample(gssWRAP_LINEAR, sampPos);
 		//±¤¼± °­Á¶°ª
 		rayIntensity += fCurIntensity * decay;
 		rayOffset += rayDelta;

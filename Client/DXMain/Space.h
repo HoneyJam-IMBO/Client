@@ -12,7 +12,8 @@ public:
 	virtual bool End();
 
 	virtual void Animate(float fTimeElapsed);
-	virtual void PrepareRender(shared_ptr<CCamera> pCamera, bool bShadow = false);
+	virtual void PrepareRender(UINT renderFlag);
+	virtual void PrepareRender(shared_ptr<CCamera> pCamera, UINT renderFlag);
 	void SetObejcts(int n, CGameObject** ppObjects);
 	void AddObject(CGameObject* pObject);
 	void RemoveObject(CGameObject* pObject);

@@ -81,6 +81,12 @@ CPointLight* CPointLight::CreatePointLight(float fRange, XMFLOAT3 xmf3Color){
 	pLight->Begin();
 	return pLight;
 }
+void CPointLight::PickingProc(){
+	CGameObject::PickingProc();
+}
+void CPointLight::LoadInfo()
+{
+}
 
 
 

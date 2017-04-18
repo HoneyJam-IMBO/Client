@@ -16,7 +16,7 @@ cbuffer gMaterialInfo : register(b3) {
 struct PixelShaderInput
 {
 	float4 position : SV_POSITION;
-	float3 positionV : POSITION;
+	float3 positionW : POSITION;
 };
 
 // (보간된) 색 데이터에 대한 통과 함수입니다.
@@ -27,9 +27,8 @@ PS_GBUFFER_OUT main(PixelShaderInput input)
 	float4 cColor = cColor = gMaterialColor;
 	
 	float Depth = input.position.z / input.position.w;
-	float lineardepth = input.positionV.z / gFar;
 
-	return (PackGBuffer(cColor.xyz, float4(0.f, 1.f, 0.f, lineardepth), gSpecIntensity, gSpecExp));
+	return (PackGBuffer(cColor.xyz, float3(0.f, 1.f, 0.f), gSpecIntensity, gSpecExp));
 
 }
 //float4 main(PixelShaderInput input) : SV_TARGET

@@ -27,7 +27,9 @@ public:
 	//rotation object float4
 	void AddRotationBar(const char* barName, const char* groupName, const char* menuName, void* var);
 	//color 
-	void AddColorBar(const char* barName, const char* groupName, const char* menuName, void* var);
+	//void AddColorBar(const char* barName, const char* groupName, const char* menuName, void* var);
+	void AddColorBar4F(const char* barName, const char* groupName, const char* menuName, void* var);
+	void AddColorBar3F(const char* barName, const char* groupName, const char* menuName, void* var);
 	//bool botton o/x 
 	void AddBoolBar(const char* barName, const char* groupName, const char* menuName, void* var);
 	void AddBoolBarCB(const char* barName, const char* groupName, const char* menuName, TwSetVarCallback setCallback, TwGetVarCallback getCallback, void* clientData);

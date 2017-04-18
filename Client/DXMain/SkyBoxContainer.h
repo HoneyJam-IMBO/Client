@@ -5,18 +5,18 @@
 
 class CSkyBoxContainer : public CObject {
 public:
-	virtual bool Begin();
-	virtual bool End();
+	void Begin(shared_ptr<CCamera> pCamera);
+	bool End();
 
 	void PrepareRender();
-	void Update(shared_ptr<CCamera> pCamera, float fTimeElapsed);
+	void Update(float fTimeElapsed);
 
 	void SetSkyBox(CSkyBox* pSkyBox) { m_pSkyBox = pSkyBox; }
 	CSkyBox* GetSkyBox() { return m_pSkyBox; }
 	//void SetDirectionalLight(CDirectionalLight* pDirectionalLight) { m_pDirectionalLight = pDirectionalLight; }
 	//CDirectionalLight* GetDirectionalLight() { return m_pDirectionalLight; }
 
-	static CSkyBoxContainer* CreateSkyBoxContainer(LPCTSTR pSkyBoxName, UINT textureIndex, CSpaceContainer* pSpaceContainer);
+	static CSkyBoxContainer* CreateSkyBoxContainer(LPCTSTR pSkyBoxName, UINT textureIndex, CSpaceContainer* pSpaceContainer, shared_ptr<CCamera> pCamera);
 	void SetSkyBoxName(wstring wsName) { m_wsSkyBoxName = wsName; }
 	void CreateSkyBoxTexture(UINT index);
 	void SetSpaceContainer(CSpaceContainer* pSpaceContainer) { m_pSpaceContainer = pSpaceContainer; }

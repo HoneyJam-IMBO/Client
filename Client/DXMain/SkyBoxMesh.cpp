@@ -25,7 +25,7 @@ bool CSkyBoxMesh::CreateVertexBuffer() {
 	XMFLOAT2 *pxmf2TexCoords = new XMFLOAT2[m_nVertices];
 
 	int i = 0;
-	float fx = WIDTH;
+	float fx = WIDTH * 0.5f;
 	//// Front Quad (remember all quads point inward)
 	//m_pVertices[i] = XMFLOAT3(-fx, +fx, +fx); pxmf2TexCoords[i++] = XMFLOAT2(0.0f, 0.0f);
 	//m_pVertices[i] = XMFLOAT3(+fx, +fx, +fx); pxmf2TexCoords[i++] = XMFLOAT2(1.0f, 0.0f);

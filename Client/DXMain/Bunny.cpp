@@ -1,18 +1,6 @@
 #include "stdafx.h"
 #include "Bunny.h"
 
-//void TW_CALL AnimationSelectCallback(void * clientData) {
-//	CAnimationInfo* pAnimInfo = reinterpret_cast<CAnimationInfo*>(clientData);
-//	pAnimInfo->SelectAnimationProc();
-//}
-//void TW_CALL JointSelectButtonCallback(void * clientData) {
-//	CBoundingBox* pOBB = reinterpret_cast<CBoundingBox*>(clientData);
-//	if(pOBB->GetActive())
-//		pOBB->SetActive(false);
-//	else
-//		pOBB->SetActive(true);
-//	
-//}
 bool CBunny::Begin() {
 	//object_id set
 //	m_objectID = object_id::OBJECT_FBX_BUNNY;

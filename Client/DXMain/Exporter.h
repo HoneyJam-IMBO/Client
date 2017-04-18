@@ -3,8 +3,8 @@
 #include "SingleTon.h"
 #include "FileExporter.h"
 #include "TxtExporter.h"
+#include "dds.h"
 #include <fstream>
-
 //bitmap
 //#define _AFXDLL
 //#include <afx.h>
@@ -47,6 +47,7 @@ public:
 
 	void MakeBitmap24(const WCHAR* fileName, Pixel24* pData, UINT nWidth, UINT nHeight);
 	void MakeBitmap32(const WCHAR* fileName, Pixel32* pData, UINT nWidth, UINT nHeight);
+	void MakeSRVTexture(ID3D11ShaderResourceView* pSRV, wstring wFileName);
 private:
 	wstring m_outputPath;
 	wofstream m_out;

@@ -5,39 +5,45 @@
 
 class CDirectXFramework;
 
-class CScene : public CObject{
+class CScene{
 
 public:
 	//begin end
 	virtual bool Begin() { return true; };
 	virtual bool Begin(string path);
 	virtual bool End();
+	//begin end
 	//animate
 	virtual void Animate(float fTimeElapsed);
+	//animate
 	//input
 	virtual void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {};
 	virtual void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {};
 	virtual void ProcessInput(float fTimeElapsed) {};
+	//input
 	//pick
 	virtual CGameObject* PickObjectPointedByCursor(int xClient, int yClient) { return nullptr; };
+	//pick
 	//create scene
-	static CScene* CreateScene(string name, CDirectXFramework* pFramework);
+	static CScene* CreateScene(string name, CDirectXFramework* pFramework, SCENE_ID eID);
+	//create scene
 
 	void LoadScene(string path);
 protected:
+	string m_sName;
 
 	//framework
 	CDirectXFramework* m_pFrameWork{ nullptr };
 	//진짜 카메라는 framework에 있다.
 	shared_ptr<CCamera> m_pCamera{ nullptr };
 	//picking
-	CGameObject* m_pPickingObject{ nullptr };
+	CGameObject*	m_pPickingObject{ nullptr };
 
 	SCENE_ID		m_eSceneID{ SC_END };
 private:
 
 public:
-	CScene::CScene(SCENE_ID eID) :CObject("Scene") { m_eSceneID = eID; }
+	CScene::CScene(SCENE_ID eID){ m_eSceneID = eID; }
 	~CScene() {}
 
 	//set get

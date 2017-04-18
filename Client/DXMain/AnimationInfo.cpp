@@ -1,8 +1,31 @@
 #include "stdafx.h"
 #include "AnimationInfo.h"
 #include "Animater.h"
-
 bool CAnimationInfo::Begin(shared_ptr<CAnimater> pAnimater){
+	int nJoint{ 0 };
+
+	nJoint = m_pAnimater->GetSkeletonData()->GetJointDatas().size();
+
+	for (int j = 0; j < nJoint; ++j) {
+		XMMATRIX FrameTransform;
+		CBoundingBox boundingBox;
+		boundingBox.Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(2.f, 2.f, 2.f, 1.f));
+		boundingBox.SetActive(false);
+		m_vTempBoundingBox.push_back(boundingBox);
+	}
+
+//	for (int MeshIndex = 0; MeshIndex < FBXIMPORTER->GetAnimationDatas().size(); ++MeshIndex) {
+//		nJoint = static_cast<int>(FBXIMPORTER->GetAnimationDatas()[MeshIndex].GetJointCnt());
+//
+//		for (int j = 0; j < nJoint; ++j) {
+//			XMMATRIX FrameTransform;
+//			m_mMeshIndexJoints[MeshIndex].push_back(FBXIMPORTER->GetAnimationDatas()[MeshIndex].GetJointDatas()[j]);
+//			CBoundingBox boundingBox;
+//			boundingBox.Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(2.f, 2.f, 2.f, 1.f));
+//			boundingBox.SetActive(false);
+//			m_vTempBoundingBox.push_back(boundingBox);
+//		}
+//	}
 	m_pAnimBuffer = CBuffer::CreateConstantBuffer(256, sizeof(XMMATRIX), 10, BIND_VS, 0);
 
 	m_pAnimater->AddAnimationInfo(this);
@@ -17,12 +40,11 @@ bool CAnimationInfo::End(){
 	m_pAnimBuffer->End();
 	m_pAnimBuffer = nullptr;
 
-	m_vActiveBoundingBox.clear();
-	for (auto data : m_vOriActiveBoundingBox) {
+	for (auto data : m_lActiveBoundingBox) {
 		data->End();
 		delete data;
 	}
-	m_vOriActiveBoundingBox.clear();
+	m_lActiveBoundingBox.clear();
 	//int MeshNum = m_mMeshIndexJoints.size();
 	//for (int i = 0; i<MeshNum; ++i) {
 	//	m_mMeshIndexJoints[i].clear();
@@ -62,23 +84,43 @@ void CAnimationInfo::CleanShaderState(){
 }
 
 void CAnimationInfo::Update(float fTimeElapsed){
+	vector<CBoundingBox*> vDeleteBoundingBox;
+	int DeleteBoxCnt{ 0 };
+	//debug
+	for (int tempOBBCnt = 0; tempOBBCnt < m_vTempBoundingBox.size(); ++tempOBBCnt) {
+		if (m_vTempBoundingBox[tempOBBCnt].GetActive()) {
+			if(false == m_pAnimationData->GetKeyFrames(tempOBBCnt).empty())
+				DEBUGER->RegistCoordinateSys(m_pAnimationData->GetKeyFrames(tempOBBCnt)[m_CurFrame].GetKeyFrameTransformMtx());
+		}
+	}
+	//debug
 	m_vActiveBoundingBox.clear();
 
-	int index{ 0 };
-	for (auto data : m_vOriActiveBoundingBox) {
+	for (auto data : m_lActiveBoundingBox) {
 		float fMin = data->GetMin();
 		float fMax = data->GetMax();
 		if (fMin <= m_CurFrame && m_CurFrame <= fMax) data->SetActive(true);
 		else data->SetActive(false);
-
-		if (data->GetActive()) {
-			BoundingOrientedBox originObb = data->GetOBB();
-			if (false == m_pAnimationData->GetKeyFrames(data->GetMyJointIndex()).empty()) {
-				originObb.Transform(originObb, m_pAnimationData->GetKeyFrames(data->GetMyJointIndex())[m_CurFrame].GetKeyFrameTransformMtx());
-				m_vActiveBoundingBox.push_back(originObb);
-				//originObb.Transform(originObb, data->GetWorldMtx());
-				//DEBUGER->RegistOBB(m_vActiveBoundingBox[index++]->GetOBB());
+		
+		if (data->GetToolActive()) {//ui 삭제 로직 
+			
+			if (data->GetActive()) {
+				BoundingOrientedBox originObb = data->GetOBB();
+				if (false == m_pAnimationData->GetKeyFrames(data->GetMyJointIndex()).empty()) {
+					originObb.Transform(originObb, m_pAnimationData->GetKeyFrames(data->GetMyJointIndex())[m_CurFrame].GetKeyFrameTransformMtx());
+					m_vActiveBoundingBox.push_back(originObb);
+					//originObb.Transform(originObb, data->GetWorldMtx());
+					//DEBUGER->RegistOBB(originObb);
+				}
 			}
+		}
+		else {
+			vDeleteBoundingBox.push_back(data);
+		}
+	}
+	if (false == vDeleteBoundingBox.empty()) {
+		for (auto data : vDeleteBoundingBox) {
+			m_lActiveBoundingBox.remove(data);
 		}
 	}
 	//update animation data
@@ -142,6 +184,9 @@ void CAnimationInfo::Reset(){
 //		m_vTempBoundingBox.push_back(boundingBox);
 //	}
 //}
+
+
+
 CAnimationInfo* CAnimationInfo::CreateAnimationInfoFromFBXFile(shared_ptr<CAnimater>  pAnimater){
 	CAnimationInfo* pAnimationInfo = new CAnimationInfo();
 	pAnimationInfo->SetAnimationIndex(pAnimater->GetAnimationCnt());
@@ -190,7 +235,7 @@ CAnimationInfo* CAnimationInfo::CreateAnimationInfoFromGJMFile(shared_ptr<CAnima
 		pBoundingBox->SetMin(min);
 		pBoundingBox->SetMax(max);
 		pBoundingBox->SetMyJointIndex(myJointIndex);
-		pAnimationInfo->GetOriActiveOBB().push_back(pBoundingBox);
+		pAnimationInfo->GetActiveOBB().push_back(pBoundingBox);
 	}//obb for end
 	float animationSpd = IMPORTER->ReadFloat();
 	pAnimationInfo->SetAnimationSpd(animationSpd);

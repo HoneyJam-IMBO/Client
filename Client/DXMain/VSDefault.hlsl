@@ -1,7 +1,6 @@
 cbuffer ViewProjectionConstantBuffer : register(b0)
 {
-	matrix gmtxView;
-	matrix gmtxProj;
+	matrix gmtxViewProjection;
 };
 
 struct VS_INPUT
@@ -16,7 +15,7 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
 	float4 position : SV_POSITION;
-	float3 positionV : POSITION;
+	float3 positionW : POSITION;
 	float3 normal : NORMAL;
 	float2 uv : TEXCOORD;
 };
@@ -25,10 +24,9 @@ struct VS_OUTPUT
 VS_OUTPUT main(VS_INPUT input, uint instanceID : SV_InstanceID)
 {
 	VS_OUTPUT output = (VS_OUTPUT)0;
-	output.positionV = mul(float4(input.position, 1.0f), input.mtxWorld).xyz;
-	output.position = mul(float4(output.positionV, 1.0f), gmtxView);
-	output.positionV = output.position.xyz;
-	output.position = mul(output.position, gmtxProj);
+	output.positionW = mul(float4(input.position, 1.0f), input.mtxWorld).xyz;
+	output.position = mul(float4(output.positionW, 1.0f), gmtxViewProjection);
+	//output.position = mul(float4(input.position, 1.0f), gmtxViewProjection);
 	output.normal = mul(input.normal, (float3x3)input.mtxWorld);
 
 	output.uv = input.uv;

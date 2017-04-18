@@ -2,12 +2,13 @@
 #include "SkyBoxContainer.h"
 #include "SpaceContainer.h"
 
-bool CSkyBoxContainer::Begin() {
+void CSkyBoxContainer::Begin(shared_ptr<CCamera> pCamera) {
 	//skybox
 	m_pSkyBox = new CSkyBox();
 	m_pSkyBox->Begin();	
+	m_pSkyBox->SetCamera(pCamera);
 	//skybox
-	return true;
+
 }
 
 bool CSkyBoxContainer::End() {
@@ -19,26 +20,21 @@ bool CSkyBoxContainer::End() {
 	m_pSkyBox = nullptr;
 	return true;
 }
-void CSkyBoxContainer::Update(shared_ptr<CCamera> pCamera, float fTimeElapsed) {
+void CSkyBoxContainer::Update(float fTimeElapsed) {
 	if (m_bActive) {
-		m_pSkyBox->SetCamera(pCamera);
-		//skybox camera 동기화
 		m_pSkyBox->Animate(fTimeElapsed);
-		//sky box 등록
-		m_pSkyBox->RegistToContainer();
-		//registe to renderer
-		//RENDERER->SetSkyBoxContainer(this);
+		//m_pSkyBox->RegistToContainer();
 		PrepareRender();
 		return;
 	}
 	//RENDERER->SetSkyBoxContainer(nullptr);
 }
-CSkyBoxContainer * CSkyBoxContainer::CreateSkyBoxContainer(LPCTSTR pSkyBoxName, UINT textureIndex, CSpaceContainer * pSpaceContainer){
+CSkyBoxContainer * CSkyBoxContainer::CreateSkyBoxContainer(LPCTSTR pSkyBoxName, UINT textureIndex, CSpaceContainer * pSpaceContainer, shared_ptr<CCamera> pCamera){
 	CSkyBoxContainer* pSkyBoxContainer = new CSkyBoxContainer();
 	pSkyBoxContainer->SetSkyBoxName(pSkyBoxName);
 	pSkyBoxContainer->CreateSkyBoxTexture(textureIndex);
 	pSkyBoxContainer->SetSpaceContainer(pSpaceContainer);
-	pSkyBoxContainer->Begin();
+	pSkyBoxContainer->Begin(pCamera);
 	return pSkyBoxContainer;
 }
 void CSkyBoxContainer::CreateSkyBoxTexture(UINT index){
@@ -52,7 +48,7 @@ void CSkyBoxContainer::CreateSkyBoxTexture(UINT index){
 	m_ptxtSkyBox = CTexture::CreateTexture(pstrTextureNames, PS_SLOT_SKYBOX, BIND_PS);
 }
 void CSkyBoxContainer::PrepareRender() {
-	RENDERER->GetSkyBoxRenderContainer()->ClearVolitileObj();
+	RENDERER->GetSkyBoxRenderContainer()->ClearVolatileResources();
 	RENDERER->GetSkyBoxRenderContainer()->AddVolatileTexture(m_ptxtSkyBox);
 	//if (m_bActive) {
 	//	//skybox

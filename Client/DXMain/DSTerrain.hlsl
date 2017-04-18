@@ -1,16 +1,14 @@
 
 texture2D gtxtHeightMap : register(t0);
 texture2D gtxtControllHeightMap : register(t1);
-
 SamplerState gssWRAP_LINEAR : register(s0);
 SamplerState gssWRAP_POINT : register(s1);
 SamplerState gssCLAMP_LINEAR : register(s2);
 SamplerState gssCLAMP_POINT : register(s3);
 
-cbuffer ViewProjectionConstantBuffer : register(b0)
-{
-	matrix gmtxView;
-	matrix gmtxProj;
+
+cbuffer ViewProjectionConstantBuffer : register(b0){
+	matrix gmtxViewProjection;
 };
 
 //#define TEXTURE_SIZE 256
@@ -40,7 +38,6 @@ struct DS_OUT {
 	float3 positionW : POSITION;
 	float2 texCoord : TEXCOORD;
 	float2 detailTexCoord : TEXCOORD1;
-	float3 positionV : TEXCOORD2;
 	//float3 tangentW : TANGENT;
 	//float3 bitangentW : BITANGET;
 };
@@ -65,12 +62,10 @@ DS_OUT main(TERRAIN_HS_CONSTANT input, float2 uv : SV_DomainLocation, OutputPatc
 	//output.tangentW = lerp(lerp(quad[0].tangentW, quad[1].tangentW, uv.x), lerp(quad[2].tangentW, quad[3].tangentW, uv.x), uv.y);
 	//output.bitangentW = lerp(lerp(quad[0].bitangentW, quad[1].bitangentW, uv.x), lerp(quad[2].bitangentW, quad[3].bitangentW, uv.x), uv.y);
 
-	output.positionW.y = gtxtControllHeightMap.SampleLevel(gssCLAMP_LINEAR, output.texCoord, 0).r * 256 *gHeightScale;//get height 
+	output.positionW.y = gtxtControllHeightMap.SampleLevel(gssWRAP_LINEAR, output.texCoord, 0).r * 256 *gHeightScale;//get height 
 
 	//calc _view projection
-	output.position = mul(float4(output.positionW, 1.0f), gmtxView);
-	output.positionV = output.position.xyz;
-	output.position = mul(output.position, gmtxProj);
+	output.position = mul(float4(output.positionW, 1.0f), gmtxViewProjection);
 
 	return output;
 }

@@ -17,7 +17,6 @@ struct DIRECTIONAL_AMBIENT_LIGHT {
 	XMFLOAT4 m_AmbientRange;
 	XMFLOAT4 m_AmbientUp;
 	XMFLOAT4 m_AmbientColor;
-
 };
 
 class CDirectionalLight : public CLight {
@@ -35,7 +34,16 @@ public:
 	virtual XMFLOAT3 GetColor();
 
 	virtual bool IsVisible(shared_ptr<CCamera> pCamera);
+	void PickingProc();
+
+	virtual void LoadInfo();
+
+	//offset length set get
+	void SetOffsetLength(float offsetLength) { m_fOffsetLength = -offsetLength; }
+	float GetOffsetLength() { return -m_fOffsetLength; }
+	//offset length set get
 private:
+	float m_fOffsetLength{ 200.f };
 	//data
 	DIRECTIONAL_AMBIENT_LIGHT m_Directional_AmbientData;
 	//data
