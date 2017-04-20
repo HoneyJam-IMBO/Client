@@ -240,7 +240,7 @@ ID3D11ShaderResourceView * CTexture::CreateTexture2DArraySRV(ID3D11ShaderResourc
 	//make textures
 	ID3D11Texture2D** ppd3dTextures = new ID3D11Texture2D*[nTextures];
 	ID3D11Resource* pResource;
-	for (int i = 0; i < nTextures; ++i) {
+	for (UINT i = 0; i < nTextures; ++i) {
 		ppd3dSRVs[i]->GetResource(&pResource);
 		ppd3dTextures[i] = (ID3D11Texture2D*)(pResource);
 	}

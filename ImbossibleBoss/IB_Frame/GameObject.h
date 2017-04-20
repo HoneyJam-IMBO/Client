@@ -113,7 +113,7 @@ public:
 	//texture select ui를 위한 함수
 	int& GetSelectMeshIndex() { return m_indexSelectMesh; }
 	void SetSelectMeshIndex(float& index) { 
-		m_indexSelectMesh = index; 
+		m_indexSelectMesh = (int)index; 
 	}
 
 	shared_ptr<CAnimater> GetAnimater() { return m_pAnimater; }

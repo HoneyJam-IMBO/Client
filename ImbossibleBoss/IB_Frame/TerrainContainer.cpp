@@ -30,8 +30,8 @@ void CTerrainContainer::Begin() {
 	//터레인 제작
 	//te`rrain
 	CTerrain* pTerrain = nullptr;
-	for (int j = 0; j < m_pSpaceContainer->GetOneSideSpaceNum(); ++j) {
-		for (int i = 0; i < m_pSpaceContainer->GetOneSideSpaceNum(); ++i) {
+	for (UINT j = 0; j < m_pSpaceContainer->GetOneSideSpaceNum(); ++j) {
+		for (UINT i = 0; i < m_pSpaceContainer->GetOneSideSpaceNum(); ++i) {
 			pTerrain = CTerrain::CreateTerrain(this, i, j);
 			m_vpTerrain.push_back(pTerrain);
 		}
