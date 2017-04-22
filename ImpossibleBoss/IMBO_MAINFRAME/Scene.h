@@ -38,13 +38,14 @@ protected:
 
 	//framework
 	CDirectXFramework* m_pFrameWork{ nullptr };
-	//진짜 카메라는 framework에 있다.
 	shared_ptr<CCamera> m_pCamera{ nullptr };
-	//picking
 	CGameObject*	m_pPickingObject{ nullptr };
 
 	SCENE_ID		m_eSceneID{ SC_END };
-private:
+	bool			m_bIsLoading{ false };
+public:
+	bool		GetIsLoading() { return m_bIsLoading; };
+
 
 public:
 	CScene::CScene(SCENE_ID eID){ m_eSceneID = eID; }

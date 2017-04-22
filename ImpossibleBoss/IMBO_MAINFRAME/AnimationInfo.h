@@ -29,7 +29,7 @@ public:
 	//joint data 수정 함수
 	//void ChangeJointData(vector<string>& vJointName);
 
-	XMMATRIX GetCurFrameMtx(UINT JointIndex, UINT meshIndex = 0) { return m_pAnimationData->GetKeyFrames(JointIndex)[m_CurFrame].GetKeyFrameTransformMtx(); };
+	XMMATRIX GetCurFrameMtx(UINT JointIndex, UINT meshIndex = 0) { return m_pAnimationData->GetKeyFrames(JointIndex)[(int)m_CurFrame].GetKeyFrameTransformMtx(); };
 	CAnimationData* GetAnimationData() { return m_pAnimationData; }
 	//map<UINT, vector<CFbxJointData>>& GetAnimationInfos() { return m_mMeshIndexJoints; }
 	

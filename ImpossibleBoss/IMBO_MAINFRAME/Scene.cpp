@@ -36,27 +36,6 @@ void CScene::LoadScene(string path){
 
 	wsMeshRoot.assign(sMeshRoot.cbegin(), sMeshRoot.cend());
 	LoadResource(wsMeshRoot);
-
-
-
-	IMPORTER->Begin(path);
-	//output path
-	wstring wsOutputPath = IMPORTER->ReadWstring();
-	//scene name
-	wstring wsSceneName = IMPORTER->ReadWstring();
-	m_sName.assign(wsSceneName.cbegin(), wsSceneName.cend());
-
-	UPDATER->LoadSpaceInfo();
-	UPDATER->LoadTerrainInfo(wsOutputPath, wsSceneName);
-	UPDATER->LoadObjectsInfo();
-	//effect info
-	RENDERER->LoadEffectInfo(wsOutputPath, wsSceneName);
-
-	//object info save
-	//m_pSpaceContainer->WriteObjects();
-	//EXPORTER->WriteEnter();
-
-	IMPORTER->End();
 }
 
 void CScene::LoadResource(wstring wsMeshRoot){

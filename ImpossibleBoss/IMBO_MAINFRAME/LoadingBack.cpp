@@ -42,14 +42,32 @@ HRESULT CLoadingBack::Initialize()
 	XMStoreFloat4x4(&m_f4x4View, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_f4x4Proj, XMMatrixOrthographicLH(WINSIZEX, WINSIZEY, 0.f, 1.f));
 
-	int k = 0;
+	m_iType = rand() % 3;
 	return S_OK;
 }
 
 int CLoadingBack::Update(float fTimeElapsed)
 {
-	m_fAccTime += fTimeElapsed * 3.f;
-	m_f2XYPos.x += 10.f * cos(m_fAccTime);
+	m_fAccTime += fTimeElapsed * 4.f;
+	//m_f2XYPos.x += 2.f * cos(m_fAccTime);
+
+	//x y 왼쪽 상단이 0, 0 오른쪽 하단이 WINSIZEX, WINSIZEY 임
+
+	if (0 == m_iType)
+	{
+		m_f2XYPos.x = WINSIZEX * 0.5f - cos(m_fAccTime) * 200.f;
+		m_f2XYPos.y = WINSIZEY * 0.5f - sin(m_fAccTime) * 200.f;
+	}
+	else if(1 == m_iType)
+	{
+		m_f2XYPos.x = WINSIZEX * 0.5f - cos(m_fAccTime) * 200.f;
+		//m_f2XYPos.y = WINSIZEY * 0.5f - sin(m_fAccTime) * 200.f;
+	}
+	else if (2 == m_iType)
+	{
+		m_f2XYPos.x = WINSIZEX * 0.5f - cos(m_fAccTime) * 200.f;
+		m_f2XYPos.y = WINSIZEY * 0.5f - cos(m_fAccTime) * 200.f;
+	}
 
 	if (m_pUIRenderCont) m_pUIRenderCont->SetRenderContainer(1.f, this);
 	return 0;

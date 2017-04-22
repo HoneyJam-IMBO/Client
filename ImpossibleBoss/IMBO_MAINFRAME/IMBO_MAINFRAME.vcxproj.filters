@@ -203,9 +203,6 @@
     <Filter Include="소스 파일\03. Scene\-00. Loading">
       <UniqueIdentifier>{79872ec1-93b7-4cc0-99c7-498a0d7be990}</UniqueIdentifier>
     </Filter>
-    <Filter Include="소스 파일\03. Scene\-01. SceneMain">
-      <UniqueIdentifier>{29089177-4d99-4d18-bbf7-e57f06c8c9a8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="소스 파일\04. DXObject">
       <UniqueIdentifier>{d4f6b329-5476-4281-87fe-edb6b238a388}</UniqueIdentifier>
     </Filter>
@@ -381,6 +378,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="소스 파일\03. Scene\-03. SCOriTown">
+      <UniqueIdentifier>{29089177-4d99-4d18-bbf7-e57f06c8c9a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\03. Scene\-01. SCLobby">
+      <UniqueIdentifier>{d7aeaee4-1509-4422-9d15-6434f287cd90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\03. Scene\-02. SCHeroSel">
+      <UniqueIdentifier>{6f0df958-0a3a-44c7-ae84-8e7179fa8f33}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -490,9 +496,6 @@
     </ClInclude>
     <ClInclude Include="Loading.h">
       <Filter>소스 파일\03. Scene\-00. Loading</Filter>
-    </ClInclude>
-    <ClInclude Include="SceneMain.h">
-      <Filter>소스 파일\03. Scene\-01. SceneMain</Filter>
     </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>소스 파일\03. Scene</Filter>
@@ -671,6 +674,12 @@
     <ClInclude Include="IMBO_MAINFRAME.h">
       <Filter>소스 파일\99. Default</Filter>
     </ClInclude>
+    <ClInclude Include="SCOriTown.h">
+      <Filter>소스 파일\03. Scene\-03. SCOriTown</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\SCHeroSel.h">
+      <Filter>소스 파일\03. Scene\-02. SCHeroSel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Light.cpp">
@@ -780,9 +789,6 @@
     </ClCompile>
     <ClCompile Include="Loading.cpp">
       <Filter>소스 파일\03. Scene\-00. Loading</Filter>
-    </ClCompile>
-    <ClCompile Include="SceneMain.cpp">
-      <Filter>소스 파일\03. Scene\-01. SceneMain</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>소스 파일\03. Scene</Filter>
@@ -942,6 +948,12 @@
     </ClCompile>
     <ClCompile Include="IMBO_MAINFRAME.cpp">
       <Filter>소스 파일\99. Default</Filter>
+    </ClCompile>
+    <ClCompile Include="SCOriTown.cpp">
+      <Filter>소스 파일\03. Scene\-03. SCOriTown</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\SCHeroSel.cpp">
+      <Filter>소스 파일\03. Scene\-02. SCHeroSel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

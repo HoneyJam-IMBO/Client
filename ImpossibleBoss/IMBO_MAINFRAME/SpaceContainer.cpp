@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "SpaceContainer.h"
-#include "SceneMain.h"
+
 
 void CSpaceContainer::Begin(){
 

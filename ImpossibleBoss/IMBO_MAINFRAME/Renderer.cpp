@@ -96,17 +96,19 @@ void CRenderer::PreRender()
 	ClearDepthStencilView(m_pd3ddsvDepthStencil);
 	ID3D11RenderTargetView *pd3dRTVs[1] = { m_pd3drtvColorSpecInt };
 	float fClearColor[4] = { 0.f, 0.f, 0.f, 0.f };
-	if (m_pd3drtvColorSpecInt) GLOBALVALUEMGR->GetDeviceContext()->ClearRenderTargetView(m_pd3drtvColorSpecInt, fClearColor);
-	SetRenderTargetViews(1, pd3dRTVs, m_pd3ddsvDepthStencil);
+	//if (m_pd3drtvColorSpecInt) GLOBALVALUEMGR->GetDeviceContext()->ClearRenderTargetView(m_pd3drtvColorSpecInt, fClearColor);
+	//SetRenderTargetViews(1, pd3dRTVs, m_pd3ddsvDepthStencil);
 	GLOBALVALUEMGR->GetDeviceContext()->OMSetDepthStencilState(m_pd3dDepthStencilState, 1);
 	//m_pCamera->SetShaderState();
 
+	SetMainRenderTargetView();
 	if (nullptr != m_pUIRederer){
 		m_pUIRederer->RenderUI();
 	}
 
 
 	DEBUGER->ClearDebuger();
+
 	HRESULT hr = m_pdxgiSwapChain->Present(0, 0);
 	if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 	{

@@ -4,6 +4,7 @@
 
 void CDirectXFramework::Begin(HINSTANCE hInstance, HWND hWnd)
 {
+	srand((unsigned)time(NULL));
 	InitSingleton(hInstance, hWnd);
 	_tcscpy_s(m_pszBuffer, _T("Impossible Boss ("));		//	GameTitle
 }
@@ -33,24 +34,39 @@ void CDirectXFramework::FrameAdvance()
 	::SetWindowText(GLOBALVALUEMGR->GethWnd(), m_pszBuffer);
 }
 void CDirectXFramework::Update(float fTimeElapsed) {
-	RENDERER->Update(fTimeElapsed);
 	//postprocessinglayer 적응값 set
-	ProcessInput(fTimeElapsed);
-	UPDATER->PreUpdate(fTimeElapsed);
-	//-----------------------------현재 씬 실행--------------------------------------
 	if (nullptr != SCENEMGR->GetPresentScene())
+	{
+		if (false == SCENEMGR->GetPresentScene()->GetIsLoading())
+		{
+			RENDERER->Update(fTimeElapsed);
+			ProcessInput(fTimeElapsed);
+			UPDATER->PreUpdate(fTimeElapsed);
+		}		
+	
 		SCENEMGR->GetPresentScene()->Animate(fTimeElapsed);
-
-	UPDATER->Update(fTimeElapsed);
-	UPDATER->PhisicsUpdate(fTimeElapsed);
+		if (false == SCENEMGR->GetPresentScene()->GetIsLoading())
+		{
+			UPDATER->Update(fTimeElapsed);
+			UPDATER->PhisicsUpdate(fTimeElapsed);
+		}		
+	}	
 }
 
 		
 void CDirectXFramework::Render() {
 	//-----------------------------카메라 버퍼 set------------------------------------
-	m_pCamera->SetShaderState();
-	
-	RENDERER->Render(m_pCamera);
+
+	if (nullptr != SCENEMGR->GetPresentScene())
+	{
+		if (true == SCENEMGR->GetPresentScene()->GetIsLoading())
+			RENDERER->PreRender();
+		else
+		{
+			m_pCamera->SetShaderState();
+			RENDERER->Render(m_pCamera);
+		}			
+	}	
 }
 
 

@@ -28,11 +28,12 @@ enum shader_value_num {
 
 enum SCENE_ID
 {
+	SC_LOBBY,
 	SC_HEROSEL,
-	SC_ORITOWN,
-	SC_BURNNINGTOWN,
+	SC_ORITOWN,	
 	SC_REPAIRTOWN,
 	SC_ALDENAD,
 	SC_BOSS,
+	SC_FINAL,
 	SC_END
 };

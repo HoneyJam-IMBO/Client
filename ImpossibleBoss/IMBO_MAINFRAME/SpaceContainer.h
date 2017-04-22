@@ -60,15 +60,15 @@ public:
 	CSpace** GetAllSpace() { return m_ppSpace; }
 	list<CGameObject*>& GetBlockObjectList() { return m_lpBlockObject; }
 	CSpace* GetStartSpace() { return m_pStartSpace; }
-	UINT GetSpaceNum() { return m_nSpace; }
-	UINT GetSize() { return m_size; }
-	UINT GetLevel() { return m_level; }
-	UINT GetOneSideSpaceNum() { return m_oneSideSpaceNum; }
-	UINT GetOneSpaceSize() { return m_oneSpaceSize; }
+	UINT GetSpaceNum() { return (UINT)m_nSpace; }
+	UINT GetSize() { return (UINT)m_size; }
+	UINT GetLevel() { return (UINT)m_level; }
+	UINT GetOneSideSpaceNum() { return (UINT)m_oneSideSpaceNum; }
+	UINT GetOneSpaceSize() { return (UINT)m_oneSpaceSize; }
 
-	int GetSpaceSize() { return m_size; }
-	int GetSpaceLevel() { return m_level; }
-	void SetSpaceSize(int size) { m_size = size; }
-	void SetSpaceLevel(int lv) { m_level = lv; }
+	int GetSpaceSize() { return (int)m_size; }
+	int GetSpaceLevel() { return (int)m_level; }
+	void SetSpaceSize(int size) { m_size = (float)size; }
+	void SetSpaceLevel(int lv) { m_level = (float)lv; }
 	//set get
 };

@@ -17,7 +17,6 @@ public:
 
 	//Loading씬에서 셋
 	void		SetPresentScene(SCENE_ID eID, CScene* pScene);
-
 	void		ChangeScene(SCENE_ID eID);
 
 private:
@@ -27,6 +26,8 @@ private:
 	SCENE_ID	m_eSceneID{ SC_END };
 	//임시
 	CDirectXFramework* m_pFrameWork{ nullptr };
+
+
 
 public:
 	CSceneMgr();

@@ -17,7 +17,7 @@ bool CUpdater::Begin() {
 		XMFLOAT4(1.0f, -1.0f, 1.0f, 0.0f),XMFLOAT4(0.1f, 0.1f, 0.1f, 0.0f) , XMFLOAT4(1.5f, 1.5f, 1.5f, 1.f),//dir
 		XMFLOAT4(0.1f, 0.1f, 0.1f, 1.f), XMFLOAT4(0.1f, 0.1f, 0.1f, 1.f), XMFLOAT4(0.1f, 0.1f, 0.1f, 1.f), XMFLOAT4(5.1f, 5.1f, 5.1f, 1.f)//ambient
 	});
-	m_pDirectionalLight->SetPosition(XMVectorSet(m_pSpaceContainer->GetSize() * 0.5f, m_pSpaceContainer->GetSize(), m_pSpaceContainer->GetSize() * 0.5f, 0.f));
+	m_pDirectionalLight->SetPosition(XMVectorSet((float)m_pSpaceContainer->GetSize() * 0.5f, (float)m_pSpaceContainer->GetSize(), (float)m_pSpaceContainer->GetSize() * 0.5f, 0.f));
 	m_pDirectionalLight->Rotate(30.f, 0.f, 0.f);
 	//-------------------------------------space-------------------------------------
 	return true;
@@ -67,7 +67,7 @@ void CUpdater::LoadSpaceInfo(){
 	//space info
 	float space_size = IMPORTER->ReadFloat();
 	float space_lv = IMPORTER->ReadFloat();
-	m_pSpaceContainer->SetSpaceSize(space_size);
+	m_pSpaceContainer->SetSpaceSize((int)space_size);
 	m_pSpaceContainer->SetSpaceLevel(space_lv);
 	m_pSpaceContainer->ChangeSpaceData();
 

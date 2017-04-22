@@ -3,6 +3,8 @@
 #include "SingleTon.h"
 #include "GameObject.h"
 
+#define THREAD_NUM 2
+
 enum TOOL_MODE {
 	//TOOL_MODE_ANIMATION,
 	TOOL_MODE_TERRAIN,
@@ -59,6 +61,13 @@ private:
 	//device
 	ID3D11Device			*	m_pd3dDevice{ nullptr };
 	ID3D11DeviceContext		*	m_pd3dDeviceContext{ nullptr };
+	//ID3D11CommandList		*	m_pd3dDeviceCommandList[THREAD_NUM];
+
+	std::mutex	m_MyLock;
+public:
+	std::mutex*	GetMutex() { return &m_MyLock; }
+
+private:
 
 	//object pisitioning °´Ã¼ 
 	CGameObject* m_pPositioningObject{ nullptr };

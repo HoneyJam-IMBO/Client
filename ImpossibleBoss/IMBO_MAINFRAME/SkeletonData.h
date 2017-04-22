@@ -9,7 +9,7 @@ public:
 	bool Begin();
 	virtual bool End();
 
-	UINT GetJointCnt() { return m_JointDatas.size(); }
+	UINT GetJointCnt() { return (UINT)m_JointDatas.size(); }
 	vector<CFbxJointData>& GetJointDatas() { return m_JointDatas; }
 
 private:

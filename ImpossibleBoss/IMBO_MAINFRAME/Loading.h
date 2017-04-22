@@ -34,24 +34,13 @@ public:
 	virtual void ProcessInput(float fTimeElapsed);
 
 public: //LoadFunc
+	void LoadScene_LOBBY();
 	void LoadScene_HEROSEL();
 	void LoadScene_ORITOWN();
-	void LoadScene_BURNNINGTOWN();
 	void LoadScene_REPAIRTOWN();
 	void LoadScene_ALDENAD();
 	void LoadScene_BOSS();
 
 
-public:	// Render pipeline
-	ID3D11Texture2D			 *m_pd3dtxtDepthStencil{ nullptr };
-	ID3D11Texture2D			 *m_pd3dtxtColorSpecInt{ nullptr };
-
-	ID3D11DepthStencilView	 *m_pd3ddsvDepthStencil{ nullptr };
-	ID3D11RenderTargetView   *m_pd3drtvColorSpecInt{ nullptr };
-
-	IDXGISwapChain			*m_pdxgiSwapChain{ nullptr };
-
-public:
-	void MakeRenderPipe();
 };
 

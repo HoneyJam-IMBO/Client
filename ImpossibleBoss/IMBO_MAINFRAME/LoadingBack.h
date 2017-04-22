@@ -19,6 +19,9 @@ public:
 	virtual void	Release() ;
 
 private:
+	int		m_iType{ 0 };
+
+private:
 	void	SetParameter();
 };
 

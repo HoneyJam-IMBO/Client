@@ -155,20 +155,22 @@ bool CGlobalValueManager::Begin(HINSTANCE hInst, HWND hWnd) {
 		for (D3D_DRIVER_TYPE &p : d3dDriverTypes)
 		{
 			if (SUCCEEDED(hResult = D3D11CreateDevice(NULL						// 기본 어댑터를 사용하려면 nullptr을 지정합니다.
-				, p							// 하드웨어 그래픽 드라이버를 사용하여 장치를 만듭니다.
-				, 0							// 드라이버가 D3D_DRIVER_TYPE_SOFTWARE가 아닌 경우 0이어야 합니다.
-				, creationFlags				// 디버그 및 Direct2D 호환성 플래그를 설정합니다.
-				, d3dFeatureLevels			// 이 응용 프로그램이 지원할 수 있는 기능 수준 목록입니다.
-				, szFeatureLevel			// 위 목록의 크기입니다.
-				, D3D11_SDK_VERSION			// Windows 스토어 앱의 경우 항상 이 값을 D3D11_SDK_VERSION으로 설정합니다.
-				, &m_pd3dDevice				// 만들어진 Direct3D 장치를 반환합니다.
-				, &nd3dFeatureLevel			// 만들어진 장치의 기능 수준을 반환합니다.
-				, &m_pd3dDeviceContext		// 장치 직접 컨텍스트를 반환합니다.
-			)
-			)
+													, p							// 하드웨어 그래픽 드라이버를 사용하여 장치를 만듭니다.
+													, 0							// 드라이버가 D3D_DRIVER_TYPE_SOFTWARE가 아닌 경우 0이어야 합니다.
+													, creationFlags				// 디버그 및 Direct2D 호환성 플래그를 설정합니다.
+													, d3dFeatureLevels			// 이 응용 프로그램이 지원할 수 있는 기능 수준 목록입니다.
+													, szFeatureLevel			// 위 목록의 크기입니다.
+													, D3D11_SDK_VERSION			// Windows 스토어 앱의 경우 항상 이 값을 D3D11_SDK_VERSION으로 설정합니다.
+													, &m_pd3dDevice				// 만들어진 Direct3D 장치를 반환합니다.
+													, &nd3dFeatureLevel			// 만들어진 장치의 기능 수준을 반환합니다.
+													, &m_pd3dDeviceContext		// 장치 직접 컨텍스트를 반환합니다.
+												)
+												)
 				)
 				break;
 		}
+		//m_pd3dDevice->CreateDeferredContext(0, &m_pd3dDeviceContext);
+
 
 		// 모든 지원 가능한 드라이버에서 생성이 실패하면 프로그램을 종료합니다.
 		if (!m_pd3dDevice)

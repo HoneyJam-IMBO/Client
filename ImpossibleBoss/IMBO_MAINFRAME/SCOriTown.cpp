@@ -1,13 +1,13 @@
 #include "stdafx.h"
-#include "SceneMain.h"
+#include "SCOriTown.h"
 #include "Pawn.h"
 
 
-bool CSceneMain::Begin() {
+bool CSCOriTown::Begin() {
 	//----------------------------------camera-------------------------------------
 	m_pCamera = m_pFrameWork->GetCamera();
+	ReadMapData();
 
-	LoadScene("../../Assets/SceneResource/com_scene/com_scene.scn");
 	m_pObject = new CPawn("elf_01", TAG_DYNAMIC_OBJECT, true);
 	m_pObject->Begin();
 	m_pObject->SetTerrainContainer(UPDATER->GetTerrainContainer());
@@ -23,30 +23,27 @@ bool CSceneMain::Begin() {
 	return CScene::Begin();
 }
 
-bool CSceneMain::End() {	
+bool CSCOriTown::End() {	
 
 	//카메라는 Framework에 존재하는 것이기에 End()작업을 진행하지 않는다.
+	Safe_EndDelete(m_pObject);
 	return CScene::End();
 }
 
-void CSceneMain::Animate(float fTimeElapsed) {
+void CSCOriTown::Animate(float fTimeElapsed) {
 	CScene::Animate(fTimeElapsed);
-	
-	
 }
 
-
-void CSceneMain::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
+void CSCOriTown::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
 	switch (nMessageID)
 	{
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
-
-		POINT p = INPUTMGR->GetMousePoint();
-		m_pPickingObject = PickObjectPointedByCursor(p.x, p.y);
-		if (m_pPickingObject) {
-			m_pPickingObject->PickingProc();
-		}
+		//POINT p = INPUTMGR->GetMousePoint();
+		//m_pPickingObject = PickObjectPointedByCursor(p.x, p.y);
+		//if (m_pPickingObject) {
+		//	m_pPickingObject->PickingProc();
+		//}
 		break;
 	case WM_LBUTTONUP:
 	case WM_RBUTTONUP:
@@ -58,7 +55,7 @@ void CSceneMain::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wPa
 		break;
 	}
 }
-void CSceneMain::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
+void CSCOriTown::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam) {
 	
 	//RCSELLER->OnProcessingKeyboardMessage(hWnd, nMessageID, wParam, lParam);
 	switch (nMessageID){
@@ -78,7 +75,7 @@ void CSceneMain::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM 
 	}
 }
 
-void CSceneMain::ProcessInput(float fTimeElapsed) {
+void CSCOriTown::ProcessInput(float fTimeElapsed) {
 	
 	if (INPUTMGR->KeyDown(VK_P)) {
 		INPUTMGR->SetDebugMode(static_cast<bool>((INPUTMGR->GetDebugMode() + 1) % 2));
@@ -87,7 +84,7 @@ void CSceneMain::ProcessInput(float fTimeElapsed) {
 }
 
 
-CGameObject* CSceneMain::PickObjectPointedByCursor(int xClient, int yClient){
+CGameObject* CSCOriTown::PickObjectPointedByCursor(int xClient, int yClient){
 
 	if (!m_pCamera) return(NULL);
 
@@ -120,48 +117,28 @@ CGameObject* CSceneMain::PickObjectPointedByCursor(int xClient, int yClient){
 	return(pNearestObject);
 }
 
-void CSceneMain::CreateControllObject(string path){
-//resource 제작	
-//	m_MeshCnt = RESOURCEMGR->CreateMultiMesh(path, "Test");
-//	//m_MeshCnt = RESOURCEMGR->CreateMultiMesh("../outputata/text.txt", "Test");
-//	RCSELLER->GetRenderContainer("fbx")->ClearMesh();
-//	char pName[20];
-//	for (int i = 0; i < m_MeshCnt; ++i) {
-//		sprintf(pName, "%s%d", "Test", i);
-//		RCSELLER->GetRenderContainer("fbx")->AddMesh(RESOURCEMGR->GetMesh(pName, i));
-//	}
-//	RCSELLER->GetRenderContainer("fbx")->SetAnimater(RESOURCEMGR->GetAnimater("Test"));
-////resource 제작	
-//
-////객체 제작
-//	m_pFBXObject = new CTestObject();
-//	m_pFBXObject->Begin();
-//	//pObject->SetTerrainContainer(m_pTerrainContainer);
-//	m_pFBXObject->SetPosition(XMLoadFloat3(&XMFLOAT3(UPDATER->GetSpaceContainer()->GetSpaceSize() / 2.f, 0, UPDATER->GetSpaceContainer()->GetSpaceSize() / 2.f)));
-//	UPDATER->GetSpaceContainer()->AddObject(m_pFBXObject);
-////객체 제작
-//	//ui pop up!
-//	m_pFBXObject->PickingProc();
+void CSCOriTown::ReadMapData()
+{
+	IMPORTER->Begin("../../Assets/SceneResource/com_scene/com_scene.scn");
+	//output path
+	wstring wsOutputPath = IMPORTER->ReadWstring();
+	//scene name
+	wstring wsSceneName = IMPORTER->ReadWstring();
+	m_sName.assign(wsSceneName.cbegin(), wsSceneName.cend());
+
+	UPDATER->LoadSpaceInfo();
+	UPDATER->LoadTerrainInfo(wsOutputPath, wsSceneName);
+	UPDATER->LoadObjectsInfo();
+	//effect info
+	RENDERER->LoadEffectInfo(wsOutputPath, wsSceneName);
+
+	IMPORTER->End();
 }
 
-void CSceneMain::CreateSceneContainers(){
-	
-}
-
-void CSceneMain::CreateTerrainContainer(){
-	//terrain
-	UPDATER->SetTerrainContainer(CTerrainContainer::CreateTerrainContainer(L"Temp", 256, 256, 0.5, UPDATER->GetSpaceContainer(), true));
-}
-
-void CSceneMain::CreateSkyBoxContainer(){
-	//skybox
-//	UPDATER->SetSkyBoxContainer(CSkyBoxContainer::CreateSkyBoxContainer(L"Temp", 0, UPDATER->GetSpaceContainer()));
-}
-
-CSceneMain::CSceneMain(SCENE_ID eID, CDirectXFramework* pFrameWork) : CScene(eID) {
+CSCOriTown::CSCOriTown(SCENE_ID eID, CDirectXFramework* pFrameWork) : CScene(eID) {
 	m_pFrameWork = pFrameWork;
 }
-CSceneMain::~CSceneMain() {
+CSCOriTown::~CSCOriTown() {
 
 }
 
