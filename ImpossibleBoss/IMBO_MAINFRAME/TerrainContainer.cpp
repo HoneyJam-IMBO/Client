@@ -48,7 +48,10 @@ void CTerrainContainer::Begin() {
 	GLOBALVALUEMGR->GetDevice()->CreateRasterizerState(&descRasterizer, &m_pd3dSpaceRSState);
 	//RS
 
-	
+	//추가
+	m_pTessFacterBuffer = RESOURCEMGR->CreateConstantBuffer("TerrainTessFacter", 1, sizeof(TERRAIN_TESS_FACTER), 1, BIND_HS);
+	m_pTessFacterData = new TERRAIN_TESS_FACTER;
+
 }
 
 bool CTerrainContainer::End() {
@@ -86,6 +89,10 @@ bool CTerrainContainer::End() {
 
 	if(m_pd3dSpaceRSState)m_pd3dSpaceRSState->Release();
 	if(m_pd3dTempRSState)m_pd3dTempRSState->Release();
+
+	//추가
+	m_pTessFacterBuffer = nullptr;
+
 	return true;
 }
 
@@ -98,6 +105,9 @@ void CTerrainContainer::PrepareRender(){
 		RENDERER->GetTerrainRenderContainer()->AddVolatileTexture(m_pHeightMapTexture);
 		RENDERER->GetTerrainRenderContainer()->AddVolatileTexture(m_pNormalTexture);
 		RENDERER->GetTerrainRenderContainer()->AddVolatileBuffer(m_pGlobalTerrainBuffer);
+		//추가
+		RENDERER->GetTerrainRenderContainer()->AddVolatileBuffer(m_pTessFacterBuffer);
+
 		m_pSplattingInfoManager->SetShaderState();//splatting
 	}
 }
@@ -162,6 +172,8 @@ float CTerrainContainer::GetHeight(XMFLOAT2 xmf2Pos){
 }
 
 void CTerrainContainer::Update(shared_ptr<CCamera> pCamera) {
+	//추가
+	XMStoreFloat3(&m_pTessFacterData->camera_pos, pCamera->GetPosition());
 
 	if (!pCamera) return;
 	if (m_bActive) {
@@ -206,6 +218,9 @@ void CTerrainContainer::SetBufferInfo(){
 	pData->OneSpaceSizeRcp		= m_pGlobalTerrainData->OneSpaceSizeRcp;
 	pData->HeightScale			= m_pGlobalTerrainData->HeightScale;
 	m_pGlobalTerrainBuffer->Unmap();
+
+	//추가
+	SetTerrainTessFacter(m_pTessFacterData->zn, m_pTessFacterData->zf, m_pTessFacterData->space_lavel_pow, m_pTessFacterData->max_facter_value, m_pTessFacterData->min_facter_value, m_pTessFacterData->camera_pos);
 }
 
 
@@ -479,12 +494,31 @@ void CTerrainContainer::ChangeSpaceData(){
 		}
 	}
 	//terrain
+
+	//추가 
+	int space_lavel_pow = 1;
+	for (int i = 0; i < m_pSpaceContainer->GetSpaceLevel(); ++i) {
+		space_lavel_pow *= 2;
+	}
+	SetTessFacterSLP(space_lavel_pow);
+
 }
 void CTerrainContainer::SetActive(bool b){
 	for (auto pTerrain : m_vpTerrain) {
 		pTerrain->SetActive(b);
 	}
 	m_bActive = b;
+}
+//추가 
+void CTerrainContainer::SetTerrainTessFacter(float zn, float zf, float space_level_pow, float max_facter_value, float min_facter_value, XMFLOAT3 xmf3CameraPos) {
+	TERRAIN_TESS_FACTER* pData = (TERRAIN_TESS_FACTER*)m_pTessFacterBuffer->Map();
+	pData->camera_pos = xmf3CameraPos;
+	pData->zn = zn;
+	pData->zf = zf;
+	pData->space_lavel_pow = space_level_pow;
+	pData->max_facter_value = max_facter_value / space_level_pow;
+	pData->min_facter_value = min_facter_value / space_level_pow;
+	m_pTessFacterBuffer->Unmap();
 }
 CTerrainContainer::CTerrainContainer() : CObject("terraincontainer") {
 }

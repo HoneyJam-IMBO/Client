@@ -3,6 +3,17 @@
 #include "Terrain.h"
 #include "SplattingInfoManager.h"
 
+
+//추가
+struct TERRAIN_TESS_FACTER {
+	XMFLOAT3 camera_pos;
+	float zn{ 1000.f };
+	float zf{ 500.f };
+	float max_facter_value{ 20.f };
+	float min_facter_value{ 10.f };
+	float space_lavel_pow{ 1.f };
+};
+
 struct TERRAIN_GLOBAL_VALUE {
 	float OneSpaceSizeRcp{ 0 };// 1/하나의 공간의 크기
 	float OneSideSpaceNumRcp{ 0 };// 1/한의 사이드에 있는 공간 수 
@@ -70,7 +81,26 @@ public:
 
 	void SetActive(bool b);
 	bool GetActive() { return m_bActive; }
+
+	//추가
+	void SetTerrainTessFacter(float zn, float zf, float space_level_pow, float max_facter_value, float min_facter_value, XMFLOAT3 xmf3CameraPos);
+	void SetTessFacterZn(float zn) { m_pTessFacterData->zn = zn; }
+	void SetTessFacterZf(float zf) { m_pTessFacterData->zf = zf; }
+	void SetTessFacterSLP(float space_level_pow) { m_pTessFacterData->space_lavel_pow = space_level_pow; }
+	void SetTessFacterMaxFV(float max_facter_value) { m_pTessFacterData->max_facter_value = max_facter_value; }
+	void SetTessFacterMinFV(float min_facter_value) { m_pTessFacterData->min_facter_value = min_facter_value; }
+
+	float GetTessFacterZn() { return m_pTessFacterData->zn; }
+	float GetTessFacterZf() { return m_pTessFacterData->zf; }
+	float GetTessFacterSLP() { return m_pTessFacterData->space_lavel_pow; }
+	float GetTessFacterMaxFV() { return m_pTessFacterData->max_facter_value; }
+	float GetTessFacterMinFV() { return m_pTessFacterData->min_facter_value; }
+
 private:
+	//추가
+	shared_ptr<CBuffer> m_pTessFacterBuffer{ nullptr };
+	TERRAIN_TESS_FACTER* m_pTessFacterData{ nullptr };
+
 	bool m_bIsTool{ false };
 	bool m_bActive{ true };
 	wstring m_wsSceneName;

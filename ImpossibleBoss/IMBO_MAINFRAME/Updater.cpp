@@ -83,6 +83,17 @@ void CUpdater::LoadSpaceInfo(){
 void CUpdater::LoadTerrainInfo(wstring wsOutputPath, wstring wsSceneName){
 	if (m_pTerrainContainer->GetActive()) {//terrain container가 있다면..
 
+		//추가
+		float zn = IMPORTER->ReadFloat();
+		m_pTerrainContainer->SetTessFacterZn(zn);
+		float zf = IMPORTER->ReadFloat();
+		m_pTerrainContainer->SetTessFacterZf(zf);
+		float max_facter_value = IMPORTER->ReadFloat();
+		m_pTerrainContainer->SetTessFacterMaxFV(max_facter_value);
+		float min_facter_value = IMPORTER->ReadFloat();
+		m_pTerrainContainer->SetTessFacterMinFV(min_facter_value);
+
+
 		//m_pTerrainContainer->SetSceneName(wsSceneName);//이름은 나중에 바꾸도록 한다.
 		//base texture path
 		XMFLOAT3 xmf3Scale;
