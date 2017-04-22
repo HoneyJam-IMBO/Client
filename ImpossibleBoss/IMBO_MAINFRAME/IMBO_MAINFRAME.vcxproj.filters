@@ -1,0 +1,1179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="0. HLSL">
+      <UniqueIdentifier>{3201b79a-6449-4674-a9ed-ebad80b598e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\00. AnimationObj">
+      <UniqueIdentifier>{e33ca5db-d824-44b5-a7a8-2145c83e04e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\01. Compute">
+      <UniqueIdentifier>{28f55f74-cee0-4040-ae2e-ecf1b5cfb30b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\02. Debug">
+      <UniqueIdentifier>{51cf783e-9d57-4bc9-8e9d-cc416553f46a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\03. Light">
+      <UniqueIdentifier>{5b99450d-88ee-4fea-b51c-a9999387dcc9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\04. PostProcessing">
+      <UniqueIdentifier>{6c64baea-b8a5-461e-9354-458f423b8924}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\05. SkyBox">
+      <UniqueIdentifier>{8b11b4f0-95e5-44b1-9d57-146652f4ebce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\06. SSLR">
+      <UniqueIdentifier>{864941e9-9733-4f93-81b3-5a6864eac548}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\07. Terrain">
+      <UniqueIdentifier>{c6a9561f-bfb8-4082-8d18-30cb7dd15657}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\08. TestDeferred">
+      <UniqueIdentifier>{761a29c2-17e9-48c9-a833-04200f1d0df3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\09. testinstancing">
+      <UniqueIdentifier>{6800db66-4600-4a97-845c-b2987002d44b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\10. UI">
+      <UniqueIdentifier>{e2384c5c-3528-4d96-a640-6e7db1cc427d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\11. Water">
+      <UniqueIdentifier>{ef048a38-3011-4693-98d8-52723cf6be2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\98. Default">
+      <UniqueIdentifier>{dfbcb52e-3c0c-400b-b73e-626a24f98da5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\99. hlsli">
+      <UniqueIdentifier>{db347a3f-488a-4c66-a635-70c40c947b3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\01. Compute\-0. AmbientOcculusion">
+      <UniqueIdentifier>{3435d1b2-4885-45c0-9dab-85f015ef03e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\01. Compute\-1. PostProcessing">
+      <UniqueIdentifier>{1b0fb5dd-5fbe-4e0f-9381-95c1070806c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\01. Compute\-2. SSLR">
+      <UniqueIdentifier>{baa24f11-70ec-409d-aed5-04bf0c9da95b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\02. Debug\-0. BoundingBox">
+      <UniqueIdentifier>{41306139-0e73-4a08-8557-c9d140ee9198}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\02. Debug\-1. CoordinateSys">
+      <UniqueIdentifier>{557b3477-105a-4405-afd4-1db2a867017c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\02. Debug\-2. DebugDepthTex">
+      <UniqueIdentifier>{5b4867dc-5081-41df-84b6-089d9fb44bbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\02. Debug\-3. DebugTex">
+      <UniqueIdentifier>{15bc7319-4e12-4c19-9674-e43cf6782697}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\03. Light\-0. Capsule">
+      <UniqueIdentifier>{5085d33e-40ec-41fb-baaf-b6f0fe96c616}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\03. Light\-1. Directional">
+      <UniqueIdentifier>{a4513f44-9361-4406-9ed3-9c5b98460827}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\03. Light\-2. Point">
+      <UniqueIdentifier>{29729dbc-b941-4e0e-85c2-533aea208f5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\03. Light\-3. Spot">
+      <UniqueIdentifier>{2c49dcf9-740b-468b-a85f-5122d95d223c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\06. SSLR\-0. Combine">
+      <UniqueIdentifier>{3ee1b811-ef49-4c2f-9b6c-47dd057ad136}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="0. HLSL\06. SSLR\-1. RayTrace">
+      <UniqueIdentifier>{6edb252f-d822-4ccb-87a2-ef6d420feddd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton">
+      <UniqueIdentifier>{09339cc1-1087-428e-aff7-ba78a34b629d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-00. Debuger">
+      <UniqueIdentifier>{955d3d0f-baab-4859-97d2-c8f8b4904c85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-00. Debuger\DebugFontData">
+      <UniqueIdentifier>{3b435487-e5a6-437b-b863-8bdab3b2da22}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-00. Debuger\DebugTextureData">
+      <UniqueIdentifier>{5df6d122-c2af-43c4-a21d-866694907962}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-01. DirectoryFinder">
+      <UniqueIdentifier>{9000dc70-c561-496c-b452-ebcd92badfa8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-02. FileIO">
+      <UniqueIdentifier>{520b18a7-9747-42b2-a03c-9ca699e3efdd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-02. FileIO\Importer">
+      <UniqueIdentifier>{23c3b293-5d09-4e34-b4e2-fb789ad5dc99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-02. FileIO\Importer\AnimationData">
+      <UniqueIdentifier>{38950adf-0634-4a36-b1ff-950cf859cb04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-02. FileIO\Importer\AnimationData\KeyFrame">
+      <UniqueIdentifier>{7fabaf8e-d38e-41c9-bf90-6d59cec383a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-02. FileIO\Importer\FileImporter">
+      <UniqueIdentifier>{b9588dbf-515c-4c3b-8c7c-71617b91797b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-02. FileIO\Importer\FileImporter\TxtImporter">
+      <UniqueIdentifier>{591552d9-c45e-4163-9cd7-4f1c5e3a8af9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-02. FileIO\Importer\SkeletonData">
+      <UniqueIdentifier>{c4b25a9d-4d46-4664-9697-bb159165705d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-02. FileIO\Importer\SkeletonData\FbxJointData">
+      <UniqueIdentifier>{0bd2616c-5aef-47f6-8788-d86809590ea5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-03. GlobalValueMGR">
+      <UniqueIdentifier>{874a2e15-f91e-43fe-9ca1-49c97517d143}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-04. InputMGR">
+      <UniqueIdentifier>{cbaec385-54f5-4972-a6b6-00b26f0d6095}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-05. RCSeller">
+      <UniqueIdentifier>{bfbf940a-6c2b-4167-a871-fdd1d5aaf86d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-06. RENDERER">
+      <UniqueIdentifier>{a56ca65a-03c5-4a9e-9688-faa6fc1b2b62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-06. RENDERER\01. ObjectRenderer">
+      <UniqueIdentifier>{27981f6e-818d-4471-9441-010e1b2eff24}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-06. RENDERER\02. AORenderer">
+      <UniqueIdentifier>{d0bdcd8b-e56b-4d0c-8d97-f72e02f3cdc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-06. RENDERER\03. LightRenderer">
+      <UniqueIdentifier>{722405c5-60dd-4df1-b293-11d2a91e7421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-06. RENDERER\04. BloomDownScale">
+      <UniqueIdentifier>{d897c976-2c52-48bd-8daf-488097539a4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-06. RENDERER\05. Bloom">
+      <UniqueIdentifier>{defcf977-6050-4f2e-a730-7074779bb4ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-06. RENDERER\06. Blur">
+      <UniqueIdentifier>{2122d417-4e86-40de-9ab5-d21865df2d64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-06. RENDERER\07. PostProcessingFinalPass">
+      <UniqueIdentifier>{6f34ab79-1674-4a76-952c-29af6a09290f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-06. RENDERER\08. SSLR">
+      <UniqueIdentifier>{4a75e639-527c-4666-9adb-fb67ccc46c83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-06. RENDERER\09. Shadow">
+      <UniqueIdentifier>{41c553da-bc17-4ef4-8844-92dc80be1e84}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-06. RENDERER\10. UIRenderer">
+      <UniqueIdentifier>{a019b998-a63f-4e21-8ec2-1a38a2f677b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-06. RENDERER\11. WaterRenderer">
+      <UniqueIdentifier>{7615d184-f630-40c5-933a-41b4736c8207}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-07. ResourceMGR">
+      <UniqueIdentifier>{74c52d3f-51a2-4242-874a-372b8bacdee2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-08. Timer">
+      <UniqueIdentifier>{09ab903a-9f4f-4745-80ef-f3284cdcb62c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-09. Updater">
+      <UniqueIdentifier>{e4421807-a76d-46a4-8186-398c65d7220b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-10. SceneMGR">
+      <UniqueIdentifier>{b690a152-599d-4f38-b86c-9a3a1d22bd2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-11. CameraMGR">
+      <UniqueIdentifier>{2639752a-a08a-4e42-92fc-60c65cf85825}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\00. Singleton\-12. NetworkMGR">
+      <UniqueIdentifier>{55a146f0-4e76-4782-85fd-e528cd585c65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\01. Object">
+      <UniqueIdentifier>{856a1b28-8708-47f2-88f7-66d4317f024d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\02. FrameWork">
+      <UniqueIdentifier>{3bacb1c4-98ed-4207-8943-f7182a518ffa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\03. Scene">
+      <UniqueIdentifier>{06eb86f8-c812-4ae5-86df-32ac3dd7a4bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\03. Scene\-00. Loading">
+      <UniqueIdentifier>{79872ec1-93b7-4cc0-99c7-498a0d7be990}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\03. Scene\-01. SceneMain">
+      <UniqueIdentifier>{29089177-4d99-4d18-bbf7-e57f06c8c9a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject">
+      <UniqueIdentifier>{d4f6b329-5476-4281-87fe-edb6b238a388}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-00. Camera">
+      <UniqueIdentifier>{714cb2b9-2a74-42e3-8975-900e4c868805}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-00. Camera\FreeCamera">
+      <UniqueIdentifier>{4697a9c7-2caf-4e89-bd0c-930a5f65a214}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-01. Container">
+      <UniqueIdentifier>{0f27f55c-93d9-4624-89e7-9dd488ac7c85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-01. Container\RenderContainer">
+      <UniqueIdentifier>{cb9cf074-0a37-4ec8-b540-e018b3746c2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-01. Container\RenderContainer\Debug">
+      <UniqueIdentifier>{dba1eb9e-c194-45d9-9fe2-ad7d76290246}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-02. Mesh">
+      <UniqueIdentifier>{87829711-0e7e-4377-9d0b-b4138fd3542f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-02. Mesh\DEBUG">
+      <UniqueIdentifier>{c2150b6e-d6fb-4e01-9966-a0e9839105a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-02. Mesh\DEBUG\BoundingBoxMesh">
+      <UniqueIdentifier>{adf720ed-df29-460b-acbf-60e6398cc07b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-02. Mesh\DEBUG\CoordinateSysMesh">
+      <UniqueIdentifier>{e25818e7-4dd8-44c3-a412-be34188e8c4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-02. Mesh\DEBUG\DebugTextureMesh">
+      <UniqueIdentifier>{4069edc6-3213-46a4-89c2-70a87a19b3a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-02. Mesh\DeferredMesh">
+      <UniqueIdentifier>{796a7b54-12fb-4bf8-8ec5-fe884d60365f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-02. Mesh\LightMesh">
+      <UniqueIdentifier>{9b1240a0-7a22-4f4e-8d36-cc013cd9c05f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-02. Mesh\OBJECT">
+      <UniqueIdentifier>{9f6d5e1e-37ab-4dff-80d3-9aab76f4a47a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-02. Mesh\OBJECT\FileBasedMesh">
+      <UniqueIdentifier>{7053edf3-1b0e-41f5-b5bb-a966ebd36253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-02. Mesh\OBJECT\SkyBoxMesh">
+      <UniqueIdentifier>{e204da28-f8c0-491a-812d-f29d92e2da14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-02. Mesh\OBJECT\SpaceMesh">
+      <UniqueIdentifier>{69970808-25c0-48dd-8ba6-e730392c523d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-02. Mesh\OBJECT\TerrainMesh">
+      <UniqueIdentifier>{bde9620c-859f-479c-a049-e4f649fc62e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-02. Mesh\Water">
+      <UniqueIdentifier>{60e8f8a2-aee5-4ed9-a3a2-ece09d00aa68}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-03. Shader">
+      <UniqueIdentifier>{c0bc6ce2-258d-449b-9c6e-9fad9a465931}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-03. Shader\ComputerSahder">
+      <UniqueIdentifier>{ccd6d5dd-6ca8-475e-b2b2-36aa59073555}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-03. Shader\RenderShader">
+      <UniqueIdentifier>{ca3d233d-a529-487d-bec2-ec0bedf43627}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-04. Material">
+      <UniqueIdentifier>{ea65c9cc-27ed-44bb-9f47-d2086fb63366}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-05. Texture">
+      <UniqueIdentifier>{2ae470c8-e309-4634-9db1-7a8a45afb64c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-05. Texture\Sampler">
+      <UniqueIdentifier>{727add8f-58b8-4064-8613-c3c3005c6dc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-05. Texture\Texture">
+      <UniqueIdentifier>{20fdd550-37d3-420d-aa09-787b550f1581}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-06. Buffer">
+      <UniqueIdentifier>{bbfa9d91-1ce5-412a-bf35-5bd510d4d9ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-07. Animater">
+      <UniqueIdentifier>{6fc7488e-ca8f-4e00-bbac-1a762af304b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\04. DXObject\-07. Animater\0. AnimationInfo">
+      <UniqueIdentifier>{9c628c27-9e16-44ff-8c2a-ff13fe04f9c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject">
+      <UniqueIdentifier>{1dac4725-8a41-4ab8-9470-93811c8ff3ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-00. DEBUG">
+      <UniqueIdentifier>{77c556ba-adea-4e15-bf77-8f38b3e41f60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-00. DEBUG\BoundingBox">
+      <UniqueIdentifier>{81606880-fda5-4912-9617-082f0de054d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-00. DEBUG\CoordinateSys">
+      <UniqueIdentifier>{9c02427e-f3b8-4831-baf2-50e0123ee429}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-00. DEBUG\DebugTexture">
+      <UniqueIdentifier>{91f40133-5317-4eb0-8cee-b9079e1a173a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-01. Light">
+      <UniqueIdentifier>{275ca193-8818-4461-86e4-e3922a921482}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-01. Light\CapsuleLight">
+      <UniqueIdentifier>{1b17a0d8-806b-4f16-8569-fecbf0a46b45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-01. Light\DirectionalLight">
+      <UniqueIdentifier>{7261da55-d51b-4f84-b9aa-d89d3d32af8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-01. Light\PointLight">
+      <UniqueIdentifier>{5c3d953d-6300-4ce2-80f8-7ae4caf52798}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-01. Light\SpotLight">
+      <UniqueIdentifier>{9042dc80-a7a0-4f3c-b22f-fc1524b09111}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-02. SkyBox">
+      <UniqueIdentifier>{184f4b02-7819-4eb9-b276-9d5e43aa3ccd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-02. SkyBox\SkyBoxContainer">
+      <UniqueIdentifier>{29c620ff-113a-4e50-8773-38795f2ae3da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-03. Space">
+      <UniqueIdentifier>{413f4348-7cba-48fe-a41e-6f0a1b93cd26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-03. Space\SpaceContainer">
+      <UniqueIdentifier>{0a16febb-84d4-4d86-92ce-efd1dba41f87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-04. Terrain">
+      <UniqueIdentifier>{8748b0ad-94c1-43d7-b8d9-5047566e877c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-04. Terrain\SplattingInfo">
+      <UniqueIdentifier>{303c824b-be4c-4284-8ab7-8eebb7c9f3e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-04. Terrain\SplattingInfo\SplattingInfoManager">
+      <UniqueIdentifier>{99f67fb0-00a3-44d4-89ec-74f8fd98b8ba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-04. Terrain\TerrainContainer">
+      <UniqueIdentifier>{486818b8-6313-4d0b-94c4-62032723ed41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-05. Player">
+      <UniqueIdentifier>{6cd9e0b8-b032-4005-a48d-2f3a66169516}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-05. Player\0. Pawn">
+      <UniqueIdentifier>{34d05e8f-01e6-40f5-8df7-313f60912693}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-06. Monster">
+      <UniqueIdentifier>{97c20e0f-c678-4bae-9b8a-fa0d1bd69ee2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-07. Skill/Effect">
+      <UniqueIdentifier>{790583d1-2896-4de2-8604-e362c014e870}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-08. UI">
+      <UniqueIdentifier>{bac129dc-a18d-4f5e-9a30-c195be69ead6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\05. GameObject\-08. UI\01. LoadingBack">
+      <UniqueIdentifier>{6482b439-28f6-4b51-928d-9f47e7550eda}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\06. Component">
+      <UniqueIdentifier>{0c9ae41c-f497-49b2-8986-c86cee32e973}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\06. Component\AnimateComponent">
+      <UniqueIdentifier>{b067d882-03af-4255-836f-3546e86b51f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\98. Header">
+      <UniqueIdentifier>{2dd1158e-354e-41f0-8e10-e24ec1c725c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\99. Default">
+      <UniqueIdentifier>{73b3b726-b80d-4cd0-b380-47b954ad7c94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="소스 파일\99. Default\리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Light.h">
+      <Filter>소스 파일\05. GameObject\-01. Light</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugFontData.h">
+      <Filter>소스 파일\00. Singleton\-00. Debuger\DebugFontData</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTextureData.h">
+      <Filter>소스 파일\00. Singleton\-00. Debuger\DebugTextureData</Filter>
+    </ClInclude>
+    <ClInclude Include="Debuger.h">
+      <Filter>소스 파일\00. Singleton\-00. Debuger</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectoryFinder.h">
+      <Filter>소스 파일\00. Singleton\-01. DirectoryFinder</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyFrame.h">
+      <Filter>소스 파일\00. Singleton\-02. FileIO\Importer\AnimationData\KeyFrame</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationData.h">
+      <Filter>소스 파일\00. Singleton\-02. FileIO\Importer\AnimationData</Filter>
+    </ClInclude>
+    <ClInclude Include="TxtImporter.h">
+      <Filter>소스 파일\00. Singleton\-02. FileIO\Importer\FileImporter\TxtImporter</Filter>
+    </ClInclude>
+    <ClInclude Include="FileImporter.h">
+      <Filter>소스 파일\00. Singleton\-02. FileIO\Importer\FileImporter</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxJointData.h">
+      <Filter>소스 파일\00. Singleton\-02. FileIO\Importer\SkeletonData\FbxJointData</Filter>
+    </ClInclude>
+    <ClInclude Include="SkeletonData.h">
+      <Filter>소스 파일\00. Singleton\-02. FileIO\Importer\SkeletonData</Filter>
+    </ClInclude>
+    <ClInclude Include="Importer.h">
+      <Filter>소스 파일\00. Singleton\-02. FileIO\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="GlobalValueManager.h">
+      <Filter>소스 파일\00. Singleton\-03. GlobalValueMGR</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>소스 파일\00. Singleton\-04. InputMGR</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderContainerSeller.h">
+      <Filter>소스 파일\00. Singleton\-05. RCSeller</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectRenderer.h">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\01. ObjectRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="AORenderer.h">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\02. AORenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="LightRenderer.h">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\03. LightRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="BloomDownScale.h">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\04. BloomDownScale</Filter>
+    </ClInclude>
+    <ClInclude Include="Bloom.h">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\05. Bloom</Filter>
+    </ClInclude>
+    <ClInclude Include="Blur.h">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\06. Blur</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessingFinalPass.h">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\07. PostProcessingFinalPass</Filter>
+    </ClInclude>
+    <ClInclude Include="SSLR.h">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\08. SSLR</Filter>
+    </ClInclude>
+    <ClInclude Include="Shadow.h">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\09. Shadow</Filter>
+    </ClInclude>
+    <ClInclude Include="UIRenderer.h">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\10. UIRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterRenderer.h">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\11. WaterRenderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceManager.h">
+      <Filter>소스 파일\00. Singleton\-07. ResourceMGR</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>소스 파일\00. Singleton\-08. Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="Updater.h">
+      <Filter>소스 파일\00. Singleton\-09. Updater</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMgr.h">
+      <Filter>소스 파일\00. Singleton\-10. SceneMGR</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraMgr.h">
+      <Filter>소스 파일\00. Singleton\-11. CameraMGR</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkMgr.h">
+      <Filter>소스 파일\00. Singleton\-12. NetworkMGR</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>소스 파일\01. Object</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXFramework.h">
+      <Filter>소스 파일\02. FrameWork</Filter>
+    </ClInclude>
+    <ClInclude Include="Loading.h">
+      <Filter>소스 파일\03. Scene\-00. Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneMain.h">
+      <Filter>소스 파일\03. Scene\-01. SceneMain</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>소스 파일\03. Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="FreeCamera.h">
+      <Filter>소스 파일\04. DXObject\-00. Camera\FreeCamera</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>소스 파일\04. DXObject\-00. Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugRenderContainer.h">
+      <Filter>소스 파일\04. DXObject\-01. Container\RenderContainer\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderContainer.h">
+      <Filter>소스 파일\04. DXObject\-01. Container\RenderContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBoxMesh.h">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\DEBUG\BoundingBoxMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="CoordinateSysMesh.h">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\DEBUG\CoordinateSysMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTextureMesh.h">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\DEBUG\DebugTextureMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="TestDeferredMesh.h">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\DeferredMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="CapsuleLightMesh.h">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\LightMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLightMesh.h">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\LightMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLightMesh.h">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\LightMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLightMesh.h">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\LightMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="FileBasedMesh.h">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\OBJECT\FileBasedMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBoxMesh.h">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\OBJECT\SkyBoxMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="SpaceMesh.h">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\OBJECT\SpaceMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainMesh.h">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\OBJECT\TerrainMesh</Filter>
+    </ClInclude>
+    <ClInclude Include="WaterMesh.h">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\Water</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>소스 파일\04. DXObject\-02. Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="ComputeShader.h">
+      <Filter>소스 파일\04. DXObject\-03. Shader\ComputerSahder</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderShader.h">
+      <Filter>소스 파일\04. DXObject\-03. Shader\RenderShader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>소스 파일\04. DXObject\-03. Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>소스 파일\04. DXObject\-04. Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Sampler.h">
+      <Filter>소스 파일\04. DXObject\-05. Texture\Sampler</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>소스 파일\04. DXObject\-05. Texture\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Buffer.h">
+      <Filter>소스 파일\04. DXObject\-06. Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimationInfo.h">
+      <Filter>소스 파일\04. DXObject\-07. Animater\0. AnimationInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="Animater.h">
+      <Filter>소스 파일\04. DXObject\-07. Animater</Filter>
+    </ClInclude>
+    <ClInclude Include="DXObject.h">
+      <Filter>소스 파일\04. DXObject</Filter>
+    </ClInclude>
+    <ClInclude Include="BoundingBox.h">
+      <Filter>소스 파일\05. GameObject\-00. DEBUG\BoundingBox</Filter>
+    </ClInclude>
+    <ClInclude Include="CoordinateSys.h">
+      <Filter>소스 파일\05. GameObject\-00. DEBUG\CoordinateSys</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugTexture.h">
+      <Filter>소스 파일\05. GameObject\-00. DEBUG\DebugTexture</Filter>
+    </ClInclude>
+    <ClInclude Include="CapsuleLight.h">
+      <Filter>소스 파일\05. GameObject\-01. Light\CapsuleLight</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectionalLight.h">
+      <Filter>소스 파일\05. GameObject\-01. Light\DirectionalLight</Filter>
+    </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>소스 파일\05. GameObject\-01. Light\PointLight</Filter>
+    </ClInclude>
+    <ClInclude Include="SpotLight.h">
+      <Filter>소스 파일\05. GameObject\-01. Light\SpotLight</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBoxContainer.h">
+      <Filter>소스 파일\05. GameObject\-02. SkyBox\SkyBoxContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="SkyBox.h">
+      <Filter>소스 파일\05. GameObject\-02. SkyBox</Filter>
+    </ClInclude>
+    <ClInclude Include="SpaceContainer.h">
+      <Filter>소스 파일\05. GameObject\-03. Space\SpaceContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="Space.h">
+      <Filter>소스 파일\05. GameObject\-03. Space</Filter>
+    </ClInclude>
+    <ClInclude Include="SplattingInfoManager.h">
+      <Filter>소스 파일\05. GameObject\-04. Terrain\SplattingInfo\SplattingInfoManager</Filter>
+    </ClInclude>
+    <ClInclude Include="SplattingInfo.h">
+      <Filter>소스 파일\05. GameObject\-04. Terrain\SplattingInfo</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainContainer.h">
+      <Filter>소스 파일\05. GameObject\-04. Terrain\TerrainContainer</Filter>
+    </ClInclude>
+    <ClInclude Include="Terrain.h">
+      <Filter>소스 파일\05. GameObject\-04. Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="Pawn.h">
+      <Filter>소스 파일\05. GameObject\-05. Player\0. Pawn</Filter>
+    </ClInclude>
+    <ClInclude Include="LoadingBack.h">
+      <Filter>소스 파일\05. GameObject\-08. UI\01. LoadingBack</Filter>
+    </ClInclude>
+    <ClInclude Include="UIObject.h">
+      <Filter>소스 파일\05. GameObject\-08. UI</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>소스 파일\05. GameObject</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimateComponent.h">
+      <Filter>소스 파일\06. Component\AnimateComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="RotateComponent.h">
+      <Filter>소스 파일\06. Component\AnimateComponent</Filter>
+    </ClInclude>
+    <ClInclude Include="Component.h">
+      <Filter>소스 파일\06. Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Define.h">
+      <Filter>소스 파일\98. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Enum.h">
+      <Filter>소스 파일\98. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Function.h">
+      <Filter>소스 파일\98. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>소스 파일\98. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Struct.h">
+      <Filter>소스 파일\98. Header</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>소스 파일\99. Default\리소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>소스 파일\99. Default\리소스 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="IMBO_MAINFRAME.h">
+      <Filter>소스 파일\99. Default</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Light.cpp">
+      <Filter>소스 파일\05. GameObject\-01. Light</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugFontData.cpp">
+      <Filter>소스 파일\00. Singleton\-00. Debuger\DebugFontData</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugTextureData.cpp">
+      <Filter>소스 파일\00. Singleton\-00. Debuger\DebugTextureData</Filter>
+    </ClCompile>
+    <ClCompile Include="Debuger.cpp">
+      <Filter>소스 파일\00. Singleton\-00. Debuger</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectoryFinder.cpp">
+      <Filter>소스 파일\00. Singleton\-01. DirectoryFinder</Filter>
+    </ClCompile>
+    <ClCompile Include="KeyFrame.cpp">
+      <Filter>소스 파일\00. Singleton\-02. FileIO\Importer\AnimationData\KeyFrame</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationData.cpp">
+      <Filter>소스 파일\00. Singleton\-02. FileIO\Importer\AnimationData</Filter>
+    </ClCompile>
+    <ClCompile Include="TxtImporter.cpp">
+      <Filter>소스 파일\00. Singleton\-02. FileIO\Importer\FileImporter\TxtImporter</Filter>
+    </ClCompile>
+    <ClCompile Include="FileImporter.cpp">
+      <Filter>소스 파일\00. Singleton\-02. FileIO\Importer\FileImporter</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxJointData.cpp">
+      <Filter>소스 파일\00. Singleton\-02. FileIO\Importer\SkeletonData\FbxJointData</Filter>
+    </ClCompile>
+    <ClCompile Include="SkeletonData.cpp">
+      <Filter>소스 파일\00. Singleton\-02. FileIO\Importer\SkeletonData</Filter>
+    </ClCompile>
+    <ClCompile Include="Importer.cpp">
+      <Filter>소스 파일\00. Singleton\-02. FileIO\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="GlobalValueManager.cpp">
+      <Filter>소스 파일\00. Singleton\-03. GlobalValueMGR</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>소스 파일\00. Singleton\-04. InputMGR</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderContainerSeller.cpp">
+      <Filter>소스 파일\00. Singleton\-05. RCSeller</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectRenderer.cpp">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\01. ObjectRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="AORenderer.cpp">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\02. AORenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="LightRenderer.cpp">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\03. LightRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="BloomDownScale.cpp">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\04. BloomDownScale</Filter>
+    </ClCompile>
+    <ClCompile Include="Bloom.cpp">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\05. Bloom</Filter>
+    </ClCompile>
+    <ClCompile Include="Blur.cpp">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\06. Blur</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcessingFinalPass.cpp">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\07. PostProcessingFinalPass</Filter>
+    </ClCompile>
+    <ClCompile Include="SSLR.cpp">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\08. SSLR</Filter>
+    </ClCompile>
+    <ClCompile Include="Shadow.cpp">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\09. Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="UIRenderer.cpp">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\10. UIRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterRenderer.cpp">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER\11. WaterRenderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>소스 파일\00. Singleton\-06. RENDERER</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceManager.cpp">
+      <Filter>소스 파일\00. Singleton\-07. ResourceMGR</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>소스 파일\00. Singleton\-08. Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="Updater.cpp">
+      <Filter>소스 파일\00. Singleton\-09. Updater</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneMgr.cpp">
+      <Filter>소스 파일\00. Singleton\-10. SceneMGR</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraMgr.cpp">
+      <Filter>소스 파일\00. Singleton\-11. CameraMGR</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkMgr.cpp">
+      <Filter>소스 파일\00. Singleton\-12. NetworkMGR</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>소스 파일\01. Object</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectXFramework.cpp">
+      <Filter>소스 파일\02. FrameWork</Filter>
+    </ClCompile>
+    <ClCompile Include="Loading.cpp">
+      <Filter>소스 파일\03. Scene\-00. Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneMain.cpp">
+      <Filter>소스 파일\03. Scene\-01. SceneMain</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>소스 파일\03. Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeCamera.cpp">
+      <Filter>소스 파일\04. DXObject\-00. Camera\FreeCamera</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>소스 파일\04. DXObject\-00. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugRenderContainer.cpp">
+      <Filter>소스 파일\04. DXObject\-01. Container\RenderContainer\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderContainer.cpp">
+      <Filter>소스 파일\04. DXObject\-01. Container\RenderContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingBoxMesh.cpp">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\DEBUG\BoundingBoxMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="CoordinateSysMesh.cpp">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\DEBUG\CoordinateSysMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugTextureMesh.cpp">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\DEBUG\DebugTextureMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="TestDeferredMesh.cpp">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\DeferredMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="CapsuleLightMesh.cpp">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\LightMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLightMesh.cpp">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\LightMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLightMesh.cpp">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\LightMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLightMesh.cpp">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\LightMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="FileBasedMesh.cpp">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\OBJECT\FileBasedMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyBoxMesh.cpp">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\OBJECT\SkyBoxMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="SpaceMesh.cpp">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\OBJECT\SpaceMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainMesh.cpp">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\OBJECT\TerrainMesh</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterMesh.cpp">
+      <Filter>소스 파일\04. DXObject\-02. Mesh\Water</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>소스 파일\04. DXObject\-02. Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="ComputeShader.cpp">
+      <Filter>소스 파일\04. DXObject\-03. Shader\ComputerSahder</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderShader.cpp">
+      <Filter>소스 파일\04. DXObject\-03. Shader\RenderShader</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>소스 파일\04. DXObject\-03. Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>소스 파일\04. DXObject\-04. Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Sampler.cpp">
+      <Filter>소스 파일\04. DXObject\-05. Texture\Sampler</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>소스 파일\04. DXObject\-05. Texture\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Buffer.cpp">
+      <Filter>소스 파일\04. DXObject\-06. Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationInfo.cpp">
+      <Filter>소스 파일\04. DXObject\-07. Animater\0. AnimationInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="Animater.cpp">
+      <Filter>소스 파일\04. DXObject\-07. Animater</Filter>
+    </ClCompile>
+    <ClCompile Include="DXObject.cpp">
+      <Filter>소스 파일\04. DXObject</Filter>
+    </ClCompile>
+    <ClCompile Include="BoundingBox.cpp">
+      <Filter>소스 파일\05. GameObject\-00. DEBUG\BoundingBox</Filter>
+    </ClCompile>
+    <ClCompile Include="CoordinateSys.cpp">
+      <Filter>소스 파일\05. GameObject\-00. DEBUG\CoordinateSys</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugTexture.cpp">
+      <Filter>소스 파일\05. GameObject\-00. DEBUG\DebugTexture</Filter>
+    </ClCompile>
+    <ClCompile Include="CapsuleLight.cpp">
+      <Filter>소스 파일\05. GameObject\-01. Light\CapsuleLight</Filter>
+    </ClCompile>
+    <ClCompile Include="DirectionalLight.cpp">
+      <Filter>소스 파일\05. GameObject\-01. Light\DirectionalLight</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
+      <Filter>소스 파일\05. GameObject\-01. Light\PointLight</Filter>
+    </ClCompile>
+    <ClCompile Include="SpotLight.cpp">
+      <Filter>소스 파일\05. GameObject\-01. Light\SpotLight</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyBoxContainer.cpp">
+      <Filter>소스 파일\05. GameObject\-02. SkyBox\SkyBoxContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyBox.cpp">
+      <Filter>소스 파일\05. GameObject\-02. SkyBox</Filter>
+    </ClCompile>
+    <ClCompile Include="SpaceContainer.cpp">
+      <Filter>소스 파일\05. GameObject\-03. Space\SpaceContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="Space.cpp">
+      <Filter>소스 파일\05. GameObject\-03. Space</Filter>
+    </ClCompile>
+    <ClCompile Include="SplattingInfoManager.cpp">
+      <Filter>소스 파일\05. GameObject\-04. Terrain\SplattingInfo\SplattingInfoManager</Filter>
+    </ClCompile>
+    <ClCompile Include="SplattingInfo.cpp">
+      <Filter>소스 파일\05. GameObject\-04. Terrain\SplattingInfo</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainContainer.cpp">
+      <Filter>소스 파일\05. GameObject\-04. Terrain\TerrainContainer</Filter>
+    </ClCompile>
+    <ClCompile Include="Terrain.cpp">
+      <Filter>소스 파일\05. GameObject\-04. Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="Pawn.cpp">
+      <Filter>소스 파일\05. GameObject\-05. Player\0. Pawn</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadingBack.cpp">
+      <Filter>소스 파일\05. GameObject\-08. UI\01. LoadingBack</Filter>
+    </ClCompile>
+    <ClCompile Include="UIObject.cpp">
+      <Filter>소스 파일\05. GameObject\-08. UI</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>소스 파일\05. GameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimateComponent.cpp">
+      <Filter>소스 파일\06. Component\AnimateComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="RotateComponent.cpp">
+      <Filter>소스 파일\06. Component\AnimateComponent</Filter>
+    </ClCompile>
+    <ClCompile Include="Component.cpp">
+      <Filter>소스 파일\06. Component</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>소스 파일\99. Default\리소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="IMBO_MAINFRAME.cpp">
+      <Filter>소스 파일\99. Default</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="IMBO_MAINFRAME.ico">
+      <Filter>소스 파일\99. Default\리소스 파일</Filter>
+    </Image>
+    <Image Include="small.ico">
+      <Filter>소스 파일\99. Default\리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="PSAnimationObject.hlsl">
+      <Filter>0. HLSL\00. AnimationObj</Filter>
+    </FxCompile>
+    <FxCompile Include="VSAnimationObject.hlsl">
+      <Filter>0. HLSL\00. AnimationObj</Filter>
+    </FxCompile>
+    <FxCompile Include="CSAONormalDepthDownScale.hlsl">
+      <Filter>0. HLSL\01. Compute\-0. AmbientOcculusion</Filter>
+    </FxCompile>
+    <FxCompile Include="CSSSAOCompute.hlsl">
+      <Filter>0. HLSL\01. Compute\-0. AmbientOcculusion</Filter>
+    </FxCompile>
+    <FxCompile Include="CSBloom.hlsl">
+      <Filter>0. HLSL\01. Compute\-1. PostProcessing</Filter>
+    </FxCompile>
+    <FxCompile Include="CSDownScaleFirstPass.hlsl">
+      <Filter>0. HLSL\01. Compute\-1. PostProcessing</Filter>
+    </FxCompile>
+    <FxCompile Include="CSDownScaleSecondPass.hlsl">
+      <Filter>0. HLSL\01. Compute\-1. PostProcessing</Filter>
+    </FxCompile>
+    <FxCompile Include="CSHorizontalBlur.hlsl">
+      <Filter>0. HLSL\01. Compute\-1. PostProcessing</Filter>
+    </FxCompile>
+    <FxCompile Include="CSVerticalBlur.hlsl">
+      <Filter>0. HLSL\01. Compute\-1. PostProcessing</Filter>
+    </FxCompile>
+    <FxCompile Include="Occlussion.hlsl">
+      <Filter>0. HLSL\01. Compute\-2. SSLR</Filter>
+    </FxCompile>
+    <FxCompile Include="GSBoundingBox.hlsl">
+      <Filter>0. HLSL\02. Debug\-0. BoundingBox</Filter>
+    </FxCompile>
+    <FxCompile Include="PSBoundingBox.hlsl">
+      <Filter>0. HLSL\02. Debug\-0. BoundingBox</Filter>
+    </FxCompile>
+    <FxCompile Include="VSBoundingBox.hlsl">
+      <Filter>0. HLSL\02. Debug\-0. BoundingBox</Filter>
+    </FxCompile>
+    <FxCompile Include="PSCoordinateSys.hlsl">
+      <Filter>0. HLSL\02. Debug\-1. CoordinateSys</Filter>
+    </FxCompile>
+    <FxCompile Include="VSCoordinateSys.hlsl">
+      <Filter>0. HLSL\02. Debug\-1. CoordinateSys</Filter>
+    </FxCompile>
+    <FxCompile Include="GSDebugDepthTexture.hlsl">
+      <Filter>0. HLSL\02. Debug\-2. DebugDepthTex</Filter>
+    </FxCompile>
+    <FxCompile Include="PSDebugDepthTexture.hlsl">
+      <Filter>0. HLSL\02. Debug\-2. DebugDepthTex</Filter>
+    </FxCompile>
+    <FxCompile Include="VSDebugDepthTexture.hlsl">
+      <Filter>0. HLSL\02. Debug\-2. DebugDepthTex</Filter>
+    </FxCompile>
+    <FxCompile Include="GSDebugTexture.hlsl">
+      <Filter>0. HLSL\02. Debug\-3. DebugTex</Filter>
+    </FxCompile>
+    <FxCompile Include="PSDebugTexture.hlsl">
+      <Filter>0. HLSL\02. Debug\-3. DebugTex</Filter>
+    </FxCompile>
+    <FxCompile Include="VSDebugTexture.hlsl">
+      <Filter>0. HLSL\02. Debug\-3. DebugTex</Filter>
+    </FxCompile>
+    <FxCompile Include="DSCapsuleLight.hlsl">
+      <Filter>0. HLSL\03. Light\-0. Capsule</Filter>
+    </FxCompile>
+    <FxCompile Include="HSCapsuleLight.hlsl">
+      <Filter>0. HLSL\03. Light\-0. Capsule</Filter>
+    </FxCompile>
+    <FxCompile Include="PSCapsuleLight.hlsl">
+      <Filter>0. HLSL\03. Light\-0. Capsule</Filter>
+    </FxCompile>
+    <FxCompile Include="VSCapsuleLight.hlsl">
+      <Filter>0. HLSL\03. Light\-0. Capsule</Filter>
+    </FxCompile>
+    <FxCompile Include="PSDirectionalLight.hlsl">
+      <Filter>0. HLSL\03. Light\-1. Directional</Filter>
+    </FxCompile>
+    <FxCompile Include="VSDirectionalLight.hlsl">
+      <Filter>0. HLSL\03. Light\-1. Directional</Filter>
+    </FxCompile>
+    <FxCompile Include="DSPointLight.hlsl">
+      <Filter>0. HLSL\03. Light\-2. Point</Filter>
+    </FxCompile>
+    <FxCompile Include="HSPointLight.hlsl">
+      <Filter>0. HLSL\03. Light\-2. Point</Filter>
+    </FxCompile>
+    <FxCompile Include="PSPointLight.hlsl">
+      <Filter>0. HLSL\03. Light\-2. Point</Filter>
+    </FxCompile>
+    <FxCompile Include="VSPointLight.hlsl">
+      <Filter>0. HLSL\03. Light\-2. Point</Filter>
+    </FxCompile>
+    <FxCompile Include="DSSpotLight.hlsl">
+      <Filter>0. HLSL\03. Light\-3. Spot</Filter>
+    </FxCompile>
+    <FxCompile Include="HSSpotLight.hlsl">
+      <Filter>0. HLSL\03. Light\-3. Spot</Filter>
+    </FxCompile>
+    <FxCompile Include="PSSpotLight.hlsl">
+      <Filter>0. HLSL\03. Light\-3. Spot</Filter>
+    </FxCompile>
+    <FxCompile Include="VSSpotLight.hlsl">
+      <Filter>0. HLSL\03. Light\-3. Spot</Filter>
+    </FxCompile>
+    <FxCompile Include="PSDebugLight.hlsl">
+      <Filter>0. HLSL\03. Light</Filter>
+    </FxCompile>
+    <FxCompile Include="PSPostProcessing.hlsl">
+      <Filter>0. HLSL\04. PostProcessing</Filter>
+    </FxCompile>
+    <FxCompile Include="VSPostProcessing.hlsl">
+      <Filter>0. HLSL\04. PostProcessing</Filter>
+    </FxCompile>
+    <FxCompile Include="PSSkyBox.hlsl">
+      <Filter>0. HLSL\05. SkyBox</Filter>
+    </FxCompile>
+    <FxCompile Include="VSSkyBox.hlsl">
+      <Filter>0. HLSL\05. SkyBox</Filter>
+    </FxCompile>
+    <FxCompile Include="PSCombine.hlsl">
+      <Filter>0. HLSL\06. SSLR\-0. Combine</Filter>
+    </FxCompile>
+    <FxCompile Include="VSCombine.hlsl">
+      <Filter>0. HLSL\06. SSLR\-0. Combine</Filter>
+    </FxCompile>
+    <FxCompile Include="PSRayTrace.hlsl">
+      <Filter>0. HLSL\06. SSLR\-1. RayTrace</Filter>
+    </FxCompile>
+    <FxCompile Include="VSRayTrace.hlsl">
+      <Filter>0. HLSL\06. SSLR\-1. RayTrace</Filter>
+    </FxCompile>
+    <FxCompile Include="DSTerrain.hlsl">
+      <Filter>0. HLSL\07. Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="HSTerrain.hlsl">
+      <Filter>0. HLSL\07. Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="PSTerrain.hlsl">
+      <Filter>0. HLSL\07. Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="VSTerrain.hlsl">
+      <Filter>0. HLSL\07. Terrain</Filter>
+    </FxCompile>
+    <FxCompile Include="PSTestDeferred.hlsl">
+      <Filter>0. HLSL\08. TestDeferred</Filter>
+    </FxCompile>
+    <FxCompile Include="VSTestDeferred.hlsl">
+      <Filter>0. HLSL\08. TestDeferred</Filter>
+    </FxCompile>
+    <FxCompile Include="PSInstancing.hlsl">
+      <Filter>0. HLSL\09. testinstancing</Filter>
+    </FxCompile>
+    <FxCompile Include="VSInctancing.hlsl">
+      <Filter>0. HLSL\09. testinstancing</Filter>
+    </FxCompile>
+    <FxCompile Include="PSUI.hlsl">
+      <Filter>0. HLSL\10. UI</Filter>
+    </FxCompile>
+    <FxCompile Include="VSUI.hlsl">
+      <Filter>0. HLSL\10. UI</Filter>
+    </FxCompile>
+    <FxCompile Include="PSRefraction.hlsl">
+      <Filter>0. HLSL\11. Water</Filter>
+    </FxCompile>
+    <FxCompile Include="PSWater.hlsl">
+      <Filter>0. HLSL\11. Water</Filter>
+    </FxCompile>
+    <FxCompile Include="VSRefraction.hlsl">
+      <Filter>0. HLSL\11. Water</Filter>
+    </FxCompile>
+    <FxCompile Include="VSWater.hlsl">
+      <Filter>0. HLSL\11. Water</Filter>
+    </FxCompile>
+    <FxCompile Include="PSDefault.hlsl">
+      <Filter>0. HLSL\98. Default</Filter>
+    </FxCompile>
+    <FxCompile Include="VSDefault.hlsl">
+      <Filter>0. HLSL\98. Default</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CalcCapsuleLight.hlsli">
+      <Filter>0. HLSL\03. Light\-0. Capsule</Filter>
+    </None>
+    <None Include="CalcDirectionalLight.hlsli">
+      <Filter>0. HLSL\03. Light\-1. Directional</Filter>
+    </None>
+    <None Include="CalcDirectionalShadow.hlsli">
+      <Filter>0. HLSL\03. Light\-1. Directional</Filter>
+    </None>
+    <None Include="CalcPointLight.hlsli">
+      <Filter>0. HLSL\03. Light\-2. Point</Filter>
+    </None>
+    <None Include="CalcSpotLight.hlsli">
+      <Filter>0. HLSL\03. Light\-3. Spot</Filter>
+    </None>
+    <None Include="GetWorldNormal.hlsli">
+      <Filter>0. HLSL\07. Terrain</Filter>
+    </None>
+    <None Include="PackGbuffer.hlsli">
+      <Filter>0. HLSL\99. hlsli</Filter>
+    </None>
+    <None Include="Quaternion.hlsli">
+      <Filter>0. HLSL\99. hlsli</Filter>
+    </None>
+    <None Include="Structure.hlsli">
+      <Filter>0. HLSL\99. hlsli</Filter>
+    </None>
+    <None Include="UnpackGBuffer.hlsli">
+      <Filter>0. HLSL\99. hlsli</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="IMBO_MAINFRAME.rc">
+      <Filter>소스 파일\99. Default\리소스 파일</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt">
+      <Filter>소스 파일\99. Default\리소스 파일</Filter>
+    </Text>
+  </ItemGroup>
+</Project>
