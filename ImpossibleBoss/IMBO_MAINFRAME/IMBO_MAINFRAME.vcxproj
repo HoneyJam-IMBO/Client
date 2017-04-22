@@ -169,7 +169,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\SCHeroSel.h" />
+    <ClInclude Include="SCHeroSel.h" />
     <ClInclude Include="AnimateComponent.h" />
     <ClInclude Include="Animater.h" />
     <ClInclude Include="AnimationData.h" />
@@ -268,7 +268,7 @@
     <ClInclude Include="WaterRenderer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\SCHeroSel.cpp" />
+    <ClCompile Include="SCHeroSel.cpp" />
     <ClCompile Include="AnimateComponent.cpp" />
     <ClCompile Include="Animater.cpp" />
     <ClCompile Include="AnimationData.cpp" />

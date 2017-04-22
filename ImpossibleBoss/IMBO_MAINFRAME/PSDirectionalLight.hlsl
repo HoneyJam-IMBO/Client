@@ -18,7 +18,12 @@ struct VS_TEXTURED_OUTPUT {
 
 float4 main(VS_TEXTURED_OUTPUT input) : SV_Target{
 
+	
 	SURFACE_DATA gbd = UnpackGBuffer_Tex(input.uv);
+
+if (gbd.depth > 0.99999) {
+	return float4(CalcAmbient(float3(0, 1, 0), gbd.Color), 1.0);
+}
 
 	//데이터를 재질 구조체로 변환
 	Material mat;
@@ -41,8 +46,7 @@ float4 main(VS_TEXTURED_OUTPUT input) : SV_Target{
 	//finalColor.xyz = mat.normal;
 
 	float3 dir = float3(0, 0, 0) - DirToLight;
-	if(gtxtDepthTexture.Sample(gssCLAMP_POINT, input.uv).x != 1 )
-		finalColor.rgb *= ShaderPCF(positionW, dot(mat.normal, dir));
+	finalColor.rgb *= ShaderPCF(positionW, dot(mat.normal, dir));
 		
 	finalColor.a = 1.0f;
 	return finalColor;

@@ -19,6 +19,7 @@ struct SURFACE_DATA {
 	float3 Normal;
 	float3 SpecInt;
 	float SpecPow;
+	float depth;
 };
 
 //------------------hellper func---------------------
@@ -57,8 +58,8 @@ SURFACE_DATA UnpackGBuffer(float2 location) {
 	Out.Normal = normalize(Out.Normal * 2.0 - 1.0);
 
 	//깊이 값 추출 및 선형 깊이 값으로 변환
-	float depth = gtxtDepthTexture.Load(location3).x;
-	Out.LinearDepth = ConvertDepthToLinear(depth);
+	Out.depth = gtxtDepthTexture.Load(location3).x;
+	Out.LinearDepth = ConvertDepthToLinear(Out.depth);
 	//Out.LinearDepth = depth;
 
 	//원래 범위 값에 대해 스펙큘러 파워 스케일 조정
@@ -84,9 +85,9 @@ SURFACE_DATA UnpackGBuffer_Tex(float2 texCoord) {
 	Out.Normal = normalize(Out.Normal * 2.0 - 1.0);
 
 	//깊이 값 추출 및 선형 깊이 값으로 변환
-	float depth = gtxtDepthTexture.Sample(gssSamplerState, texCoord);
+	Out.depth = gtxtDepthTexture.Sample(gssSamplerState, texCoord);
 	//float depth = gtxtDepthTexture.Load(location3).x;
-	Out.LinearDepth = ConvertDepthToLinear(depth);
+	Out.LinearDepth = ConvertDepthToLinear(Out.depth);
 	//Out.LinearDepth = depth;
 
 	//원래 범위 값에 대해 스펙큘러 파워 스케일 조정

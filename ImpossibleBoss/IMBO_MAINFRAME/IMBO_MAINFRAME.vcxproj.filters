@@ -677,7 +677,7 @@
     <ClInclude Include="SCOriTown.h">
       <Filter>소스 파일\03. Scene\-03. SCOriTown</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\SCHeroSel.h">
+    <ClInclude Include="SCHeroSel.h">
       <Filter>소스 파일\03. Scene\-02. SCHeroSel</Filter>
     </ClInclude>
   </ItemGroup>
@@ -952,7 +952,7 @@
     <ClCompile Include="SCOriTown.cpp">
       <Filter>소스 파일\03. Scene\-03. SCOriTown</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\SCHeroSel.cpp">
+    <ClCompile Include="SCHeroSel.cpp">
       <Filter>소스 파일\03. Scene\-02. SCHeroSel</Filter>
     </ClCompile>
   </ItemGroup>
