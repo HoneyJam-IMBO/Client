@@ -118,6 +118,10 @@ void CInputManager::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM
 		/*윈도우의 크기가 변경될 때(현재는 “Alt+Enter“ 전체 화면 모드와 윈도우 모드로 전환될 때) 스왑 체인의 후면버퍼 크기를 조정하고 후면버퍼에 대한 렌더 타겟 뷰를 다시 생성한다. */
 	case WM_SIZE: {
 		GLOBALVALUEMGR->SetrcClient(LOWORD(lParam), HIWORD(lParam));
+
+		/*RECT rcWindow = { 0, 0, WINSIZEX, WINSIZEY };
+		AdjustWindowRect(&rcWindow, WS_OVERLAPPEDWINDOW, FALSE);*/
+
 		GLOBALVALUEMGR->GetDeviceContext()->OMSetRenderTargets(0, NULL, NULL);
 
 		RENDERER->ResizeBuffer();

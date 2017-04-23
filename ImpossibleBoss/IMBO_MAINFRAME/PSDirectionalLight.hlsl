@@ -22,7 +22,7 @@ float4 main(VS_TEXTURED_OUTPUT input) : SV_Target{
 	SURFACE_DATA gbd = UnpackGBuffer_Tex(input.uv);
 
 if (gbd.depth > 0.99999) {
-	return float4(CalcAmbient(float3(0, 1, 0), gbd.Color), 1.0);
+	return float4(gbd.Color.xyz, 1.0);
 }
 
 	//데이터를 재질 구조체로 변환

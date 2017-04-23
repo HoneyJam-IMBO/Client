@@ -137,11 +137,13 @@ void CLoading::LoadScene_HEROSEL()
 	RESOURCEMGR->CreateTexture("Char_Thumb_1", _T("../../Assets/Scene_HeroSel/Char_Thumb_2.png"), PS_TEXTURE, BIND_PS);
 	RESOURCEMGR->CreateTexture("Char_Thumb_2", _T("../../Assets/Scene_HeroSel/Char_Thumb_3.png"), PS_TEXTURE, BIND_PS);
 	RESOURCEMGR->CreateTexture("Char_Thumb_3", _T("../../Assets/Scene_HeroSel/Char_Thumb_4.png"), PS_TEXTURE, BIND_PS);
+	RESOURCEMGR->CreateTexture("Char_Thumb_4", _T("../../Assets/Scene_HeroSel/Char_Thumb_1.png"), PS_TEXTURE, BIND_PS);
+	RESOURCEMGR->CreateTexture("Char_Thumb_5", _T("../../Assets/Scene_HeroSel/Char_Thumb_2.png"), PS_TEXTURE, BIND_PS);
 
 }
 void CLoading::LoadScene_ORITOWN()
 {
-	LoadScene("../../Assets/SceneResource/com_scene/com_scene.scn");
+	LoadScene("../../Assets/SceneResource/simple_scene/simple_scene.scn");
 }
 
 void CLoading::LoadScene_REPAIRTOWN()

@@ -808,9 +808,6 @@
     <ClCompile Include="FreeCamera.cpp">
       <Filter>소스 파일\04. DXObject\-00. Camera\FreeCamera</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>소스 파일\04. DXObject\-00. Camera</Filter>
-    </ClCompile>
     <ClCompile Include="DebugRenderContainer.cpp">
       <Filter>소스 파일\04. DXObject\-01. Container\RenderContainer\Debug</Filter>
     </ClCompile>
@@ -972,6 +969,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\ClickButton.cpp">
       <Filter>소스 파일\05. GameObject\-08. UI\02. ClickButton</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>소스 파일\04. DXObject\-00. Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

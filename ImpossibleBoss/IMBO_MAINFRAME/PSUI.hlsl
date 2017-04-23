@@ -25,7 +25,7 @@ struct VS_OUTPUT {
 float4 main(VS_OUTPUT input) : SV_TARGET
 {
 	float4 cBaseTexColor = gtxtUI.Sample(textureSampler, input.texCoord);
-	cBaseTexColor.a = 1.f;
+	//cBaseTexColor.a = 1.f;
 	
 	return cBaseTexColor;
 }

@@ -119,7 +119,7 @@ CGameObject* CSCOriTown::PickObjectPointedByCursor(int xClient, int yClient){
 
 void CSCOriTown::ReadMapData()
 {
-	IMPORTER->Begin("../../Assets/SceneResource/com_scene/com_scene.scn");
+	IMPORTER->Begin("../../Assets/SceneResource/simple_scene/simple_scene.scn");
 	//output path
 	wstring wsOutputPath = IMPORTER->ReadWstring();
 	//scene name

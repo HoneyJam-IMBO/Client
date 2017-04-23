@@ -103,7 +103,8 @@ void CUpdater::LoadTerrainInfo(wstring wsOutputPath, wstring wsSceneName){
 		int length = IMPORTER->ReadInt();
 		UPDATER->GetTerrainContainer()->SetTerrainLength(length);
 		float fHeightScale = IMPORTER->ReadFloat();
-		UPDATER->GetTerrainContainer()->SetHeightScale(fHeightScale);
+		UPDATER->GetTerrainContainer()->SetTerrainScale(XMFLOAT3(static_cast<float>(m_pSpaceContainer->GetSize() / (width)),
+			fHeightScale, static_cast<float>(m_pSpaceContainer->GetSize() / (length))));
 
 		wstring wsBaseTexturePath = IMPORTER->ReadWstring();
 		UPDATER->GetTerrainContainer()->SetBaseTexture(wsBaseTexturePath);

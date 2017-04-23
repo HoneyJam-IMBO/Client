@@ -5,7 +5,6 @@ struct tUImatVP {
 	XMFLOAT4X4	m_xmf4x4VP;
 	//float		m_fAlpha;
 	//float		a, b, c;
-	
 
 };
 
@@ -20,6 +19,10 @@ public:
 	virtual int		Update(float fTimeElapsed) { return 0; };
 	virtual void	Render() {};
 	virtual void	Release() { };
+
+public:
+	XMVECTOR	GetUIPos() { return XMLoadFloat2(&m_f2XYPos); }
+	XMVECTOR	GetUISize() { return XMLoadFloat2(&m_f2XYSize); }
 	
 protected:
 	XMFLOAT2	m_f2XYPos{ 0.f, 0.f };

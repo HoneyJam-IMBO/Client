@@ -86,13 +86,10 @@ void CRenderer::PreRender()
 	RESOURCEMGR->GetSampler("WRAP_LINEAR")->SetShaderState();
 	RESOURCEMGR->GetSampler("WRAP_POINT")->SetShaderState();
 	RESOURCEMGR->GetSampler("CLAMP_LINEAR")->SetShaderState();
-	//RESOURCEMGR->GetSampler("CLAMP_POINT")->SetShaderState();
-	//RESOURCEMGR->GetSampler("SHADOW")->SetShaderState();
-	//////
 
 	//CLEAR
 	ClearDepthStencilView(m_pd3ddsvDepthStencil);
-	float fClearColor[4] = { 0.f, 0.f, 1.f, 1.f };
+	float fClearColor[4] = { 0.f, 0.f, 0.f, 1.f };
 	if (m_pd3dRenderTargetView) GLOBALVALUEMGR->GetDeviceContext()->ClearRenderTargetView(m_pd3dRenderTargetView, fClearColor);
 	
 
@@ -127,7 +124,6 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	ClearDepthStencilView(m_pd3ddsvDepthStencil);
 	SetForwardRenderTargets();//gbuff°¡ µÉ rtv/ dsv set
 	GLOBALVALUEMGR->GetDeviceContext()->OMSetDepthStencilState(m_pd3dDepthStencilState, 1);
-	
 	
 	//object
 	pCamera->SetShaderState();
