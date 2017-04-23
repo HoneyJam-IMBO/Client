@@ -380,6 +380,7 @@ shared_ptr<CTexture> CTexture::CreateTexture(_TCHAR(pstrFilePath)[128], UINT Slo
 	ID3D11ShaderResourceView* pd3dsrvTexture{ nullptr };
 	if (L".tga" == extention || L".TGA" == extention) {
 		ScratchImage image;
+
 		TexMetadata info;
 		info.format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		HRESULT hr = LoadFromTGAFile(pstrFilePath, &info, image);

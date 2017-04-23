@@ -33,6 +33,9 @@ protected:
 	shared_ptr<CTexture>	m_pTexture;
 
 	CUIRenderer*		m_pUIRenderCont{ nullptr };
+
+
+	float		m_fRenderLayer{ 0.f };
 protected:
 	TCHAR		m_szTexture[64];		//텍스처 이름
 	float		m_fAccTime{ 0.f };

@@ -3,7 +3,6 @@
 #include "Renderer.h"
 
 bool CRenderer::Begin() {
-	
 	D3D11_DEPTH_STENCIL_DESC descDepth;
 	descDepth.DepthEnable = TRUE;
 	descDepth.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
@@ -15,7 +14,7 @@ bool CRenderer::Begin() {
 	descDepth.FrontFace = stencilMarkOp;
 	descDepth.BackFace = stencilMarkOp;
 	GLOBALVALUEMGR->GetDevice()->CreateDepthStencilState(&descDepth, &m_pd3dDepthStencilState);
-	if (false == CreateSwapChain()) return false;
+	//if (false == CreateSwapChain()) return false;
 
 
 	//layer
@@ -55,7 +54,7 @@ bool CRenderer::Begin() {
 }
 
 bool CRenderer::End() {
-	if (m_pdxgiSwapChain) m_pdxgiSwapChain->Release();
+	//if (m_pdxgiSwapChain) m_pdxgiSwapChain->Release();
 	if (m_pd3dRenderTargetView) m_pd3dRenderTargetView->Release();
 	if (m_pd3ddsvReadOnlyDepthStencil) m_pd3ddsvReadOnlyDepthStencil->Release();
 	
@@ -85,37 +84,29 @@ void CRenderer::PreRender()
 {
 	//CLEAR
 	RESOURCEMGR->GetSampler("WRAP_LINEAR")->SetShaderState();
-	//RESOURCEMGR->GetSampler("WRAP_POINT")->SetShaderState();
-	//RESOURCEMGR->GetSampler("CLAMP_LINEAR")->SetShaderState();
+	RESOURCEMGR->GetSampler("WRAP_POINT")->SetShaderState();
+	RESOURCEMGR->GetSampler("CLAMP_LINEAR")->SetShaderState();
 	//RESOURCEMGR->GetSampler("CLAMP_POINT")->SetShaderState();
 	//RESOURCEMGR->GetSampler("SHADOW")->SetShaderState();
 	//////
 
-
 	//CLEAR
 	ClearDepthStencilView(m_pd3ddsvDepthStencil);
-	ID3D11RenderTargetView *pd3dRTVs[1] = { m_pd3drtvColorSpecInt };
-	float fClearColor[4] = { 0.f, 0.f, 0.f, 0.f };
-	//if (m_pd3drtvColorSpecInt) GLOBALVALUEMGR->GetDeviceContext()->ClearRenderTargetView(m_pd3drtvColorSpecInt, fClearColor);
-	//SetRenderTargetViews(1, pd3dRTVs, m_pd3ddsvDepthStencil);
-	GLOBALVALUEMGR->GetDeviceContext()->OMSetDepthStencilState(m_pd3dDepthStencilState, 1);
-	//m_pCamera->SetShaderState();
+	float fClearColor[4] = { 0.f, 0.f, 1.f, 1.f };
+	if (m_pd3dRenderTargetView) GLOBALVALUEMGR->GetDeviceContext()->ClearRenderTargetView(m_pd3dRenderTargetView, fClearColor);
+	
 
 	SetMainRenderTargetView();
 	if (nullptr != m_pUIRederer){
 		m_pUIRederer->RenderUI();
 	}
 
-
-	DEBUGER->ClearDebuger();
-
-	HRESULT hr = m_pdxgiSwapChain->Present(0, 0);
-	if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
-	{
-		DEBUGER->DebugMessageBox("explosion", "d");
-		return;
+	HRESULT hr = GLOBALVALUEMGR->GetSwapChain()->Present(0, 0);
+	if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET){
+		DEBUGER->DebugMessageBox("explosion", "d");	return;
 	}
 }
+
 
 void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	//CLEAR
@@ -128,16 +119,15 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 
 	//shadow render
 	m_pShadow->RenderShadowMap(pCamera);
-
-	ID3D11ShaderResourceView* pRFL = m_pWaterRenderer->RenderReflectionMap(pCamera, m_pd3ddsvDepthStencil, m_pObjectRenderer);
-
+	
+	//ID3D11ShaderResourceView* pRFL = m_pWaterRenderer->RenderReflectionMap(pCamera, m_pd3ddsvDepthStencil, m_pObjectRenderer);
+	
 	//clear buff
 	//CLEAR
 	ClearDepthStencilView(m_pd3ddsvDepthStencil);
 	SetForwardRenderTargets();//gbuff가 될 rtv/ dsv set
 	GLOBALVALUEMGR->GetDeviceContext()->OMSetDepthStencilState(m_pd3dDepthStencilState, 1);
-
-
+	
 	
 	//object
 	pCamera->SetShaderState();
@@ -145,8 +135,8 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	UPDATER->GetSkyBoxContainer()->GetSkyBox()->RegistToContainer();
 	m_pObjectRenderer->Excute(pCamera);
 	
-	m_pWaterRenderer->RenderWater(pCamera, m_pd3dsrvDepthStencil);
-
+	//m_pWaterRenderer->RenderWater(pCamera, m_pd3dsrvDepthStencil);
+	
 	if (INPUTMGR->GetDebugMode()) {	DEBUGER->DebugRender(pCamera);}
 	
 	//SSAO
@@ -159,14 +149,14 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	ID3D11ShaderResourceView* pAmbientOcclution = m_pAORenderer->Excute(pCamera, SSAO_OffsetRadius, SSAO_Radius);
 	pAmbientOcclution  = m_p4to1Blur->Excute(pAmbientOcclution);
 	GLOBALVALUEMGR->GetDeviceContext()->PSSetShaderResources(4, 1, &pAmbientOcclution);
-
+	
 	//LIGHT RENDER
 	//SetMainRenderTargetView();
 	m_pLightRenderer->Excute(pCamera, m_pShadow);
 	for (auto texture : m_vObjectLayerResultTexture) {
 		texture->CleanShaderState();
 	}
-
+	
 	//SSLR
 	if (m_bSSLROnOff) {
 		if (UPDATER->GetDirectionalLight()) {
@@ -201,7 +191,8 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	for (auto texture : m_vLightLayerResultTexture) {
 		texture->CleanShaderState();
 	}
-	
+	//SetMainRenderTargetView();
+
 	if (nullptr != m_pUIRederer){
 		m_pUIRederer->RenderUI();
 	}
@@ -210,11 +201,12 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	if (INPUTMGR->GetDebugMode()) {
 		ID3D11Buffer* pGBufferUnpackingBuffer = pCamera->GetGBufferUnpackingBuffer();
 		GLOBALVALUEMGR->GetDeviceContext()->PSSetConstantBuffers(PS_UNPACKING_SLOT, 1, &pGBufferUnpackingBuffer);
-
+	
 		DEBUGER->AddDepthTexture(XMFLOAT2(500, 0), XMFLOAT2(750, 150), m_pd3dsrvDepthStencil);
-		DEBUGER->AddTexture(XMFLOAT2(100, 0), XMFLOAT2(350, 250), pRFL);
-		
-
+	//	DEBUGER->AddTexture(XMFLOAT2(100, 0), XMFLOAT2(350, 250), pRFL);
+		DEBUGER->AddTexture(XMFLOAT2(100, 0), XMFLOAT2(400, 300), m_vLightLayerResultTexture[0]->GetShaderResourceView());
+		//m_vLightLayerResultTexture
+	
 		//이건 꼭 여기서 해줘야함.
 		DEBUGER->RenderTexture();
 		DEBUGER->RenderText();
@@ -224,7 +216,7 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	}
 	//DEBUGER->ClearDebuger();
 	//PRESENT
-	HRESULT hr = m_pdxgiSwapChain->Present(0, 0);
+	HRESULT hr = GLOBALVALUEMGR->GetSwapChain()->Present(0, 0);
 	if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
 	{
 		DEBUGER->DebugMessageBox("explosion", "d");
@@ -272,129 +264,15 @@ void CRenderer::SetRenderTargetViews(UINT nRenderTarget, ID3D11RenderTargetView*
 	GLOBALVALUEMGR->GetDeviceContext()->OMSetRenderTargets(nRenderTarget, pd3dRTVs, pd3ddsvDepthStencil);
 }
 
-
-bool CRenderer::CreateSwapChain()
-{
-	// Swap Chain Description 구조체
-	DXGI_SWAP_CHAIN_DESC dxgiSwapChainDesc;
-#pragma region [DXGI_SWAP_CHAIN_DESC 초기화]
-	// 구조체 비우기
-	::ZeroMemory(&dxgiSwapChainDesc, sizeof(dxgiSwapChainDesc));
-	// BufferCount : 후면 버퍼의 수를 지정
-	dxgiSwapChainDesc.BufferCount = 2;
-
-	// BufferDesc : 후면 버퍼의 디스플레이 형식을 지정
-	{
-		// Width : 버퍼의 가로 크기를 픽셀로 지정
-		dxgiSwapChainDesc.BufferDesc.Width = GLOBALVALUEMGR->GetrcClient().right;
-		// Height : 버퍼의 세로 크기를 픽셀로 지정
-		dxgiSwapChainDesc.BufferDesc.Height = GLOBALVALUEMGR->GetrcClient().bottom;
-		// Format : 후면 버퍼 픽셀 형식
-		/// DirectX 11-1(Chap 01)-Device, p.49 참조
-		dxgiSwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-		// RefreshRate : 화면 갱신 비율을 Hz 단위로 지정
-		{
-			// Denominator : 분모
-			dxgiSwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-			// Numerator : 분자
-			dxgiSwapChainDesc.BufferDesc.RefreshRate.Numerator = 60;
-		}
-		// ScanlineOrdering : scan line 그리기 모드 지정(기본 0)
-		//	DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED        (0) : 스캔 라인 순서를 지정하지 않음	
-		//	DXGI_MODE_SCANLINE_ORDER_PROGRESSIVE        (1) : 프로그레시브 스캔 라인 순서 지정
-		//	DXGI_MODE_SCANLINE_ORDER_UPPER_FIELD_FIRST  (2) : 상위 필드로 이미지 생성
-		//	DXGI_MODE_SCANLINE_ORDER_LOWER_FIELD_FIRST  (3) : 하위 필드로 이미지 생성
-		dxgiSwapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	}
-
-	// BufferUsage : 후면 버퍼에 대한 표면 사용 방식과 CPU의 접근 방법 지정
-	//	DXGI_USAGE_SHADER_INPUT				: shader 의 입력으로 사용
-	//	DXGI_USAGE_RENDER_TARGET_OUTPUT		: render target으로 사용
-	//	DXGI_USAGE_BACK_BUFFER         		: back buffer 로 사용
-	//	DXGI_USAGE_SHARED              		: 공유 목적
-	//	DXGI_USAGE_READ_ONLY           		: 읽기 전용
-	//	DXGI_USAGE_DISCARD_ON_PRESENT  		: DXGI 내부 전용 사용(사용자가 사용하지 않음)
-	//	DXGI_USAGE_UNORDERED_ACCESS    		: 무순서화 접근
-	dxgiSwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	// OutputWindow : 출력 윈도우의 핸들을 지정(반드시 유효해야 함)
-	dxgiSwapChainDesc.OutputWindow = GLOBALVALUEMGR->GethWnd();
-
-	// SampleDesc : 다중 샘플링의 품질을 지정
-	// CheckMultisampleQualityLevels 함수를 사용하여 다중 샘플링 가능 여부를 확인한 뒤에 값 변경
-	{
-		// Count : 픽셀 당 샘플 개수
-		//	1  : 다중 샘플링을 하지 않음
-		//	2~ : 해당 수만큼의 다중 샘플링
-		dxgiSwapChainDesc.SampleDesc.Count = 1;
-		// Quality : 품질 레벨
-		// 0 : 다중 샘플링을 하지 않음
-		dxgiSwapChainDesc.SampleDesc.Quality = 0;
-	}
-
-	// Windowed : 윈도우 모드 또는 전체 화면 모드 지정 ~ TRUE  | 창 모드 
-	//												   ~ FALSE | 전체 화면
-	dxgiSwapChainDesc.Windowed = TRUE;
-
-	// Flags : Swap Chain 동작에 대한 선택 사항을 지정
-	//	DXGI_SWAP_CHAIN_FLAG_NONPREROTATED		(1) : 전체 화면 모드에서 전면 버퍼의 내용을 화면으로 옮길 때 자동 회전하지 않음
-	//	DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH	(2) : 응용 프로그램이 디스플레이 모드를 변경할 수 있음
-	//	DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE		(4) : 응용 프로그램이 GDI 로 랜더링 할 수 있음. 후면 버퍼에 GetDC() 사용 가능
-	dxgiSwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH/*2*/;
-
-	// SwapEffect : Swaping을 처리하는 선택사항을 지정(기본 : 0)
-	//	DXGI_SWAP_EFFECT_DISCARD		(0) : 버퍼 내용을 폐기
-	//	DXGI_SWAP_EFFECT_SEQUENTIAL		(1) : 순차 복사
-	// DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL	(2) : Flip 순차 복사
-	dxgiSwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-
-	// Result Handle 입니다. 장치가 성공적으로 생성도는지 검사합니다.
-	HRESULT hResult = S_OK;
-	IDXGIDevice *pdxgiDevice = NULL;
-	if (FAILED(hResult = GLOBALVALUEMGR->GetDevice()->QueryInterface(__uuidof(IDXGIDevice), (LPVOID*)&pdxgiDevice)))
-	{
-		MessageBox(GLOBALVALUEMGR->GethWnd(), TEXT("DXGI Device 객체를 반환받지 못했습니다. 프로그램을 종료합니다."), TEXT("프로그램 구동 실패"), MB_OK);
-		return(false);
-	}
-	// DXGI Factory 인스턴스를 DXGIFactory에서 받습니다.
-	//IDXGIFactory *pdxgiFactory = NULL;
-	IDXGIFactory *pdxgiFactory = NULL;
-
-	UINT udxgiFlag = 0;
-#ifdef _DEBUG
-	udxgiFlag |= DXGI_CREATE_FACTORY_DEBUG;
-#endif
-	//if (FAILED(hResult = CreateDXGIFactory3(udxgiFlag, __uuidof(IDXGIFactory3), (LPVOID*)&pdxgiFactory)))
-	if (FAILED(hResult = CreateDXGIFactory(/*udxgiFlag,*/ __uuidof(IDXGIFactory), (LPVOID*)&pdxgiFactory)))
-	{
-		MessageBox(GLOBALVALUEMGR->GethWnd(), TEXT("DXGIFactory에서의 객체 생성이 실패했습니다. 프로그램을 종료합니다."), TEXT("프로그램 구동 실패"), MB_OK);
-		return(false);
-	}
-	//  SwapChain 을 생성합니다
-	if (FAILED(hResult = pdxgiFactory->CreateSwapChain(pdxgiDevice, &dxgiSwapChainDesc, &m_pdxgiSwapChain)))
-	{
-		MessageBox(GLOBALVALUEMGR->GethWnd(), TEXT("SwapChain 인스턴스 생성이 실패했습니다. 프로그램을 종료합니다."), TEXT("프로그램 구동 실패"), MB_OK);
-		return(false);
-	}
-
-	//	// Direct2D : Direct2D 인스턴스를 생성합니다.
-	//	if (!CreateD2D1Device(pdxgiDevice))
-	//	{
-	//		MessageBox(m_hWnd, TEXT("Direct2D 인스턴스 생성이 실패했습니다. 프로그램을 종료합니다."), TEXT("프로그램 구동 실패"), MB_OK);
-	//		return(false);
-	//	}
-
-	// 할당받은 COM 객체를 반환합니다.
-	if (pdxgiDevice) pdxgiDevice->Release();
-	if (pdxgiFactory) pdxgiFactory->Release();
-	return true;
-}
-
 bool CRenderer::CreateRenderTargetView() {
 
 	HRESULT hResult = S_OK;
 	ID3D11Texture2D *pd3dBackBuffer{ nullptr };
-	if (FAILED(hResult = m_pdxgiSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *)&pd3dBackBuffer))) return(false);
+	if (FAILED(hResult = GLOBALVALUEMGR->GetSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID *)&pd3dBackBuffer))) return(false);
 	if (FAILED(hResult = GLOBALVALUEMGR->GetDevice()->CreateRenderTargetView(pd3dBackBuffer, NULL, &m_pd3dRenderTargetView))) return(false);
+	//m_pd3dRenderTargetView->
+
+
 	if (pd3dBackBuffer) pd3dBackBuffer->Release();
 	{
 		//----------------------------------------Resource Desc-----------------------------------------//
@@ -569,13 +447,12 @@ void CRenderer::ReleaseForwardRenderTargets() {
 
 }
 
-
 bool CRenderer::ResizeBuffer() {
 	if (m_pd3dRenderTargetView) m_pd3dRenderTargetView->Release();
 	if (m_pd3ddsvReadOnlyDepthStencil) m_pd3ddsvReadOnlyDepthStencil->Release();
 
-	if (FAILED(m_pdxgiSwapChain->ResizeBuffers(1, 0, 0, DXGI_FORMAT_R16G16B16A16_FLOAT, 0)))
-		MessageBox(nullptr, TEXT(""), TEXT(""), MB_OK);
+	if (FAILED(GLOBALVALUEMGR->GetSwapChain()->ResizeBuffers(1, 0, 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0)))
+		MessageBox(nullptr, TEXT("바보"), TEXT("바보2"), MB_OK);
 
 	//resize rtv size, deferred texture size
 	CreateRenderTargetView();

@@ -34,6 +34,8 @@ public:
 	//device
 	ID3D11Device* GetDevice() { return m_pd3dDevice; }
 	ID3D11DeviceContext* GetDeviceContext() { return m_pd3dDeviceContext; }
+	IDXGISwapChain*			GetSwapChain(){ return m_pdxgiSwapChain; }
+
 
 	void SetSSLR(bool bSSLR) { m_bSSLR = bSSLR; }
 	bool& GetSSLR() { return m_bSSLR; }
@@ -59,13 +61,10 @@ private:
 	RECT m_rcClient;
 
 	//device
-	ID3D11Device			*	m_pd3dDevice{ nullptr };
-	ID3D11DeviceContext		*	m_pd3dDeviceContext{ nullptr };
-	//ID3D11CommandList		*	m_pd3dDeviceCommandList[THREAD_NUM];
-
-	std::mutex	m_MyLock;
-public:
-	std::mutex*	GetMutex() { return &m_MyLock; }
+	ID3D11Device*			m_pd3dDevice{ nullptr };
+	ID3D11DeviceContext*	m_pd3dDeviceContext{ nullptr };
+	IDXGISwapChain*			m_pdxgiSwapChain{ nullptr };
+	
 
 private:
 

@@ -43,6 +43,8 @@ protected:
 
 	SCENE_ID		m_eSceneID{ SC_END };
 	bool			m_bIsLoading{ false };
+
+	vector<CUIObject*>	m_vecUI;
 public:
 	bool		GetIsLoading() { return m_bIsLoading; };
 

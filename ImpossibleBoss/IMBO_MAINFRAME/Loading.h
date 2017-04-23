@@ -10,13 +10,11 @@ public:
 
 public:
 	HANDLE m_hLoadThread;
-	HANDLE m_hRenderThread;
 	static DWORD WINAPI FuncLoadResourceThread(LPVOID arg);
-	static DWORD WINAPI FuncRenderThread(LPVOID arg);
 
 	HANDLE m_hLoadEvent;
 
-	vector<CUIObject*>	m_vecUI;
+
 private:
 	bool	m_bComplete{ false };
 public:

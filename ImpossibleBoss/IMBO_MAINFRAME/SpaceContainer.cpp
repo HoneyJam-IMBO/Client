@@ -23,6 +23,7 @@ bool CSpaceContainer::End(){
 	for (auto pObject : m_lpBlockObject) {
 		pObject->End();
 		delete pObject;
+		pObject = nullptr;
 	}
 	m_lpBlockObject.clear();
 
