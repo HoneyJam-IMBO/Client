@@ -37,7 +37,7 @@ public:
 	void SetMainRenderTargetView();
 	void SetRenderTargetViews(UINT nRenderTarget, ID3D11RenderTargetView** pd3dRTVs, ID3D11DepthStencilView* pd3ddsvDepthStencil);
 
-	bool CreateSwapChain();
+	//bool CreateSwapChain();
 	bool CreateRenderTargetView();
 	void ReleaseForwardRenderTargets();
 	void ClearDepthStencilView(ID3D11DepthStencilView* pDepthStencilView);
@@ -57,7 +57,7 @@ private:
 	CRenderContainer* m_pTerrainRenderContainer{ nullptr };
 	CRenderContainer* m_pSkyBoxRenderContainer{ nullptr };
 
-	IDXGISwapChain			*	m_pdxgiSwapChain{ nullptr };
+	//IDXGISwapChain			*	m_pdxgiSwapChain{ nullptr };
 	ID3D11RenderTargetView	*	m_pd3dRenderTargetView{ nullptr };
 	
 	ID3D11DepthStencilState* m_pd3dDepthStencilState{ nullptr };

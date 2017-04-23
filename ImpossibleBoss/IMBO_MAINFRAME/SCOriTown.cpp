@@ -26,7 +26,7 @@ bool CSCOriTown::Begin() {
 bool CSCOriTown::End() {	
 
 	//카메라는 Framework에 존재하는 것이기에 End()작업을 진행하지 않는다.
-	Safe_EndDelete(m_pObject);
+	//Safe_EndDelete(m_pObject);
 	return CScene::End();
 }
 

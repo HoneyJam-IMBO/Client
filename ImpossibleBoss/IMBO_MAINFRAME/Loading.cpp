@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Loading.h"
 #include "SceneMgr.h"
+
+#include "SCHeroSel.h"
 #include "SCOriTown.h"
 
 #include "LoadingBack.h"
@@ -26,7 +28,7 @@ bool CLoading::Begin()
 
 	string strName = "Logo";
 	RESOURCEMGR->CreateTexture("Logo", _T("../../Assets/Loading/Logo.png"), PS_TEXTURE, BIND_PS);
-	CUIObject* pUI = CLoadingBack::Create(XMLoadFloat2(&XMFLOAT2(WINSIZEX * 0.5f, WINSIZEX * 0.5f)), XMLoadFloat2(&XMFLOAT2(50.f, 50.f)), StringToTCHAR(strName));
+	CUIObject* pUI = CLoadingBack::Create(XMLoadFloat2(&XMFLOAT2(WINSIZEX * 0.5f, WINSIZEX * 0.5f)), XMLoadFloat2(&XMFLOAT2(250.f, 250.f)), StringToTCHAR(strName));
 	m_vecUI.push_back(pUI);
 
 	m_hLoadThread = CreateThread(NULL, 0, FuncLoadResourceThread, this, 0, NULL);
@@ -59,7 +61,7 @@ void CLoading::Animate(float fTimeElapsed)
 	{
 		CScene*	pScene = nullptr;
 		switch (m_eSceneID) {
-		case SC_HEROSEL:		pScene = new CSCOriTown(m_eSceneID, m_pFrameWork);			break;
+		case SC_HEROSEL:		pScene = new CSCHeroSel(m_eSceneID, m_pFrameWork);			break;
 		case SC_ORITOWN:		pScene = new CSCOriTown(m_eSceneID, m_pFrameWork);			break;
 		}
 
@@ -123,11 +125,23 @@ void CLoading::LoadScene_LOBBY()
 }
 void CLoading::LoadScene_HEROSEL()
 {
-	LoadScene("../../Assets/SceneResource/com_scene/com_scene.scn");
+	RESOURCEMGR->CreateTexture("Back", _T("../../Assets/Scene_HeroSel/background.jpg"), PS_TEXTURE, BIND_PS);
+	RESOURCEMGR->CreateTexture("CButton_0", _T("../../Assets/Scene_HeroSel/Char_Button_1.jpg"), PS_TEXTURE, BIND_PS);
+	RESOURCEMGR->CreateTexture("CButton_1", _T("../../Assets/Scene_HeroSel/Char_Button_2.jpg"), PS_TEXTURE, BIND_PS);
+	RESOURCEMGR->CreateTexture("CButton_2", _T("../../Assets/Scene_HeroSel/Char_Button_3.jpg"), PS_TEXTURE, BIND_PS);
+	RESOURCEMGR->CreateTexture("CButton_3", _T("../../Assets/Scene_HeroSel/Char_Button_4.jpg"), PS_TEXTURE, BIND_PS);
+	RESOURCEMGR->CreateTexture("CButton_4", _T("../../Assets/Scene_HeroSel/Char_Button_5.jpg"), PS_TEXTURE, BIND_PS);
+	RESOURCEMGR->CreateTexture("CButton_5", _T("../../Assets/Scene_HeroSel/Char_Button_6.jpg"), PS_TEXTURE, BIND_PS);
+
+	RESOURCEMGR->CreateTexture("Char_Thumb_0", _T("../../Assets/Scene_HeroSel/Char_Thumb_1.png"), PS_TEXTURE, BIND_PS);
+	RESOURCEMGR->CreateTexture("Char_Thumb_1", _T("../../Assets/Scene_HeroSel/Char_Thumb_2.png"), PS_TEXTURE, BIND_PS);
+	RESOURCEMGR->CreateTexture("Char_Thumb_2", _T("../../Assets/Scene_HeroSel/Char_Thumb_3.png"), PS_TEXTURE, BIND_PS);
+	RESOURCEMGR->CreateTexture("Char_Thumb_3", _T("../../Assets/Scene_HeroSel/Char_Thumb_4.png"), PS_TEXTURE, BIND_PS);
+
 }
 void CLoading::LoadScene_ORITOWN()
 {
-
+	LoadScene("../../Assets/SceneResource/com_scene/com_scene.scn");
 }
 
 void CLoading::LoadScene_REPAIRTOWN()
