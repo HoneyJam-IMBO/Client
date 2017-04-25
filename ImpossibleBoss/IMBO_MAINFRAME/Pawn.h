@@ -11,10 +11,13 @@ public:
 private:
 	void	KeyInput(float fDeltaTime);
 	void	GetServerData();
+	void	SetupAnimation(DWORD dwDirection);
+	void	Jumping(float fDeltaTime);
 
 private:
 	int		m_iAnimNum{ 0 };
 	bool	m_bSprit{ false };
+	float	m_fJumpTime{ 0.f };
 
 public:
 	CPawn(string name, tag t = tag::TAG_DEFAULT, bool bSprit = false);

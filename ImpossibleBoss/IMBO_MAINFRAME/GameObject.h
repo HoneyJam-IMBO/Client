@@ -129,6 +129,7 @@ protected:
 
 	bool m_bIsVisible{ true }; 
 	bool m_bActive{ true };
+	
 
 	//terrain container
 	CTerrainContainer*	m_pTerrainContainer{ nullptr };
@@ -142,6 +143,15 @@ protected:
 	//animater
 	shared_ptr<CAnimater> m_pAnimater{ nullptr };
 	vector<BoundingOrientedBox> m_vObjectActiveOBBs;
+protected:
+	bool		m_bIdle{ false };
+	CCamera*	m_pCamera{ nullptr };
+	bool		m_bJump{ false };
+public:
+	void SetIdleState(bool bIdle) { m_bIdle = bIdle; }
+	bool GetIdleState() { return m_bIdle; }
+
+	void SetCamera(CCamera* pCam) { m_pCamera = pCam; }
 
 public:
 	CGameObject(string name, tag t = tag::TAG_DEFAULT);

@@ -64,20 +64,15 @@ void CCamera::GenerateProjectionMatrix(float fFov, float fRatio, float fNear, fl
 //viewmtx 갱신
 void CCamera::UpdateViewMtx() {
 
-	if (nullptr != m_pTarget)
-	{
-		XMVECTOR xvTargetDir = m_pTarget->GetLook();
-		XMVECTOR xvTargetRight = m_pTarget->GetRight();
-
-		xvTargetDir = XMVector4Transform(xvTargetDir * -1, XMMatrixRotationAxis(xvTargetRight, m_fAngleY));
-		XMStoreFloat3(&m_xmf3Pos, m_pTarget->GetPosition() + xvTargetDir * 100.f);
-		m_xmf3Pos.y = m_xmf3Pos.y + 10.f;
-		XMStoreFloat3(&m_xmf3At, xvTargetDir * -1);
-	}
+	//if (nullptr != m_pTarget)
+	//{
+	//	XMVECTOR xmvAt = XMVector4Normalize(m_pTarget->GetPosition() - XMLoadFloat3(&m_xmf3Pos));
+	//	XMStoreFloat3(&m_xmf3At, xmvAt);
+	//}
 
 	XMStoreFloat4x4(&m_xmf4x4View,
 		XMMatrixLookAtLH(XMLoadFloat3(&m_xmf3Pos),
-			XMVectorAdd(XMLoadFloat3(&m_xmf3Pos), XMLoadFloat3(&m_xmf3At)),
+			/*XMVectorAdd(XMLoadFloat3(&m_xmf3Pos), */XMLoadFloat3(&m_xmf3At)/*)*/,
 			XMLoadFloat3(&m_xmf3UpDefault)));
 
 	//update frustum
@@ -90,16 +85,13 @@ void CCamera::UpdateReflectionViewMtx()
 	XMFLOAT3 xmRefleAt = { m_xmf3At.x, -m_xmf3At.y, m_xmf3At.z };
 	XMStoreFloat4x4(&m_xmf4x4ReflectionView,
 		XMMatrixLookAtLH(XMLoadFloat3(&xmReflePos),
-		XMVectorAdd(XMLoadFloat3(&xmReflePos), XMLoadFloat3(&xmRefleAt)),
+		/*XMVectorAdd(XMLoadFloat3(&xmReflePos), */XMLoadFloat3(&xmRefleAt)/*)*/,
 		XMLoadFloat3(&m_xmf3UpDefault)));
 }
 
 bool CCamera::IsInFrustum(BoundingBox& boundingBox){
-	//if (DISJOINT == m_BoundingFrustum.Contains(boundingBox)) return false;
-	//return true;
 	bool result = m_BoundingFrustum.Intersects(boundingBox);
 	return result;
-	//return true;
 }
 
 void CCamera::SetLookAt(XMVECTOR xmvPos, XMVECTOR xmvLookAt, XMVECTOR xmvUp)
@@ -146,12 +138,27 @@ void CCamera::UpdateShaderState() {
 	GLOBALVALUEMGR->GetDeviceContext()->UpdateSubresource(m_pViewProjectionBuffer, 0, NULL, &m_stCameraBufferData, 0, 0);
 }
 
+void CCamera::SetTarget(CGameObject * pTarget)
+{
+	m_pTarget = pTarget;
+	XMVECTOR xvTargetDir = m_pTarget->GetLook();
+	XMVECTOR xvTargetRight = m_pTarget->GetRight();
+
+	xvTargetDir = XMVector4Transform(xvTargetDir * -1, XMMatrixRotationAxis(xvTargetRight, XMConvertToRadians(45.f)));
+	XMStoreFloat3(&m_xmf3Pos, m_pTarget->GetPosition() + xvTargetDir * 100.f);
+	m_xmf3Pos.y = m_xmf3Pos.y + 10.f;
+	m_pTarget->SetCamera(this);
+	//XMStoreFloat3(&m_xmf3At, xvTargetDir * -1);
+}
+
 CCamera::CCamera() : DXObject("camera"){
 	//카메라 상수버퍼
 	m_pViewProjectionBuffer = nullptr;
 
 	XMStoreFloat4x4(&m_xmf4x4View, XMMatrixIdentity());
 	XMStoreFloat4x4(&m_xmf4x4Projection, XMMatrixIdentity());
+
+
 }
 CCamera::~CCamera() {
 	

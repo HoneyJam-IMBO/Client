@@ -8,15 +8,17 @@ bool CSCOriTown::Begin() {
 	m_pCamera = m_pFrameWork->GetCamera();
 	ReadMapData();
 
-	m_pObject = new CPawn("elf_01", TAG_DYNAMIC_OBJECT, true);
+	m_pObject = new CPawn("new_elf10", TAG_DYNAMIC_OBJECT, true);
 	m_pObject->Begin();
 	m_pObject->SetTerrainContainer(UPDATER->GetTerrainContainer());
 	m_pObject->SetPosition(XMVectorSet(500, 0, 500, 0));
 	m_pObject->SetScale(XMVectorSet(1, 1, 1, 1));
+	//m_pObject->G
 	
 	UPDATER->GetSpaceContainer()->AddObject(m_pObject);
 	m_pObject->GetAnimater()->SetCurAnimationIndex(0);
 	CAMMGR->SetTarget(CAM_FREE, m_pObject);
+	CAMMGR->GetCamera(CAM_FREE)->SetMode(MODE_FIX);
 
 	//NETWORKMGR->Connect("192.168.10.101");
 
@@ -81,6 +83,10 @@ void CSCOriTown::ProcessInput(float fTimeElapsed) {
 		INPUTMGR->SetDebugMode(static_cast<bool>((INPUTMGR->GetDebugMode() + 1) % 2));
 	}
 	m_pCamera->ProcessInput(fTimeElapsed);
+	if (INPUTMGR->KeyDown(VK_1))
+	{
+		SCENEMGR->ChangeScene(SC_ORITOWN);
+	}
 }
 
 

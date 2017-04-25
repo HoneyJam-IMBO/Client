@@ -115,7 +115,7 @@ void CAnimater::DeleteAnimationInfo(UINT AnimationIndex){
 }
 
 void CAnimater::SetCurAnimationIndex(UINT AnimationIndex) { 
-
+	if (m_CurAnimationIndex == AnimationIndex) return;
 	m_CurAnimationIndex = AnimationIndex; 
 	ResetAnimationInfos();
 }

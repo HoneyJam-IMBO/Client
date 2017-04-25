@@ -29,6 +29,13 @@ public:
 	virtual void Render() {};
 	//---------------------------------------카메라 조정---------------------------------
 
+private:
+	void CameraInputProcess(float fTimeDelta);
+	void FixCamera();
+	void CalcultateMouseMoveValue();
+
+
+	POINT m_ptOldMousePos;
 
 public:
 	CFreeCamera();

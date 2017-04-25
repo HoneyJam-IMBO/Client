@@ -45,7 +45,12 @@
 #include <timeapi.h>
 #include <queue>
 #include <unordered_map>
+#include "winuser.h"                       //마우스 휠 이벤트 처리를 위한 헤더 함수
 
+#ifndef WM_MOUSEWHEEL 
+
+#define WM_MOUSEWHEEL 0x020A  //마우스 휠 이벤트 메세지 이름
+#endif
 
 
 // D3D11

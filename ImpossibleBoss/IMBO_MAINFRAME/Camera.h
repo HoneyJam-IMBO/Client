@@ -1,6 +1,18 @@
 #pragma once
 #include "DXObject.h"
 
+enum ANGLETYPE {
+	ANGLE_X,
+	ANGLE_Y,
+	ANGLE_END
+};
+
+enum CAMERA_MODE {
+	MODE_FIX,
+	MODE_FREE,
+	MODE_END
+};
+
 struct GBUFFER_UNPACKING_DATA {
 	XMFLOAT4 PerspectiveValues;
 	XMFLOAT4X4 ViewInv;
@@ -75,9 +87,13 @@ protected:	//aabb flustum rcClient
 	RECT m_rcClient;		//rect size
 
 protected:
-	CGameObject* m_pTarget{ nullptr };
+	CGameObject*	m_pTarget{ nullptr };
+	CAMERA_MODE		m_eMode{ MODE_END };
+
+	bool			m_bFix{ false };
 public:
-	void SetTarget(CGameObject* pTarget) { m_pTarget = pTarget; }
+	void SetTarget(CGameObject* pTarget);
+	void SetMode(CAMERA_MODE eMode) { m_eMode = eMode; }
 	bool IsTarget() { return m_pTarget == nullptr ? false : true; }
 
 protected:	//카메라 상수버퍼
@@ -100,8 +116,15 @@ protected:	//카메라 상수버퍼
 	XMFLOAT3 m_xmf3At{ 0.f, 0.f, 1.f };
 	XMFLOAT3 m_xmf3UpDefault{ 0.f, 1.f, 0.f };
 
-	float m_fAngleX{ 0.f };
-	float m_fAngleY{ 0.f };
+public:
+	float m_fCurrentAngle[ANGLE_END]{ 0.f };
+	float m_fTargetAngle[ANGLE_END]{ 0.f };
+
+	float m_fCurDistance{ 100.f };
+	float m_fTgtDistance{ 100.f };
+
+	float m_cxDelta{ 0.f };
+	float m_cyDelta{ 0.f };
 public:
 	CCamera();
 	virtual ~CCamera();

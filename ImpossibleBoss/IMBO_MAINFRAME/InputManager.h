@@ -56,7 +56,8 @@ enum eVK {
 	VK_W,
 	VK_X,
 	VK_Y,
-	VK_Z
+	VK_Z,
+	VK_SPACE_ = 0x20
 };
 
 class CInputManager : public CSingleTonBase<CInputManager> {
@@ -112,6 +113,7 @@ public:
 
 	float GetcxDelta() { return m_cxDelta; }
 	float GetcyDelta() { return m_cyDelta; }
+	float GetcurWheelDalta() { return m_cWheelDelta; }
 	//void SetOldcxDelta(float cxdelta) { m_OldcxDelta = cxdelta; }
 	//void SetOldcyDelta(float cydelta) { m_OldcyDelta = cydelta; }
 
@@ -132,17 +134,25 @@ private:
 	bool m_bDownCheck[256];
 
 	//mouse
-	int									m_sWheel{ WHEEL_NON };
-	POINT								pt;
+	int		m_sWheel{ WHEEL_NON };
+	POINT	pt;
 
-	bool								m_bCapture{ false };
-	bool								m_bLeftCheck{ false };
-	bool m_bLeftOnlyCheck{ false };
-	bool								m_bRightCheck{ false };
+	bool	m_bCapture{ false };
+	bool	m_bLeftCheck{ false };
+	bool	m_bLeftOnlyCheck{ false };
+	bool	m_bRightCheck{ false };
 
 	POINT							m_ptOldCursorPos;
 	float m_cxDelta{ 0.f }, m_cyDelta{ 0.f };
 
+private:
+	float m_fOldWheelValue{ 0.f };
+	float m_fCurWheelValue{ 0.f };
+	float m_cWheelDelta{ 0.f };
+	bool m_bCheck{ true };
+public:
+	void SetCheckMouse(bool bCheck) { m_bCheck = bCheck; };
+private:
 	//for drag&drop
 	HDROP m_hDropInfo{ NULL };
 	UINT m_DropFileBuffSize{ DROP_FILE_NAME_BUFF_SIZE };

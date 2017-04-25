@@ -95,13 +95,11 @@ ID3D11ShaderResourceView * CShadow::RenderShadowMap(shared_ptr<CCamera> pCamera)
 	
 	float space_size = UPDATER->GetSpaceContainer()->GetSize();
 	XMVECTOR xmPos = XMVectorSet(space_size / 2, 0.f, space_size / 2, 0.f);
-
 	XMStoreFloat3(&xmf3Pos, xmPos);
 	at = XMVectorSet(xmf3Pos.x, xmf3Pos.y, xmf3Pos.z, 0);
-
 	XMVECTOR eye = at + xmvDirectionalLightDir*offset * 1.5f;
 	XMVECTOR up = { 0.0f, 1.0f, 0.0f, 0.0f };
-	m_pCamera->SetLookAt(eye, xmvDirectionalLightDir, up);
+	m_pCamera->SetLookAt(eye, xmPos, up);
 	m_pCamera->SetViewport(0, 0, 4096, 4096, 0.0f, 1.0f);
 
 	m_pCamera->UpdateShaderState();

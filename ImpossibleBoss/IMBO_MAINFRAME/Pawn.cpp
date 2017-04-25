@@ -29,20 +29,13 @@ void CPawn::KeyInput(float fDeltaTime)
 	if (INPUTMGR->OnlyKeyBoardDown(VK_S))		dwDirection |= DIR_BACKWARD;
 	if (INPUTMGR->OnlyKeyBoardDown(VK_A))		dwDirection |= DIR_LEFT;
 	if (INPUTMGR->OnlyKeyBoardDown(VK_D))		dwDirection |= DIR_RIGHT;
+	if (INPUTMGR->KeyBoardDown(VK_SPACE_))		m_bJump = true;
 
-	if (INPUTMGR->KeyDown(VK_Q))
-	{
-		if (m_pAnimater->GetAnimationCnt()  - 1> m_iAnimNum)
-			++m_iAnimNum;
-		else
-			m_iAnimNum = 0;
-
-		m_pAnimater->SetCurAnimationIndex(m_iAnimNum);
+	if (true == INPUTMGR->MouseRightDown())	{
+		m_bIdle = true;
 	}
-
-	float fSpeed = 200.f;
-	if (dwDirection)
-	{
+	float fSpeed = 50.f;
+	if (dwDirection || m_bJump){
 		if (dwDirection & DIR_FORWARD)		xmvShift += GetLook();
 		if (dwDirection & DIR_BACKWARD)		xmvShift -= GetLook();
 		if (dwDirection & DIR_RIGHT)		xmvShift += GetRight();
@@ -50,26 +43,85 @@ void CPawn::KeyInput(float fDeltaTime)
 
 		XMVector3Normalize(xmvShift);
 
-		//pos에 shift*speed*ftimeElapsed 더해줌 = 속도만큼 이동
 		XMStoreFloat3(&m_xmf3Position, XMLoadFloat3(&m_xmf3Position) + ((xmvShift * fSpeed) * fDeltaTime));
 		SetPosition(XMLoadFloat3(&m_xmf3Position));
-	}
-	//cs_packet_player_position PosPacket;
-	//PosPacket.Size = sizeof(PosPacket);
-	//PosPacket.Type = CS_PLAYER_POS;
-	//PosPacket.PosX = m_xmf3Position.x;
-	//PosPacket.PosY = m_xmf3Position.y;
-	//PosPacket.PosZ = m_xmf3Position.z;
-	//PosPacket.RotY = 0.f;
-	//PosPacket.AnimNumber = m_iAnimNum;
-	////send_wsabuf.len = sizeof(PosPacket);
 
-	//NETWORKMGR->SendPacket(&PosPacket);
+		if(true == m_bJump)
+			Jumping(fDeltaTime);
+
+		m_bIdle = false;
+		SetupAnimation(dwDirection);
+	}
+	else
+	{
+		m_pAnimater->SetCurAnimationIndex(ELF_ANIM_IDLE);
+	}
+	if (true == INPUTMGR->MouseRightUp() && abs(m_pCamera->m_cxDelta + m_pCamera->m_cyDelta) > 1.f)	{
+		m_bIdle = false;
+	}
+	if (false == m_bIdle)	{
+		SetRotation(XMMatrixRotationY(m_pCamera->m_fCurrentAngle[ANGLE_Y] + XM_PI));
+	}
+		
 }
 
 void CPawn::GetServerData()
 {
 
+}
+
+void CPawn::SetupAnimation(DWORD dwDirection)
+{
+	UINT uAnimNum = 0;
+
+	if (false == m_bJump)
+	{
+		if (dwDirection & DIR_FORWARD)
+			if (uAnimNum != ELF_ANIM_RUN_F) uAnimNum = ELF_ANIM_RUN_F;
+		if (dwDirection & DIR_BACKWARD)
+			if (uAnimNum != ELF_ANIM_RUN_B) uAnimNum = ELF_ANIM_RUN_B;
+		if (dwDirection & DIR_LEFT)
+			if (uAnimNum != ELF_ANIM_RUN_L) uAnimNum = ELF_ANIM_RUN_L;
+		if (dwDirection & DIR_RIGHT)
+			if (uAnimNum != ELF_ANIM_RUN_R) uAnimNum = ELF_ANIM_RUN_R;
+
+		if (dwDirection & DIR_FORWARD && dwDirection & DIR_LEFT)
+			if (uAnimNum != ELF_ANIM_RUN_FL) uAnimNum = ELF_ANIM_RUN_FL;
+		if (dwDirection & DIR_FORWARD && dwDirection & DIR_RIGHT)
+			if (uAnimNum != ELF_ANIM_RUN_FR) uAnimNum = ELF_ANIM_RUN_FR;
+		if (dwDirection & DIR_BACKWARD && dwDirection & DIR_LEFT)
+			if (uAnimNum != ELF_ANIM_RUN_BL) uAnimNum = ELF_ANIM_RUN_BL;
+		if (dwDirection & DIR_BACKWARD && dwDirection & DIR_RIGHT)
+			if (uAnimNum != ELF_ANIM_RUN_BR) uAnimNum = ELF_ANIM_RUN_BR;
+	}
+	else
+	{
+
+
+	}
+	
+
+	m_pAnimater->SetCurAnimationIndex(uAnimNum);
+}
+
+void CPawn::Jumping(float fDeltaTime)
+{
+	m_fJumpTime += fDeltaTime;
+	float fJumpValue = 4.f * m_fJumpTime * m_fJumpTime;
+	float fJumpPower = 2.f;
+	
+
+	m_xmf4x4World._42 += fJumpPower - fJumpValue;
+	m_xmf3Position.y += fJumpPower - fJumpValue;
+	
+	if (m_xmf4x4World._42 < GetTerrainHeight())
+	{
+		m_fJumpTime = 0.f;
+		m_bJump = false;
+
+		m_xmf4x4World._42 = GetTerrainHeight();
+		m_xmf3Position.y = GetTerrainHeight();
+	}
 }
 
 CPawn::CPawn(string name, tag t, bool bSprit)

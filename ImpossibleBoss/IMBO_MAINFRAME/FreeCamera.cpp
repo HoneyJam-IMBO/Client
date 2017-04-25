@@ -19,16 +19,16 @@ bool CFreeCamera::End() {
 
 void CFreeCamera::Rotate(float x, float y, float z) {
 
-	m_fAngleX += x;
-	m_fAngleY += y;
-	
-	XMStoreFloat3(&m_xmf3At, XMVector4Transform(XMLoadFloat4(&XMFLOAT4(0.f, 0.f, 1.f, 0.f)), XMMatrixRotationRollPitchYaw(m_fAngleY, m_fAngleX, 0)));
-	XMStoreFloat3(&m_xmf3At, XMVector3Normalize(XMLoadFloat3(&m_xmf3At)));
+	//m_fAngleX += x;
+	//m_fAngleY += y;
 
-	if (nullptr != m_pTarget)
-	{
-		m_pTarget->SetRotation(XMMatrixRotationY(m_fAngleX));
-	}
+	////XMStoreFloat3(&m_xmf3At, XMVector4Transform(XMLoadFloat4(&XMFLOAT4(0.f, 0.f, 1.f, 0.f)), XMMatrixRotationRollPitchYaw(m_fLinearY, m_fLinearX, 0)));
+	////XMStoreFloat3(&m_xmf3At, XMVector3Normalize(XMLoadFloat3(&m_xmf3At)));
+
+	//if (nullptr != m_pTarget)
+	//{
+	//	m_pTarget->SetRotation(XMMatrixRotationY(m_fLinearX));
+	//}
 }
 
 void CFreeCamera::Update(float fTimeElapsed) {
@@ -39,6 +39,13 @@ void CFreeCamera::Update(float fTimeElapsed) {
 //상수버퍼 갱신
 void CFreeCamera::UpdateShaderState() {
 	//정보 갱신
+
+	float fTimeDelta = TIMEMGR->GetTimeElapsed();
+	CalcultateMouseMoveValue();
+	FixCamera();
+	if(nullptr != m_pTarget )
+		CameraInputProcess(fTimeDelta);
+
 	XMMATRIX xmMtxProjection = (XMLoadFloat4x4(&m_xmf4x4Projection));
 	UpdateViewMtx();
 	XMMATRIX xmMtxView = XMLoadFloat4x4(&m_xmf4x4View);
@@ -62,6 +69,16 @@ void CFreeCamera::UpdateShaderState() {
 
 	GBUFFER_UNPACKING_DATA data{ xmf4PerspectiveValues , xmf4x4ViewInverce };
 	GLOBALVALUEMGR->GetDeviceContext()->UpdateSubresource(m_pGBufferUnpackingBuffer, 0, NULL, &data, 0, 0);
+
+
+	if (true == m_bFix && MODE_FIX == m_eMode)
+	{
+		INPUTMGR->SetCheckMouse(false);
+		POINT		ptMouse = { GLOBALVALUEMGR->GetrcClient().right >> 1, GLOBALVALUEMGR->GetrcClient().bottom >> 1 };
+		ClientToScreen(GLOBALVALUEMGR->GethWnd(), &ptMouse);
+		SetCursorPos(ptMouse.x, ptMouse.y);
+		m_ptOldMousePos = ptMouse;
+	}
 }
 
 void CFreeCamera::SetShaderState() {
@@ -72,50 +89,115 @@ void CFreeCamera::SetShaderState() {
 }
 
 void CFreeCamera::ProcessInput(float fTimeElapsed) {
+	//DWORD dwDirection = 0;
+	////UINT iMoveState;
+	//float fDeltaMdis;
+	//float fMouseSpeed = 10.f;
+	////float cyDelta = INPUTMGR->GetcyDelta();
+	//
+	//if (fDeltaMdis = INPUTMGR->GetcxDelta())
+	//{
+	//	m_fTargetAngle[ANGLE_Y] += XMConvertToRadians(fDeltaMdis * fTimeElapsed * fMouseSpeed);
+	//}
+
+	//if (fDeltaMdis = INPUTMGR->GetcyDelta())
+	//{
+	//	if(XMConvertToDegrees(m_fTargetAngle[ANGLE_X]) >= -45.f && XMConvertToDegrees(m_fTargetAngle[ANGLE_X]) <= 45.f)
+	//		m_fTargetAngle[ANGLE_X] += XMConvertToRadians(fDeltaMdis * fTimeElapsed * fMouseSpeed);
+	//}
+	//if()
+}
+
+void CFreeCamera::CameraInputProcess(float fTimeDelta)
+{
 	DWORD dwDirection = 0;
 	//UINT iMoveState;
-	float cxDelta = INPUTMGR->GetcxDelta();
-	float cyDelta = INPUTMGR->GetcyDelta();
-	
-#define SPEED 500
+	//float fDeltaMdis;
+	float fMouseSpeed = 20.f;
+	//float cyDelta = INPUTMGR->GetcyDelta();
 
-	XMVECTOR xmvShift = XMVectorSet(0.0f, 0.0f, 0.0f, 0.f);
-	if (INPUTMGR->OnlyKeyBoardDown(VK_W))		dwDirection |= DIR_FORWARD;
-	if (INPUTMGR->OnlyKeyBoardDown(VK_S))		dwDirection |= DIR_BACKWARD;
-	if (INPUTMGR->OnlyKeyBoardDown(VK_A))		dwDirection |= DIR_LEFT;
-	if (INPUTMGR->OnlyKeyBoardDown(VK_D))		dwDirection |= DIR_RIGHT;
-	if (INPUTMGR->OnlyKeyBoardDown(VK_E))		dwDirection |= DIR_UP;
-	if (INPUTMGR->OnlyKeyBoardDown(VK_Q))		dwDirection |= DIR_DOWN;
-
-	if (dwDirection)
+	if (nullptr != m_pTarget)
 	{
+		XMStoreFloat3(&m_xmf3At, XMVectorAdd(m_pTarget->GetPosition(), XMLoadFloat3(&XMFLOAT3(0.f, 30.f, 0.f))));
+	}
+		
 
-		XMStoreFloat3(&m_xmf3Right, XMVector3Cross(XMLoadFloat3(&XMFLOAT3(0.f, 1.f, 0.f)), XMLoadFloat3(&m_xmf3At)));
-		XMStoreFloat3(&m_xmf3Right, XMVector3Normalize(XMLoadFloat3(&m_xmf3Right)));
-
-		if (dwDirection & DIR_FORWARD)		xmvShift += XMLoadFloat3(&m_xmf3At);
-		if (dwDirection & DIR_BACKWARD)		xmvShift -= XMLoadFloat3(&m_xmf3At);
-		if (dwDirection & DIR_RIGHT)		xmvShift += XMLoadFloat3(&m_xmf3Right);
-		if (dwDirection & DIR_LEFT)			xmvShift -= XMLoadFloat3(&m_xmf3Right);
-		if (dwDirection & DIR_UP)			xmvShift += XMLoadFloat3(&m_xmf3Up);
-		if (dwDirection & DIR_DOWN)			xmvShift -= XMLoadFloat3(&m_xmf3Up);
-
-		XMVector3Normalize(xmvShift);
-
-		//pos에 shift*speed*ftimeElapsed 더해줌 = 속도만큼 이동
-		XMStoreFloat3(&m_xmf3Pos, XMLoadFloat3(&m_xmf3Pos) + ((xmvShift * SPEED) * fTimeElapsed));
-
+	if (0.f != m_cxDelta)
+	{
+		m_fTargetAngle[ANGLE_Y] += XMConvertToRadians(m_cxDelta * fTimeDelta * fMouseSpeed);
 	}
 
-	if (cxDelta || cyDelta)
+	if (0.f != m_cyDelta)
 	{
-		cxDelta *= 0.01f;
-		cyDelta *= 0.01f;
-		/*cxDelta는 y-축의 회전을 나타내고 cyDelta는 x-축의 회전을 나타낸다. 오른쪽 마우스 버튼이 눌려진 경우 cxDelta는 z-축의 회전을 나타낸다.*/
-		if (INPUTMGR->MouseRightDown())
-			Rotate(cyDelta, 0.0f, -cxDelta);
-		else
-			Rotate(cxDelta, cyDelta, 0.0f);
+		if (XMConvertToDegrees(m_fTargetAngle[ANGLE_X]) >= -45.f && XMConvertToDegrees(m_fTargetAngle[ANGLE_X]) <= 45.f)
+			m_fTargetAngle[ANGLE_X] -= XMConvertToRadians(m_cyDelta * fTimeDelta * fMouseSpeed);
+	}
+
+
+	float fCamZoomSpd = 2.f;
+	float fTagetDis = m_fTgtDistance + INPUTMGR->GetcurWheelDalta();
+
+	//Lerp
+	if (m_fTargetAngle[ANGLE_X] != m_fCurrentAngle[ANGLE_X])
+	{
+		m_fCurrentAngle[ANGLE_X] += (m_fTargetAngle[ANGLE_X] - m_fCurrentAngle[ANGLE_X]) * fTimeDelta * 5.f;
+	}
+
+	if (XMConvertToDegrees(m_fTargetAngle[ANGLE_X]) <= -45.f)
+		m_fTargetAngle[ANGLE_X] = XMConvertToRadians(-45.f);
+	else if (XMConvertToDegrees(m_fTargetAngle[ANGLE_X]) >= 45.f)
+		m_fTargetAngle[ANGLE_X] = XMConvertToRadians(45.f);
+
+	if (m_fTargetAngle[ANGLE_Y] != m_fCurrentAngle[ANGLE_Y])
+	{
+		m_fCurrentAngle[ANGLE_Y] += (m_fTargetAngle[ANGLE_Y] - m_fCurrentAngle[ANGLE_Y]) * fTimeDelta * 5.f;
+	}
+
+	if (fTagetDis != m_fCurDistance)
+	{
+		m_fCurDistance += (fTagetDis - m_fCurDistance) * fTimeDelta * 5.f;
+	}
+
+
+	XMMATRIX matRotX, matRotY, matWorld;
+	matRotX = XMMatrixRotationX(m_fCurrentAngle[ANGLE_X]);
+	matRotY = XMMatrixRotationY(m_fCurrentAngle[ANGLE_Y]);
+	matWorld = XMMatrixMultiply(matRotX, matRotY);
+
+	XMVECTOR vTempEyePos;
+	vTempEyePos = XMVector4Transform(XMLoadFloat3(&XMFLOAT3(0.f, 0.f, m_fCurDistance)), matWorld);
+
+	
+	//m_vEye = m_vAt + vTempEyePos;
+	XMStoreFloat3(&m_xmf3Pos, XMVectorAdd(XMLoadFloat3(&m_xmf3At), vTempEyePos));
+
+	if (nullptr != m_pTarget)
+	{
+		//if(false == INPUTMGR->MouseRightDown() || false == m_pTarget->GetIdleState())
+		//	m_pTarget->SetRotation(XMMatrixRotationY(m_fCurrentAngle[ANGLE_Y] + XM_PI));
+	}
+}
+
+void CFreeCamera::FixCamera()
+{
+	if(INPUTMGR->KeyDown(VK_2))
+		m_bFix ^= true;
+}
+
+void CFreeCamera::CalcultateMouseMoveValue()
+{
+	POINT ptCursorPos;
+	GetCursorPos(&ptCursorPos);
+	//마우스 버튼이 눌린 채로 이전 위치에서 현재 마우스 커서의 위치까지 움직인 양을 구한다.
+	if (true == m_bFix)
+	{
+		m_cxDelta = (float)(ptCursorPos.x - m_ptOldMousePos.x) / 3.0f;
+		m_cyDelta = (float)(ptCursorPos.y - m_ptOldMousePos.y) / 3.0f;
+	}
+	else
+	{
+		m_cxDelta = 0.f;
+		m_cyDelta = 0.f;
 	}
 }
 

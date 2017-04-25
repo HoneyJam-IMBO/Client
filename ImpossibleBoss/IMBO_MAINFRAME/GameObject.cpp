@@ -123,7 +123,7 @@ void CGameObject::SetPosition(XMVECTOR pos) {
 	m_xmf4x4World._41 = m_xmf3Position.x;
 	m_xmf4x4World._42 = m_xmf3Position.y;
 	m_xmf4x4World._43 = m_xmf3Position.z;
-	if (m_pTerrainContainer) {
+	if (false == m_bJump &&m_pTerrainContainer) {
 		m_xmf4x4World._42 = GetTerrainHeight();
 		m_xmf3Position.y = GetTerrainHeight();
 	}

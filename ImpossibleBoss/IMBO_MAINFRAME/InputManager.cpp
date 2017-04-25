@@ -33,14 +33,14 @@ void CInputManager::Update(float fTimeEleasped) {
 	INPUTMGR->SetWheel(WHEEL_NON);
 
 	//IsGamepadConnected(&m_bConnect);
-	m_cxDelta = 0.0f, m_cyDelta = 0.0f;
+	//m_cxDelta = 0.0f, m_cyDelta = 0.0f;
 
 	//if (m_bConnect)
 	//	UpdateGamePoad(fTimeEleasped);
 	//else
 
 	UpdateKeyBoard();
-	if (m_bCapture)
+	//if (m_bCapture)
 		UpdateMouse();
 }
 void CInputManager::UpdateKeyBoard() {
@@ -48,19 +48,19 @@ void CInputManager::UpdateKeyBoard() {
 }
 
 void CInputManager::UpdateMouse() {
-	POINT ptCursorPos;
+	//POINT ptCursorPos;
 
 	//마우스를 캡쳐했으면 마우스가 얼마만큼 이동하였는 가를 계산한다.
-	if (GetCapture() == GLOBALVALUEMGR->GethWnd())
+	//if (GetCapture() == GLOBALVALUEMGR->GethWnd())
 	{
 		//마우스 커서를 화면에서 없앤다(보이지 않게 한다).
-		SetCursor(NULL);
+		//SetCursor(NULL);
 		//현재 마우스 커서의 위치를 가져온다.
-		GetCursorPos(&ptCursorPos);
-		//마우스 버튼이 눌린 채로 이전 위치에서 현재 마우스 커서의 위치까지 움직인 양을 구한다.
-		m_cxDelta = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.0f;
-		m_cyDelta = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.0f;
-		SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
+		//GetCursorPos(&ptCursorPos);
+		////마우스 버튼이 눌린 채로 이전 위치에서 현재 마우스 커서의 위치까지 움직인 양을 구한다.
+		//m_cxDelta = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.0f;
+		//m_cyDelta = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.0f;
+		//SetCursorPos(m_ptOldCursorPos.x, m_ptOldCursorPos.y);
 	}
 }
 
@@ -129,7 +129,7 @@ void CInputManager::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPARAM
 		if (UPDATER->GetCamera()) UPDATER->GetCamera()->SetViewport(0, 0, GLOBALVALUEMGR->GetrcClient().right, GLOBALVALUEMGR->GetrcClient().bottom, 0.0f, 1.0f);
 		break;
 	}
-
+	case WM_MOUSEWHEEL:
 	case WM_LBUTTONDOWN:
 	case WM_RBUTTONDOWN:
 	case WM_LBUTTONUP:
@@ -153,17 +153,17 @@ void CInputManager::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM 
 	{
 
 	case WM_LBUTTONDOWN:
-		INPUTMGR->SetbCapture(true);
+		SetbCapture(true);
 
-		INPUTMGR->SetOldCursorPos();
-		INPUTMGR->SetMouseLeft(true);
+		//SetOldCursorPos();
+		SetMouseLeft(true);
 		break;
 
 	case WM_RBUTTONDOWN:
-		INPUTMGR->SetbCapture(true);
+		SetbCapture(true);
 
-		INPUTMGR->SetOldCursorPos();
-		INPUTMGR->SetMouseRight(true);
+		//SetOldCursorPos();
+		SetMouseRight(true);
 		break;
 
 	case WM_LBUTTONUP:
@@ -171,27 +171,51 @@ void CInputManager::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM 
 		//static bool showCusor = true;
 		//showCusor = showCusor ? false : true;
 		//ShowCursor(showCusor);
-		INPUTMGR->SetMouseLeft(false);
-		INPUTMGR->SetbCapture(false);
+		SetMouseLeft(false);
+		SetbCapture(false);
 		break;
 	}
 
 	case WM_RBUTTONUP:
-		INPUTMGR->SetMouseRight(false);
-		INPUTMGR->SetbCapture(false);
+		SetMouseRight(false);
+		SetbCapture(false);
 		break;
 
 	case WM_MOUSEMOVE:
-		INPUTMGR->SetMousePoint((int)LOWORD(lParam), (int)HIWORD(lParam));
+		SetMousePoint((int)LOWORD(lParam), (int)HIWORD(lParam));
+		//SetOldCursorPos();
+		
+			if (m_bCheck)
+			{
+				POINT ptCursorPos;
+				GetCursorPos(&ptCursorPos);
+				//마우스 버튼이 눌린 채로 이전 위치에서 현재 마우스 커서의 위치까지 움직인 양을 구한다.
+				m_cxDelta = (float)(ptCursorPos.x - m_ptOldCursorPos.x) / 3.0f;
+				m_cyDelta = (float)(ptCursorPos.y - m_ptOldCursorPos.y) / 3.0f;
+				m_ptOldCursorPos = ptCursorPos;
+			}
+			else
+			{
+				m_cxDelta = 0.f;
+				m_cyDelta = 0.f;
+				m_bCheck = true;
+			}
+		
+		
 		break;
 	case WM_MOUSEWHEEL:
-		((short)HIWORD(wParam) < WHEEL_NON) ?
-			INPUTMGR->SetWheel(WHEEL_DOWN) :
-			INPUTMGR->SetWheel(WHEEL_UP);
+		if (((short)HIWORD(wParam) < WHEEL_NON))
+		{
+			SetWheel(WHEEL_DOWN);
+		}
+		else
+		{
+			SetWheel(WHEEL_UP);
+		}
 		break;
 		//for drag&drop
 	case WM_DROPFILES:
-		INPUTMGR->ProcDropFile(wParam);
+		ProcDropFile(wParam);
 
 		break;
 	default:
@@ -237,9 +261,32 @@ bool CInputManager::KeyBoardDown(eVK input) {
 //mouse
 void CInputManager::SetWheel(int wheel)
 {
-	if (wheel > WHEEL_NON)   m_sWheel = WHEEL_UP;
-	else if (wheel < WHEEL_NON) m_sWheel = WHEEL_DOWN;
-	else                  m_sWheel = WHEEL_NON;
+	//	m_cWheelDelta = 0.f;
+	float fTimeDelta = TIMEMGR->GetTimeElapsed();
+	float fSpeed = 400.f;
+	if (wheel > WHEEL_NON)
+	{
+		m_sWheel = WHEEL_UP;
+		m_cWheelDelta -= fTimeDelta * fSpeed;
+
+		if (m_cWheelDelta < -80.f)
+			m_cWheelDelta = -80.f;
+	}
+	else if (wheel < WHEEL_NON)
+	{
+		m_sWheel = WHEEL_DOWN;
+		m_cWheelDelta += fTimeDelta * fSpeed;
+
+
+		if (m_cWheelDelta > 140.f)
+			m_cWheelDelta = 140.f;
+	}
+	else {
+		m_sWheel = WHEEL_NON;
+	}
+	/*m_cWheelDelta = m_fCurWheelValue - m_fOldWheelValue;
+	m_fOldWheelValue = m_fCurWheelValue;*/
+	//float m_fCurWheelValue{ 0.f };
 }
 
 void CInputManager::MouseWheel()
