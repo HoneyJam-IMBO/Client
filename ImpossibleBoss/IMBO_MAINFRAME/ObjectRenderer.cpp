@@ -58,7 +58,6 @@ void CObjectRenderer::CleanShaderState(){
 	}
 
 	m_pTerrainRenderContainer->ClearObjectList();
-	m_pSkyBoxRenderContainer->ClearObjectList();
 }
 
 void CObjectRenderer::UpdateShaderState(){
@@ -104,6 +103,11 @@ void CObjectRenderer::ExcuteShadowRender(shared_ptr<CCamera> pCamera)
 	for (auto pRenderContainer : RCSELLER->GetStempRenderContainer()[tag::TAG_STATIC_OBJECT]) {
 		pRenderContainer.second->Render(pCamera);
 	}
+}
+
+void CObjectRenderer::RenderSkyBox(){
+	m_pSkyBoxRenderContainer->Render(nullptr);
+	m_pSkyBoxRenderContainer->ClearObjectList();
 }
 
 CObjectRenderer::CObjectRenderer() : DXObject("objectrenderer"){

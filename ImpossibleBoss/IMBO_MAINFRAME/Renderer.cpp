@@ -187,7 +187,8 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	for (auto texture : m_vLightLayerResultTexture) {
 		texture->CleanShaderState();
 	}
-	//SetMainRenderTargetView();
+	pCamera->SetShaderState();
+	m_pObjectRenderer->RenderSkyBox();
 
 	if (nullptr != m_pUIRederer){
 		m_pUIRederer->RenderUI();
@@ -254,7 +255,7 @@ void CRenderer::SetForwardRenderTargets() {
 	SetRenderTargetViews(RENDER_TARGET_NUMBER, pd3dRTVs, m_pd3ddsvDepthStencil);
 }
 void CRenderer::SetMainRenderTargetView() {
-	GLOBALVALUEMGR->GetDeviceContext()->OMSetRenderTargets(1, &m_pd3dRenderTargetView, nullptr);
+	GLOBALVALUEMGR->GetDeviceContext()->OMSetRenderTargets(1, &m_pd3dRenderTargetView, m_pd3ddsvReadOnlyDepthStencil);
 }
 void CRenderer::SetRenderTargetViews(UINT nRenderTarget, ID3D11RenderTargetView** pd3dRTVs, ID3D11DepthStencilView* pd3ddsvDepthStencil) {
 	GLOBALVALUEMGR->GetDeviceContext()->OMSetRenderTargets(nRenderTarget, pd3dRTVs, pd3ddsvDepthStencil);
@@ -457,6 +458,12 @@ bool CRenderer::ResizeBuffer() {
 }
 
 void CRenderer::LoadEffectInfo(wstring wsOutputPath, wstring wsSceneName){
+	//back buffer color
+	m_fBackBufferClearColor[0] = IMPORTER->ReadFloat();
+	m_fBackBufferClearColor[1] = IMPORTER->ReadFloat();
+	m_fBackBufferClearColor[2] = IMPORTER->ReadFloat();
+	m_fBackBufferClearColor[3] = IMPORTER->ReadFloat();
+
 	//ssao
 	float fSSAORadius = IMPORTER->ReadFloat();
 	SetSSAORadius(fSSAORadius);

@@ -686,11 +686,11 @@
     <ClInclude Include="SCHeroSel.h">
       <Filter>소스 파일\03. Scene\-02. SCHeroSel</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\ImageUI.h">
-      <Filter>소스 파일\05. GameObject\-08. UI\00. ImageUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\ClickButton.h">
+    <ClInclude Include="ClickButton.h">
       <Filter>소스 파일\05. GameObject\-08. UI\02. ClickButton</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageUI.h">
+      <Filter>소스 파일\05. GameObject\-08. UI\00. ImageUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -964,14 +964,14 @@
     <ClCompile Include="SCHeroSel.cpp">
       <Filter>소스 파일\03. Scene\-02. SCHeroSel</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\ImageUI.cpp">
-      <Filter>소스 파일\05. GameObject\-08. UI\00. ImageUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\ClickButton.cpp">
-      <Filter>소스 파일\05. GameObject\-08. UI\02. ClickButton</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>소스 파일\04. DXObject\-00. Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="ClickButton.cpp">
+      <Filter>소스 파일\05. GameObject\-08. UI\02. ClickButton</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageUI.cpp">
+      <Filter>소스 파일\05. GameObject\-08. UI\00. ImageUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

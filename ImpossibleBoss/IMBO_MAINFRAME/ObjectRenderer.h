@@ -15,6 +15,7 @@ public:
 
 	void Excute(shared_ptr<CCamera> pCamera);
 	void ExcuteShadowRender(shared_ptr<CCamera> pCamera);
+	void RenderSkyBox();
 
 	CRenderContainer* GetSkyBoxRenderContainer() { return m_pSkyBoxRenderContainer; }
 	CRenderContainer* GetTerrainRenderContainer() { return m_pTerrainRenderContainer; }

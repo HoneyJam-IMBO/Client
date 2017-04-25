@@ -169,8 +169,8 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\ClickButton.h" />
-    <ClInclude Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\ImageUI.h" />
+    <ClInclude Include="ClickButton.h" />
+    <ClInclude Include="ImageUI.h" />
     <ClInclude Include="SCHeroSel.h" />
     <ClInclude Include="AnimateComponent.h" />
     <ClInclude Include="Animater.h" />
@@ -270,8 +270,8 @@
     <ClInclude Include="WaterRenderer.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\ClickButton.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\ImageUI.cpp" />
+    <ClCompile Include="ClickButton.cpp" />
+    <ClCompile Include="ImageUI.cpp" />
     <ClCompile Include="SCHeroSel.cpp" />
     <ClCompile Include="AnimateComponent.cpp" />
     <ClCompile Include="Animater.cpp" />

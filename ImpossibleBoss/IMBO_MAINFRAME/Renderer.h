@@ -105,6 +105,8 @@ private:
 	//-------------------------layer-------------------------
 
 	//effects
+	//back  buffer color
+	float m_fBackBufferClearColor[4];
 	//ssao
 	float m_fSSAORadius{ 0.f };
 	float m_fSSAOOffsetRadius{ 0.f };
