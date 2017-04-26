@@ -140,6 +140,8 @@ void CLoading::LoadScene_HEROSEL()
 	RESOURCEMGR->CreateTexture("Char_Thumb_4", _T("../../Assets/Scene_HeroSel/Char_Thumb_1.png"), PS_TEXTURE, BIND_PS);
 	RESOURCEMGR->CreateTexture("Char_Thumb_5", _T("../../Assets/Scene_HeroSel/Char_Thumb_2.png"), PS_TEXTURE, BIND_PS);
 
+	RESOURCEMGR->CreateTexture("Button_Ready", _T("../../Assets/Scene_HeroSel/Button_Ready.png"), PS_TEXTURE, BIND_PS);
+
 }
 void CLoading::LoadScene_ORITOWN()
 {

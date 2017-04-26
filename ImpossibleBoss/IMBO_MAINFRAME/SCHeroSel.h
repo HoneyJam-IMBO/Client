@@ -25,6 +25,9 @@ public:
 	virtual void ProcessInput(float fTimeElapsed);
 
 private:
+	bool	m_bReady{ false };
+
+private:
 	void	KeyInput();
 	void	CheckCollisionButton();
 };

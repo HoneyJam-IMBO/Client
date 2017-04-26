@@ -393,6 +393,9 @@
     <Filter Include="소스 파일\05. GameObject\-08. UI\02. ClickButton">
       <UniqueIdentifier>{637ece6b-1d97-4453-b94f-c4aee2230cc8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="소스 파일\03. Scene\-02. SCHeroSel\Charactors">
+      <UniqueIdentifier>{13b35f16-1723-4a88-b3f9-df6ff593567b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Light.h">
@@ -692,6 +695,9 @@
     <ClInclude Include="ImageUI.h">
       <Filter>소스 파일\05. GameObject\-08. UI\00. ImageUI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\Charactors.h">
+      <Filter>소스 파일\03. Scene\-02. SCHeroSel\Charactors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Light.cpp">
@@ -972,6 +978,9 @@
     </ClCompile>
     <ClCompile Include="ImageUI.cpp">
       <Filter>소스 파일\05. GameObject\-08. UI\00. ImageUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\Charactors.cpp">
+      <Filter>소스 파일\03. Scene\-02. SCHeroSel\Charactors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

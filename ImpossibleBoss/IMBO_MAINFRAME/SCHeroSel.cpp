@@ -16,6 +16,9 @@ CSCHeroSel::~CSCHeroSel()
 
 bool CSCHeroSel::Begin()
 {
+	NETWORKMGR->Connect("192.168.10.101");
+	//NETWORKMGR->SendPacket();
+
 	UPDATER->GetSkyBoxContainer()->SetActive(false);
 	UPDATER->GetTerrainContainer()->SetActive(false);
 
@@ -26,8 +29,9 @@ bool CSCHeroSel::Begin()
 	for (int i = 0; i < 6; ++i)
 	{
 		strName = "CButton_" + to_string(i);
-		pUI = CClickButton::Create(XMLoadFloat2(&XMFLOAT2(WINSIZEX * 0.5f - 400.f + i * 160.f, WINSIZEY * 0.8f)),
+		pUI = CClickButton::Create(XMLoadFloat2(&XMFLOAT2(WINSIZEX * 0.5f - 400.f + i * 160.f, WINSIZEY * 0.75f)),
 												XMLoadFloat2(&XMFLOAT2(70.f, 120.f)), StringToTCHAR(strName));
+		((CClickButton*)pUI)->SetID(0);
 		m_vecButtonUI.push_back(pUI);
 
 		strName = "Char_Thumb_" + to_string(i);
@@ -35,6 +39,11 @@ bool CSCHeroSel::Begin()
 							XMLoadFloat2(&XMFLOAT2(200.f, 280.f)), StringToTCHAR(strName), 1.f);
 		m_vecCharUI.push_back(pUI);
 	}
+	strName = "Button_Ready";
+	pUI = CClickButton::Create(XMLoadFloat2(&XMFLOAT2(WINSIZEX * 0.5f, WINSIZEY * 0.92f)),
+		XMLoadFloat2(&XMFLOAT2(105.f, 32.f)), StringToTCHAR(strName));
+	((CClickButton*)pUI)->SetID(1);
+	m_vecButtonUI.push_back(pUI);
 
 	return CScene::Begin();
 }
@@ -79,6 +88,14 @@ void CSCHeroSel::Animate(float fTimeElapsed)
 	{
 		SCENEMGR->ChangeScene(SC_ORITOWN);
 	}
+	if (INPUTMGR->KeyDown(VK_P))
+	{
+		cs_packet_create_room* pPacket = new cs_packet_create_room;
+		pPacket->Size = sizeof(cs_packet_create_room);
+		pPacket->Type = CS_CREATE_ROOM;
+		NETWORKMGR->SendPacket(pPacket, pPacket->Size);
+	}
+
 }
 
 void CSCHeroSel::OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam)
@@ -113,8 +130,31 @@ void CSCHeroSel::CheckCollisionButton()
 		if ((ptPos.x > xmButtonPos.x - xmButtonSize.x&& ptPos.x < xmButtonPos.x + xmButtonSize.x )
 			&& (ptPos.y > xmButtonPos.y - xmButtonSize.y&& ptPos.y < xmButtonPos.y + xmButtonSize.y))
 		{
-			m_iHeroSelNum = i;
-			return;
+			if (((CClickButton*)m_vecButtonUI[i])->GetID() == 0)
+			{
+				m_iHeroSelNum = i;
+				cs_packet_client_info_in_room* pPacket = new cs_packet_client_info_in_room;
+				pPacket->Character = i;
+				pPacket->isReady = false;
+				pPacket->Size = sizeof(cs_packet_client_info_in_room);
+				pPacket->Type = CS_CHARACTER_READY_CHANGE;
+				NETWORKMGR->SendPacket(pPacket, pPacket->Size);
+				return;
+			}
+			else if (((CClickButton*)m_vecButtonUI[i])->GetID() == 1)
+			{
+				if (m_iHeroSelNum == -1)
+					return;
+
+				m_bReady ^= true;
+				cs_packet_client_info_in_room* pPacket = new cs_packet_client_info_in_room;
+				pPacket->Character = m_iHeroSelNum;
+				pPacket->isReady = m_bReady;
+				pPacket->Size = sizeof(cs_packet_client_info_in_room);
+				pPacket->Type = CS_CHARACTER_READY_CHANGE;
+				NETWORKMGR->SendPacket(pPacket, pPacket->Size);
+				return;
+			}			
 		}
 	}
 }

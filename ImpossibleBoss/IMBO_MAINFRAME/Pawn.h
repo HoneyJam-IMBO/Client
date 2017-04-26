@@ -19,6 +19,8 @@ private:
 	bool	m_bSprit{ false };
 	float	m_fJumpTime{ 0.f };
 
+	UINT	m_nAnimNum{ 0 };
+
 public:
 	CPawn(string name, tag t = tag::TAG_DEFAULT, bool bSprit = false);
 	~CPawn();

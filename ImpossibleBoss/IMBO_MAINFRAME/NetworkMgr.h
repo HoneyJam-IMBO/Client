@@ -13,21 +13,33 @@
 #define WM_SOCKET WM_USER + 1
 
 
-#define MAX_BUFFER_SIZE 1024
-#define MAX_PACKET_SIZE 1024
-#define MAX_STR_SIZE 100
-#define PACKET_SIZE_SIZE 2
-#define PACKET_TYPE_SIZE 2
+#define MAX_BUFFER_SIZE         1024
+#define MAX_PACKET_SIZE         1024
+#define MAX_STR_SIZE         100
+#define PACKET_SIZE_SIZE      2
+#define PACKET_TYPE_SIZE      2
+#define MAX_CLIENT_IN_ROOM		4
 
+#define SC_ID                  1
+#define SC_NOTICE               2
+#define SC_LOBBY_CLIENT_LIST      3
+#define SC_ROOM_INFO            13
+#define SC_CREATE_ROOM_SUCCESS      11
+#define SC_CREATE_ROOM_FAIL         12
+#define SC_JOIN_ROOM_SUCCESS      4
+#define SC_JOIN_ROOM_FAIL         5
+#define SC_CLIENT_IN_ROOM         6
+#define SC_ALL_READY_COMPLETE      7
+#define SC_GAME_START            8
+#define SC_REMOVE_PLAYER         9
+#define SC_PLAYER_POS            10
 
-#define SC_ID 1
-#define SC_NOTICE 2
-#define SC_LOBBY_CLIENT_LIST 3
-#define SC_PUT_PLAYER 4
-#define SC_REMOVE_PLAYER 5
-#define SC_PLAYER_POS 6
-
-#define CS_PLAYER_POS 1
+#define CS_CREATE_ROOM            6
+#define CS_JOIN_ROOM            1
+#define CS_OUT_ROOM               2
+#define CS_CHARACTER_READY_CHANGE   3
+#define CS_LOADING_COMPLETE         4
+#define CS_PLAYER_POS            5
 
 //////////////////////////////////////////////////////
 //
@@ -36,6 +48,16 @@
 //////////////////////////////////////////////////////
 enum EVENTTYPE {
 	E_RECV, E_SEND
+};
+
+struct ClientInLobby {
+	int id;
+	int iRoomNumber;
+};
+
+struct ClientInRoom {
+	char Character;
+	bool isReady;
 };
 
 struct Player {
@@ -63,15 +85,18 @@ struct ClientInfo {
 	int iPrevRecvSize;
 	int iCurrPacketSize;
 
+	bool bLoadingComplete;
+	ClientInRoom tInRoom;
 	Player tPlayer;
+
 };
 
-struct ClientInLobby {
-	int id;
+struct RoomInfo {
 	int iRoomNumber;
+	char ClientCount;
+	bool isStart;
+	int ClientsIDInRoom[MAX_CLIENT_IN_ROOM];
 };
-
-
 
 //////////////////////////////////////////////////////////////////
 //
@@ -98,12 +123,37 @@ struct sc_packet_lobby_client_list {
 	INT ClientId[MAX_CLIENT];
 	INT ClientRoomNumber[MAX_CLIENT];
 };
-struct sc_packet_put_player {
+
+struct sc_packet_join_room_result {
+	WORD Size;
+	WORD Type;
+};
+
+struct sc_packet_room_info {
+	WORD Size;
+	WORD Type;
+	INT RoomNumber;
+	INT ClientCount;
+	BOOL isStart;
+	INT ClientsId[MAX_CLIENT_IN_ROOM];
+};
+
+struct sc_packet_client_info_in_room {
 	WORD Size;
 	WORD Type;
 	INT Id;
-	INT x;
-	INT y;
+	BYTE Character;
+	BOOL isReady;
+};
+
+struct sc_packet_all_ready {
+	WORD Size;
+	WORD Type;
+};
+
+struct sc_packet_all_loading_complete {
+	WORD Size;
+	WORD Type;
 };
 
 struct sc_packet_remove_player {
@@ -118,26 +168,56 @@ struct sc_packet_player_position {
 
 	INT Id;
 
-	DWORD PosX;
-	DWORD PosY;
-	DWORD PosZ;
+	float PosX;
+	float PosY;
+	float PosZ;
 
-	DWORD RotY;
+	float RotY;
 
-	BYTE AnimNumber;
+	char AnimNumber;
+};
+////////////////////////////////////////////////////////
+// CS
+////////////////////////////////////////////////////////
+struct cs_packet_create_room {
+	WORD Size;
+	WORD Type;
+};
+struct cs_packet_join_room {
+	WORD Size;
+	WORD Type;
+	INT RoomNumber;
+};
+
+struct cs_packet_out_room {
+	WORD Size;
+	WORD Type;
+	INT RoomNumber;
+};
+
+struct cs_packet_client_info_in_room {
+	WORD Size;
+	WORD Type;
+	BYTE Character;
+	BOOL isReady;
+};
+
+struct cs_packet_loading_complete {
+	WORD Size;
+	WORD Type;
 };
 
 struct cs_packet_player_position {
 	WORD Size;
 	WORD Type;
 
-	DWORD PosX;
-	DWORD PosY;
-	DWORD PosZ;
+	float PosX;
+	float PosY;
+	float PosZ;
 
-	DWORD RotY;
+	float RotY;
 
-	BYTE AnimNumber;
+	char AnimNumber;
 };
 #pragma pack(pop)
 //protocol

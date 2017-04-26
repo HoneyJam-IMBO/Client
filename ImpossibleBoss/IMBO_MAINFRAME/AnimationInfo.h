@@ -14,6 +14,8 @@ public:
 
 	virtual void Update(float fTimeElapsed);
 
+
+	bool GetLoopDone() { return m_bLoopDone; }
 	float& GetCurFrame() { return m_CurFrame; }
 	int& GetFrameCnt() { return m_pAnimationData->GetAnimationLength(); }
 	bool& GetbAnimation() { return m_bAnimation; }
@@ -55,6 +57,7 @@ private:
 	UINT m_AnimationIndex{ 0 };
 	float m_CurFrame{ 0 };
 	bool m_bAnimation{ true };
+	bool m_bLoopDone{ false };
 	//buffer
 	shared_ptr<CBuffer> m_pAnimBuffer{ nullptr };
 public:

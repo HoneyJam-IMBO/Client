@@ -63,6 +63,10 @@ bool CNetworkManager::OnProcessingWindowMessage(HWND hWnd, UINT nMessageID, WPAR
 			ReadPacket((SOCKET)wParam);
 			return true;
 			break;
+
+		case FD_WRITE:
+			break;
+
 		case FD_CLOSE:
 			closesocket((SOCKET)wParam);
 			clienterror();
@@ -90,6 +94,19 @@ void CNetworkManager::ProcessPacket(char * ptr){
 	case SC_NOTICE:
 		
 		break;
+	case SC_ROOM_INFO:
+		break;
+	case SC_CREATE_ROOM_SUCCESS:
+		break;
+	case SC_JOIN_ROOM_SUCCESS:
+		break;
+	case SC_CLIENT_IN_ROOM:
+		break;
+	case SC_ALL_READY_COMPLETE:
+		break;
+	case SC_GAME_START:
+		break;
+
 	case SC_PLAYER_POS:
 		sc_packet_player_position PosPacket;
 		memcpy(&PosPacket, ptr, iPacketSize);
@@ -149,7 +166,7 @@ void CNetworkManager::ProcessPacket(char * ptr){
 
 void CNetworkManager::SendPacket(void* pData, int iDataSize) {
 	WSABUF SendWSABuf;
-	pData = SendWSABuf.buf;
+	SendWSABuf.buf = (char*)pData;
 	SendWSABuf.len = iDataSize;
 	DWORD dwSendBytes;
 	int ret = WSASend(ClientSocket, &SendWSABuf, 1, &dwSendBytes, 0, NULL, NULL);

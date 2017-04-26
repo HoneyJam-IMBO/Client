@@ -128,7 +128,12 @@ void CAnimationInfo::Update(float fTimeElapsed){
 		m_CurFrame = m_CurFrame + (fTimeElapsed*m_fAnimationSpd);
 	}
 	if (m_CurFrame > m_pAnimationData->GetAnimationLength()) {
+		m_bLoopDone = true;
 		m_CurFrame = 0.f;
+	}
+	else
+	{
+		m_bLoopDone = false;
 	}
 }
 
@@ -136,68 +141,8 @@ void CAnimationInfo::Reset(){
 	m_CurFrame = 0;
 }
 
-//void CAnimationInfo::ChangeJointData(vector<string>& vJointName){
-//	//인자로 들어온 animater의 joint tree정보를 가지고 
-//	//자신의 joint데이터를 갱신한다 . 
-//	//인자로 들어온 joint tree정보는 모든 joint들의 정보를 아우른다.
-//	
-//	//1. 새로운 벡터를 제작한다.
-//	vector<CFbxJointData> vTempJoints;
-//	vector<CFbxJointData> ::iterator iter;
-//	int CurIndex{ 0 };
-//	int ChangeIndex{ 0 };
-//	for (auto jointName : vJointName) {
-//		CurIndex = 0;
-//		//2. 인자로 들어온 animation tree만큼 루프를 돈다.
-//		iter = find_if(m_vJoints.begin(), m_vJoints.end(), [&jointName, &CurIndex](CFbxJointData& my) {
-//			CurIndex++;
-//			return (my.GetJointName() == jointName);
-//		});
-//		//3. 각 joint의 이름을 가지고 기존의 joint의 이름과 비교하여 있으면 넣고
-//		if (m_vJoints.end() != iter) {
-//			vTempJoints.push_back(*iter);
-//			m_mChangeIndex.insert(pair<int, int>(CurIndex, ChangeIndex));
-//		}
-//		//아니면 새로운 joint에게 offsetmtx만 넣고 frame mtx등 필요없는 데이터는 Identity를 넣는다.
-//		else {//같은 이름이 없는 경우가 2가지 있다. 나에게는 있는데 상대에게는 없는 joint
-//			//상대에게는 있는데 나에게 없는 joint가 그것이다.
-//			//이경우는 상대에게는 있는데 나에겐 없는 joint경우만 해당한다. 
-//			CFbxJointData data;
-//			//data.SetMyIndex(joint.GetMyIndex());
-//			//data.SetJointName(joint.GetJointName());
-//			//data.SetOffsetMtx(joint.GetOffsetMtx());
-//			//data.SetParentIndex(joint.GetParentIndex());
-//			vTempJoints.push_back(data);
-//		}
-//		ChangeIndex++;
-//	}
-//	//4. 기존의 vector를 날리고 새로운 vector를 저장한다.
-//	m_vJoints.clear();
-//	m_vTempBoundingBox.clear();
-//
-//	for (auto data : vTempJoints) {
-//		m_vJoints.push_back(data);
-//		//bounding box 추가
-//		CBoundingBox boundingBox;
-//		boundingBox.Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(2.f, 2.f, 2.f, 1.f));
-//		boundingBox.SetActive(false);
-//		m_vTempBoundingBox.push_back(boundingBox);
-//	}
-//}
-
-
 
 CAnimationInfo* CAnimationInfo::CreateAnimationInfoFromFBXFile(shared_ptr<CAnimater>  pAnimater){
-	//CAnimationInfo* pAnimationInfo = new CAnimationInfo();
-	//pAnimationInfo->SetAnimationIndex(pAnimater->GetAnimationCnt());
-	//pAnimationInfo->SetAnimater(pAnimater);
-
-	//CAnimationData* pAnimationData = new CAnimationData();
-	//*pAnimationData = FBXIMPORTER->GetAnimationData();
-
-	//pAnimationInfo->SetAnimationData(pAnimationData);
-	//pAnimationInfo->Begin(pAnimater);
-	//return pAnimationInfo;
 	return nullptr;
 }
 

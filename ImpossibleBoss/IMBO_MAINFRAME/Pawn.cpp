@@ -15,9 +15,8 @@ void CPawn::Animate(float fTimeElapsed)
 		KeyInput(fTimeElapsed);
 	
 	GetServerData();
-
-
 	if (m_pAnimater) m_pAnimater->Update(TIMEMGR->GetTimeElapsed());
+
 	CGameObject::Animate(fTimeElapsed);
 }
 
@@ -34,28 +33,43 @@ void CPawn::KeyInput(float fDeltaTime)
 	if (true == INPUTMGR->MouseRightDown())	{
 		m_bIdle = true;
 	}
-	float fSpeed = 50.f;
-	if (dwDirection || m_bJump){
+
+	SetupAnimation(dwDirection);
+	float fSpeed = 100.f;
+	if (dwDirection){
 		if (dwDirection & DIR_FORWARD)		xmvShift += GetLook();
 		if (dwDirection & DIR_BACKWARD)		xmvShift -= GetLook();
 		if (dwDirection & DIR_RIGHT)		xmvShift += GetRight();
 		if (dwDirection & DIR_LEFT)			xmvShift -= GetRight();
 
-		XMVector3Normalize(xmvShift);
-
-		XMStoreFloat3(&m_xmf3Position, XMLoadFloat3(&m_xmf3Position) + ((xmvShift * fSpeed) * fDeltaTime));
+		XMStoreFloat3(&m_xmf3Position, XMLoadFloat3(&m_xmf3Position) + ((XMVector3Normalize(xmvShift) * fSpeed) * fDeltaTime));
 		SetPosition(XMLoadFloat3(&m_xmf3Position));
 
-		if(true == m_bJump)
-			Jumping(fDeltaTime);
-
 		m_bIdle = false;
-		SetupAnimation(dwDirection);
 	}
 	else
 	{
-		m_pAnimater->SetCurAnimationIndex(ELF_ANIM_IDLE);
+		if (false == m_bJump)
+		{
+			if (ELF_ANIM_JUMP_END != m_nAnimNum)
+			{
+				m_nAnimNum = ELF_ANIM_IDLE;
+				m_pAnimater->SetCurAnimationIndex(m_nAnimNum);
+			}
+			else
+			{
+				if (true == m_pAnimater->GetCurAnimationInfo()->GetLoopDone())
+				{
+					m_nAnimNum = ELF_ANIM_IDLE;
+					m_pAnimater->SetCurAnimationIndex(m_nAnimNum);
+				}
+			}			
+		}			
 	}
+	if (true == m_bJump)
+		Jumping(fDeltaTime);
+
+
 	if (true == INPUTMGR->MouseRightUp() && abs(m_pCamera->m_cxDelta + m_pCamera->m_cyDelta) > 1.f)	{
 		m_bIdle = false;
 	}
@@ -67,48 +81,63 @@ void CPawn::KeyInput(float fDeltaTime)
 
 void CPawn::GetServerData()
 {
-
 }
 
 void CPawn::SetupAnimation(DWORD dwDirection)
 {
-	UINT uAnimNum = 0;
+	//UINT uAnimNum = 0;
 
 	if (false == m_bJump)
 	{
 		if (dwDirection & DIR_FORWARD)
-			if (uAnimNum != ELF_ANIM_RUN_F) uAnimNum = ELF_ANIM_RUN_F;
+			if (m_nAnimNum != ELF_ANIM_RUN_F) m_nAnimNum = ELF_ANIM_RUN_F;
 		if (dwDirection & DIR_BACKWARD)
-			if (uAnimNum != ELF_ANIM_RUN_B) uAnimNum = ELF_ANIM_RUN_B;
+			if (m_nAnimNum != ELF_ANIM_RUN_B) m_nAnimNum = ELF_ANIM_RUN_B;
 		if (dwDirection & DIR_LEFT)
-			if (uAnimNum != ELF_ANIM_RUN_L) uAnimNum = ELF_ANIM_RUN_L;
+			if (m_nAnimNum != ELF_ANIM_RUN_L) m_nAnimNum = ELF_ANIM_RUN_L;
 		if (dwDirection & DIR_RIGHT)
-			if (uAnimNum != ELF_ANIM_RUN_R) uAnimNum = ELF_ANIM_RUN_R;
+			if (m_nAnimNum != ELF_ANIM_RUN_R) m_nAnimNum = ELF_ANIM_RUN_R;
 
 		if (dwDirection & DIR_FORWARD && dwDirection & DIR_LEFT)
-			if (uAnimNum != ELF_ANIM_RUN_FL) uAnimNum = ELF_ANIM_RUN_FL;
+			if (m_nAnimNum != ELF_ANIM_RUN_FL) m_nAnimNum = ELF_ANIM_RUN_FL;
 		if (dwDirection & DIR_FORWARD && dwDirection & DIR_RIGHT)
-			if (uAnimNum != ELF_ANIM_RUN_FR) uAnimNum = ELF_ANIM_RUN_FR;
+			if (m_nAnimNum != ELF_ANIM_RUN_FR) m_nAnimNum = ELF_ANIM_RUN_FR;
 		if (dwDirection & DIR_BACKWARD && dwDirection & DIR_LEFT)
-			if (uAnimNum != ELF_ANIM_RUN_BL) uAnimNum = ELF_ANIM_RUN_BL;
+			if (m_nAnimNum != ELF_ANIM_RUN_BL) m_nAnimNum = ELF_ANIM_RUN_BL;
 		if (dwDirection & DIR_BACKWARD && dwDirection & DIR_RIGHT)
-			if (uAnimNum != ELF_ANIM_RUN_BR) uAnimNum = ELF_ANIM_RUN_BR;
+			if (m_nAnimNum != ELF_ANIM_RUN_BR) m_nAnimNum = ELF_ANIM_RUN_BR;
+
+		if(0 != dwDirection)
+			m_pAnimater->SetCurAnimationIndex(m_nAnimNum);
 	}
 	else
 	{
+		//if (0 == dwDirection)
+		{
+			if (m_nAnimNum != ELF_ANIM_JUMP_START
+				&& m_nAnimNum != ELF_ANIM_JUMP_LOOP
+				&& m_nAnimNum != ELF_ANIM_JUMP_END)
+			{
+				m_nAnimNum = ELF_ANIM_JUMP_START;
+				m_pAnimater->SetCurAnimationIndex(m_nAnimNum);
+			}
+				
 
-
+			if (m_nAnimNum == ELF_ANIM_JUMP_START
+				&& true == m_pAnimater->GetCurAnimationInfo()->GetLoopDone())
+			{
+				m_nAnimNum = ELF_ANIM_JUMP_LOOP;
+				m_pAnimater->SetCurAnimationIndex(m_nAnimNum);
+			}
+		}
 	}
-	
-
-	m_pAnimater->SetCurAnimationIndex(uAnimNum);
 }
 
 void CPawn::Jumping(float fDeltaTime)
 {
 	m_fJumpTime += fDeltaTime;
-	float fJumpValue = 4.f * m_fJumpTime * m_fJumpTime;
-	float fJumpPower = 2.f;
+	float fJumpValue = 6.f * m_fJumpTime * m_fJumpTime;
+	float fJumpPower = 1.7f;
 	
 
 	m_xmf4x4World._42 += fJumpPower - fJumpValue;
@@ -121,6 +150,9 @@ void CPawn::Jumping(float fDeltaTime)
 
 		m_xmf4x4World._42 = GetTerrainHeight();
 		m_xmf3Position.y = GetTerrainHeight();
+
+		m_nAnimNum = ELF_ANIM_JUMP_END;
+		m_pAnimater->SetCurAnimationIndex(m_nAnimNum);
 	}
 }
 
