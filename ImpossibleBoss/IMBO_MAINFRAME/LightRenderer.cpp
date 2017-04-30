@@ -92,9 +92,9 @@ void CLightRenderer::Excute(shared_ptr<CCamera> pCamera, CShadow* m_pShadow){
 	if (m_pShadow){
 		m_pShadow->CleanShaderState();
 	}
-	m_mRenderContainer["pointlight"]->Render(pCamera);
-	m_mRenderContainer["capsulelight"]->Render(pCamera);
-	m_mRenderContainer["spotlight"]->Render(pCamera);
+	//m_mRenderContainer["pointlight"]->Render(pCamera);
+	//m_mRenderContainer["capsulelight"]->Render(pCamera);
+	//m_mRenderContainer["spotlight"]->Render(pCamera);
 
 	CleanShaderState();
 }

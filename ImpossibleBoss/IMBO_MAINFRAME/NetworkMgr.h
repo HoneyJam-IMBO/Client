@@ -3,13 +3,14 @@
 #include "SingleTon.h"
 //protocol
 
+#define BUF_SIZE 1024
+
 #define SERVER_PORT 9595
 
 #define MAX_CLIENT 100
 
 #define THREAD_NUM 8
 
-#define BUF_SIZE 1024
 #define WM_SOCKET WM_USER + 1
 
 
@@ -61,9 +62,9 @@ struct ClientInRoom {
 };
 
 struct Player {
-	float PosX, PosY, PosZ;
-	float RotY;
-	char AnimNumber;
+	float PosX{ 0.f }, PosY{ 0.f }, PosZ{ 0.f };
+	float RotY{ 0.f };
+	char AnimNumber{ -1 };
 };
 
 struct WSAOVERLAPPED_EX {
@@ -73,10 +74,11 @@ struct WSAOVERLAPPED_EX {
 	EVENTTYPE eEventType;
 };
 
-struct ClientInfo {
-	int Id;
-	int iRoomNumber;
-	bool bConnected;
+class ClientInfo {
+public:
+	int Id{ -1 };
+	int iRoomNumber{ -1 };
+	bool bConnected{ false };
 	SOCKET Sock;
 	WSAOVERLAPPED_EX RecvOverEx;
 	mutex myLock;
@@ -88,10 +90,14 @@ struct ClientInfo {
 	bool bLoadingComplete;
 	ClientInRoom tInRoom;
 	Player tPlayer;
-
 };
 
-struct RoomInfo {
+
+static int num_other_player = 0;
+static int other_id[3] = {-1, -1, -1};
+
+class RoomInfo {
+public:
 	int iRoomNumber;
 	char ClientCount;
 	bool isStart;
@@ -142,7 +148,7 @@ struct sc_packet_client_info_in_room {
 	WORD Size;
 	WORD Type;
 	INT Id;
-	BYTE Character;
+	int Character;
 	BOOL isReady;
 };
 
@@ -174,7 +180,7 @@ struct sc_packet_player_position {
 
 	float RotY;
 
-	char AnimNumber;
+	UINT AnimNumber;
 };
 ////////////////////////////////////////////////////////
 // CS
@@ -198,7 +204,7 @@ struct cs_packet_out_room {
 struct cs_packet_client_info_in_room {
 	WORD Size;
 	WORD Type;
-	BYTE Character;
+	int Character;
 	BOOL isReady;
 };
 
@@ -217,7 +223,7 @@ struct cs_packet_player_position {
 
 	float RotY;
 
-	char AnimNumber;
+	UINT AnimNumber;
 };
 #pragma pack(pop)
 //protocol
@@ -241,11 +247,11 @@ public:
 private:
 	SOCKET      ClientSocket;
 	WSABUF      send_wsabuf;
-	char      send_buffer[BUF_SIZE];
+	char		send_buffer[BUF_SIZE];
 	WSABUF      recv_wsabuf;
-	char      recv_buffer[BUF_SIZE];
-	char      packet_buffer[BUF_SIZE];
-	DWORD      in_packet_size = 0;
+	char		recv_buffer[BUF_SIZE];
+	char		packet_buffer[BUF_SIZE];
+	DWORD		in_packet_size = 0;
 	int         saved_packet_size = 0;
 	int         g_myid;
 

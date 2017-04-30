@@ -23,7 +23,7 @@ public:
 public:
 	XMVECTOR	GetUIPos() { return XMLoadFloat2(&m_f2XYPos); }
 	XMVECTOR	GetUISize() { return XMLoadFloat2(&m_f2XYSize); }
-	
+	void		SetImageName(TCHAR* pTexName){ memcpy(m_szTexture, pTexName, sizeof(TCHAR) * 64); }
 protected:
 	XMFLOAT2	m_f2XYPos{ 0.f, 0.f };
 	XMFLOAT2	m_f2XYSize{ 1.f, 1.f };

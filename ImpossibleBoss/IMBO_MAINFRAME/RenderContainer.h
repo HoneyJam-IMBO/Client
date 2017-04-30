@@ -97,7 +97,9 @@ public:
 
 };
 
+//typedef CAtlMap<string, CRenderContainer*> mapRenderContainer;
+//typedef CAtlMap<tag, mapRenderContainer> mapTagRenderContainer;
 typedef map<string, CRenderContainer*> mapRenderContainer;
 typedef map<tag, mapRenderContainer> mapTagRenderContainer;
-typedef pair<string, CRenderContainer*> pairRenderContainer;
-typedef pair<tag, pairRenderContainer> pairTagRenderContainer;
+//typedef pair<string, CRenderContainer*> pairRenderContainer;
+//typedef pair<tag, pairRenderContainer> pairTagRenderContainer;

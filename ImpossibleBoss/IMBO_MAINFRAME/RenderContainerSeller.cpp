@@ -164,6 +164,14 @@ bool CRenderContainerSeller::Begin(){
 
 bool CRenderContainerSeller::End(){
 	//render container delete
+
+	//POSITION ContainerPos =  m_mTagRenderContainer.GetStartPosition();
+	//while (ContainerPos != NULL)
+	//{
+
+	//}
+
+
 	for (auto pairTagRenderContainer : m_mTagRenderContainer) {
 		for (auto pairRenderContainer : pairTagRenderContainer.second) {
 			delete pairRenderContainer.second;

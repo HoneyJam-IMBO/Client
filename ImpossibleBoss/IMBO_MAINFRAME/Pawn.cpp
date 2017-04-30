@@ -13,11 +13,14 @@ void CPawn::Animate(float fTimeElapsed)
 {
 	if (true == m_bSprit)
 		KeyInput(fTimeElapsed);
-	
-	GetServerData();
-	if (m_pAnimater) m_pAnimater->Update(TIMEMGR->GetTimeElapsed());
+	else
+	{
 
-	CGameObject::Animate(fTimeElapsed);
+	}
+	
+	if (m_pAnimater) m_pAnimater->Update(TIMEMGR->GetTimeElapsed());
+	CGameObject::Animate(fTimeElapsed);	
+	PushServerData();
 }
 
 void CPawn::KeyInput(float fDeltaTime)
@@ -74,13 +77,23 @@ void CPawn::KeyInput(float fDeltaTime)
 		m_bIdle = false;
 	}
 	if (false == m_bIdle)	{
-		SetRotation(XMMatrixRotationY(m_pCamera->m_fCurrentAngle[ANGLE_Y] + XM_PI));
+		m_fAngleY = m_pCamera->m_fCurrentAngle[ANGLE_Y] + XM_PI;
+		SetRotation(XMMatrixRotationY(m_fAngleY));
 	}
 		
 }
 
-void CPawn::GetServerData()
+void CPawn::PushServerData()
 {
+	//cs_packet_player_position *pPacket = new cs_packet_player_position;
+	//pPacket->Size = sizeof(cs_packet_player_position);
+	//pPacket->Type = CS_PLAYER_POS;
+	//pPacket->PosX = m_xmf3Position.x;
+	//pPacket->PosY = m_xmf3Position.y;
+	//pPacket->PosZ = m_xmf3Position.z;
+	//pPacket->RotY = m_pCamera->m_fCurrentAngle[ANGLE_Y] + XM_PI;
+	//pPacket->AnimNumber = m_nAnimNum;
+	//NETWORKMGR->SendPacket(pPacket, pPacket->Size);
 }
 
 void CPawn::SetupAnimation(DWORD dwDirection)

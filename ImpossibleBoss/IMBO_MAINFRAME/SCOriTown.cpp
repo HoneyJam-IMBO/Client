@@ -13,13 +13,16 @@ bool CSCOriTown::Begin() {
 	m_pObject->SetTerrainContainer(UPDATER->GetTerrainContainer());
 	m_pObject->SetPosition(XMVectorSet(500, 0, 500, 0));
 	m_pObject->SetScale(XMVectorSet(1, 1, 1, 1));
-	//m_pObject->G
 	
 	UPDATER->GetSpaceContainer()->AddObject(m_pObject);
 	m_pObject->GetAnimater()->SetCurAnimationIndex(0);
 	CAMMGR->SetTarget(CAM_FREE, m_pObject);
 	CAMMGR->GetCamera(CAM_FREE)->SetMode(MODE_FIX);
 
+	cs_packet_loading_complete *pPacket = new cs_packet_loading_complete;
+	pPacket->Size = sizeof(cs_packet_loading_complete);
+	pPacket->Type = CS_LOADING_COMPLETE;
+	NETWORKMGR->SendPacket(pPacket, pPacket->Size);
 	//NETWORKMGR->Connect("192.168.10.101");
 
 	return CScene::Begin();

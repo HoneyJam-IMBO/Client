@@ -116,43 +116,43 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 
 	//shadow render
 	m_pShadow->RenderShadowMap(pCamera);
-	
+
 	//ID3D11ShaderResourceView* pRFL = m_pWaterRenderer->RenderReflectionMap(pCamera, m_pd3ddsvDepthStencil, m_pObjectRenderer);
-	
+
 	//clear buff
 	//CLEAR
 	ClearDepthStencilView(m_pd3ddsvDepthStencil);
 	SetForwardRenderTargets();//gbuff가 될 rtv/ dsv set
 	GLOBALVALUEMGR->GetDeviceContext()->OMSetDepthStencilState(m_pd3dDepthStencilState, 1);
-	
+
 	//object
 	pCamera->SetShaderState();
 	UPDATER->GetSpaceContainer()->PrepareRender(pCamera);
 	UPDATER->GetSkyBoxContainer()->GetSkyBox()->RegistToContainer();
 	m_pObjectRenderer->Excute(pCamera);
-	
+
 	//m_pWaterRenderer->RenderWater(pCamera, m_pd3dsrvDepthStencil);
-	
-	if (INPUTMGR->GetDebugMode()) {	DEBUGER->DebugRender(pCamera);}
-	
+
+	if (INPUTMGR->GetDebugMode()) { DEBUGER->DebugRender(pCamera); }
+
 	//SSAO
 	SetRenderTargetViews(1, &m_pd3drtvLight, m_pd3ddsvReadOnlyDepthStencil);
 	for (auto texture : m_vObjectLayerResultTexture) {
 		texture->SetShaderState();
-	}	
+	}
 	float SSAO_OffsetRadius = m_fSSAOOffsetRadius;//m_pFramework->GetCurScene()->GetSSAOOffsetRadius();
 	float SSAO_Radius = m_fSSAORadius;//m_pFramework->GetCurScene()->GetSSAORadius();
 	ID3D11ShaderResourceView* pAmbientOcclution = m_pAORenderer->Excute(pCamera, SSAO_OffsetRadius, SSAO_Radius);
-	pAmbientOcclution  = m_p4to1Blur->Excute(pAmbientOcclution);
+	pAmbientOcclution = m_p4to1Blur->Excute(pAmbientOcclution);
 	GLOBALVALUEMGR->GetDeviceContext()->PSSetShaderResources(4, 1, &pAmbientOcclution);
-	
+
 	//LIGHT RENDER
 	//SetMainRenderTargetView();
 	m_pLightRenderer->Excute(pCamera, m_pShadow);
 	for (auto texture : m_vObjectLayerResultTexture) {
 		texture->CleanShaderState();
 	}
-	
+
 	//SSLR
 	if (m_bSSLROnOff) {
 		if (UPDATER->GetDirectionalLight()) {
@@ -161,7 +161,7 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 			GLOBALVALUEMGR->GetDeviceContext()->RSGetViewports(&num, &oldvp);
 			ID3D11RasterizerState* pPrevRSState;
 			GLOBALVALUEMGR->GetDeviceContext()->RSGetState(&pPrevRSState);
-	
+
 			XMVECTOR xmvSunDir = UPDATER->GetDirectionalLight()->GetLook();
 			XMFLOAT3 xmf3Color = UPDATER->GetDirectionalLight()->GetColor();
 			float fOffsetSunPos = UPDATER->GetDirectionalLight()->GetOffsetLength();
@@ -169,18 +169,18 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 			float fInitDecay = m_fSSLRInitDecay;// m_pFramework->GetCurScene()->GetSSLRInitDecay();
 			float fDistDecay = m_fSSLRDistDecay;// m_pFramework->GetCurScene()->GetSSLRDistDecay();
 			float fMaxDeltaLen = m_fSSLRMaxDeltaLen;//m_pFramework->GetCurScene()->GetSSLRMaxDeltaLen();
-	
+
 			m_pSSLR->Excute(pCamera, m_pd3drtvLight, pAmbientOcclution, xmvSunDir, xmf3Color,
 				fOffsetSunPos, fMaxSunDist, fInitDecay, fDistDecay, fMaxDeltaLen);
-	
+
 			// Restore the states
 			GLOBALVALUEMGR->GetDeviceContext()->RSSetViewports(num, &oldvp);
 			GLOBALVALUEMGR->GetDeviceContext()->RSSetState(pPrevRSState);
 			if (pPrevRSState)pPrevRSState->Release();
 		}
 	}//sslr 모드가 true이면 sslr 실행 
-	
-	//POST PROCESSING
+
+	 //POST PROCESSING
 	SetMainRenderTargetView();
 	m_vLightLayerResultTexture[0]->SetShaderState();
 	PostProcessing(pCamera);
@@ -190,7 +190,7 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	pCamera->SetShaderState();
 	m_pObjectRenderer->RenderSkyBox();
 
-	if (nullptr != m_pUIRederer){
+	if (nullptr != m_pUIRederer) {
 		m_pUIRederer->RenderUI();
 	}
 
@@ -198,12 +198,12 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	if (INPUTMGR->GetDebugMode()) {
 		ID3D11Buffer* pGBufferUnpackingBuffer = pCamera->GetGBufferUnpackingBuffer();
 		GLOBALVALUEMGR->GetDeviceContext()->PSSetConstantBuffers(PS_UNPACKING_SLOT, 1, &pGBufferUnpackingBuffer);
-	
+
 		DEBUGER->AddDepthTexture(XMFLOAT2(500, 0), XMFLOAT2(750, 150), m_pd3dsrvDepthStencil);
-	//	DEBUGER->AddTexture(XMFLOAT2(100, 0), XMFLOAT2(350, 250), pRFL);
+		//	DEBUGER->AddTexture(XMFLOAT2(100, 0), XMFLOAT2(350, 250), pRFL);
 		DEBUGER->AddTexture(XMFLOAT2(100, 0), XMFLOAT2(400, 300), m_vLightLayerResultTexture[0]->GetShaderResourceView());
 		//m_vLightLayerResultTexture
-	
+
 		//이건 꼭 여기서 해줘야함.
 		DEBUGER->RenderTexture();
 		DEBUGER->RenderText();

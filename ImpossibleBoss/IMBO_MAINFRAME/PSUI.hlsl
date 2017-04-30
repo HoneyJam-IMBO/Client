@@ -2,11 +2,6 @@
 
 
 Texture2D	gtxtUI		: register(t0);
-sampler		gSamplerD	: register(s0);
-sampler		gSamplerP	: register(s1);
-//sampler		gSampler	: register(s2);
-
-sampler		gSampler	: register(s2);
 
 sampler textureSampler = sampler_state
 {

@@ -3,14 +3,19 @@
 #include "SpaceContainer.h"
 #include "RenderContainerSeller.h"
 
-void CSpace::Begin(CSpaceContainer * pSpaceContainer, UINT size, int lv, XMVECTOR pos){
+
+
+void CSpace::Begin(CSpaceContainer * pSpaceContainer, UINT size, int lv, XMVECTOR pos) {
 	//object_id set 
-//	m_objectID = object_id::OBJECT_SPACE;
+	//	m_objectID = object_id::OBJECT_SPACE;
 	CGameObject::Begin();
 	//size를 알아야 할지도 모르니까 일단 저장
 	m_size = size;
 	m_pSpaceContainer = pSpaceContainer;
 
+	//CAtlMap<string, int> a;
+
+	
 	//자신의 위치를 정해줌 
 	//공간의 중간이 아니라 제일 처음/ 좌표가 시작 좌표
 	SetPosition(pos);
@@ -38,7 +43,7 @@ void CSpace::Begin(CSpaceContainer * pSpaceContainer, UINT size, int lv, XMVECTO
 		float fz = static_cast<float>(m_pSpaceContainer->GetOneSpaceSize());
 
 		BoundingBox::CreateFromPoints(m_OriBoundingBox, XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(fx, fy, fz, 0.f));
-		
+
 		//SetRenderContainer(pSeller);//그림을 그릴 수도 있으니 RenderContainer set
 		return;
 	}
@@ -56,7 +61,7 @@ void CSpace::Begin(CSpaceContainer * pSpaceContainer, UINT size, int lv, XMVECTO
 			//x먼저 증가, 이후 z증가.
 			/* 자식 공간의 순서
 			2 3
-			0 1 
+			0 1
 			*/
 			XMVECTOR xmvOffset = XMVectorSet(static_cast<float>(i*child_size), 0.f, static_cast<float>(j*child_size), 0.f);
 			m_ppChildSpace[k] = new CSpace();
@@ -66,7 +71,7 @@ void CSpace::Begin(CSpaceContainer * pSpaceContainer, UINT size, int lv, XMVECTO
 
 }
 
-bool CSpace::End(){
+bool CSpace::End() {
 	for (auto mlp : m_mlpObject) {
 		for (auto pObject : mlp.second) {
 			pObject->End();
@@ -89,7 +94,7 @@ bool CSpace::End(){
 	return true;
 }
 
-void CSpace::Animate(float fTimeElapsed){
+void CSpace::Animate(float fTimeElapsed) {
 	if (m_ppChildSpace) {
 		for (int i = 0; i < 4; ++i) {
 			m_ppChildSpace[i]->Animate(fTimeElapsed);
@@ -100,7 +105,7 @@ void CSpace::Animate(float fTimeElapsed){
 
 		list<CGameObject*>::iterator iter = m_mlpObject[tag::TAG_DYNAMIC_OBJECT].begin();
 		list<CGameObject*>::iterator iter_end = m_mlpObject[tag::TAG_DYNAMIC_OBJECT].end();
-		for(; iter != iter_end; )
+		for (; iter != iter_end; )
 		{
 			(*iter)->Animate(fTimeElapsed);
 			int current_index = m_pSpaceContainer->SearchSpace((*iter)->GetPosition());
@@ -108,46 +113,70 @@ void CSpace::Animate(float fTimeElapsed){
 			{
 				m_pSpaceContainer->AddBlockObjectList((*iter));//block Object list에 등록
 				m_mlpObject[tag::TAG_DYNAMIC_OBJECT].erase(iter++);
-								
-			}else
+
+			}
+			else
 				++iter;
 			nObject++;
 		}
 
-		if(INPUTMGR->GetDebugMode())
+		if (INPUTMGR->GetDebugMode())
 			DEBUGER->AddText(20.0f, 800.0f, static_cast<float>(m_index * 15.f), YT_Color(255, 255, 255), L"space %d object_num : %d", m_index, nObject);
 		m_bRender = false;
 	}
 }
 
-void CSpace::PrepareRender(shared_ptr<CCamera> pCamera, UINT renderFlag){
-	
+void CSpace::PrepareRender(shared_ptr<CCamera> pCamera, UINT renderFlag) {
+
 	if (IsVisible(pCamera))
 	{											//여기에	 space 프러스텀 컬링
 		if (nullptr == m_ppChildSpace) {		//내 자식이 없으면 나는 leaf node
 			SetbRender(true);					//나는 그리는 space다.
 
-			if(INPUTMGR->GetDebugMode())
+			if (INPUTMGR->GetDebugMode())
 				this->RegistToDebuger();
 			for (auto mlp : m_mlpObject) {		//모든 객체에 대해서
 				for (auto pObject : mlp.second) {
-					if (pObject->IsVisible(pCamera)) 
-					{
-						//	pObject->RegistToContainer();
-						if (renderFlag & RTAG_TERRAIN) {
-							if (pObject->GetTag() == TAG_TERRAIN) pObject->RegistToContainer();
+
+					//	pObject->RegistToContainer();
+					if (renderFlag & RTAG_TERRAIN) {
+						if (pObject->GetTag() == TAG_TERRAIN)
+						{
+							if (pObject->IsVisible(pCamera))
+							{
+								pObject->RegistToContainer();
+							}
 						}
-						if (renderFlag & RTAG_STATIC_OBJECT) {
-							if (pObject->GetTag() == TAG_STATIC_OBJECT) pObject->RegistToContainer();
+					}
+					if (renderFlag & RTAG_STATIC_OBJECT) {
+						if (pObject->GetTag() == TAG_STATIC_OBJECT)
+						{
+							if (pObject->IsVisible(pCamera))
+							{
+								pObject->RegistToContainer();
+							}
 						}
-						if (renderFlag & RTAG_DYNAMIC_OBJECT) {
-							if (pObject->GetTag() == TAG_DYNAMIC_OBJECT) pObject->RegistToContainer();
+					}
+					if (renderFlag & RTAG_DYNAMIC_OBJECT) {
+						if (pObject->GetTag() == TAG_DYNAMIC_OBJECT)
+						{
+							if (pObject->IsVisible(pCamera))
+							{
+								pObject->RegistToContainer();
+							}
 						}
-						if (renderFlag & RTAG_LIGHT) {
-							if (pObject->GetTag() == TAG_LIGHT) pObject->RegistToContainer();
+					}
+					if (renderFlag & RTAG_LIGHT) {
+						if (pObject->GetTag() == TAG_LIGHT)
+						{
+							if (pObject->IsVisible(pCamera))
+							{
+								pObject->RegistToContainer();
+							}
 						}
 					}
 				}
+
 			}//end for
 		}//end if
 		else {//leaf가 아니라면
@@ -212,7 +241,7 @@ void CSpace::RemoveObject(CGameObject* pObject) {
 
 }
 
-void CSpace::RemoveObject(string name){
+void CSpace::RemoveObject(string name) {
 	for (auto data : m_mlpObject) {
 		for (auto pObject : data.second) {
 			if (pObject->GetName() == name) {
@@ -224,7 +253,7 @@ void CSpace::RemoveObject(string name){
 	}
 }
 
-CGameObject * CSpace::PickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float& distance){
+CGameObject * CSpace::PickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float& distance) {
 	float fHitDistance = FLT_MAX;
 	distance = fHitDistance;
 	float fNearHitDistance = FLT_MAX;
@@ -244,7 +273,7 @@ CGameObject * CSpace::PickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRa
 }
 
 
-CSpace::CSpace() : CGameObject("space", tag::TAG_SPACE){
+CSpace::CSpace() : CGameObject("space", tag::TAG_SPACE) {
 
 }
 

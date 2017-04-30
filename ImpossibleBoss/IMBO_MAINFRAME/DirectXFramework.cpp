@@ -104,7 +104,7 @@ void CDirectXFramework::InitSingleton(HINSTANCE hInstance, HWND hWnd)
 	SCENEMGR->Begin(this);
 	NETWORKMGR->Begin();
 
-	SCENEMGR->ChangeScene(SC_HEROSEL);
+	SCENEMGR->ChangeScene(SC_ORITOWN);
 }
 
 void CDirectXFramework::Make_Camera()
