@@ -366,5 +366,5 @@ CGameObject::CGameObject(string name, tag t) : CObject(name, t) {
 	XMStoreFloat4x4(&m_xmf4x4World, XMMatrixIdentity());
 }
 CGameObject ::~CGameObject() {
-
+	CGameObject* p = this;
 }

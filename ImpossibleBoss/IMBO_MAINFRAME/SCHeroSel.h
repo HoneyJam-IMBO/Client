@@ -10,6 +10,8 @@ public:
 private:
 	vector<CUIObject*>	m_vecButtonUI;
 	vector<CUIObject*>	m_vecCharUI;
+	vector<CUIObject*>	m_vecReadyUI;
+	//vector<CUIObject*>	m_vecSelectCharUI;
 
 	int	m_iHeroSelNum{ -1 };
 
@@ -23,6 +25,8 @@ public:
 	virtual void OnProcessingMouseMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	virtual void OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM wParam, LPARAM lParam);
 	virtual void ProcessInput(float fTimeElapsed);
+
+	virtual void SetSelSceneInfo(int id, int character, bool is_ready);
 
 private:
 	bool	m_bReady{ false };

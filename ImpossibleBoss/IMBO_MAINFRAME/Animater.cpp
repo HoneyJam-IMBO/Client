@@ -1,18 +1,24 @@
 #include "stdafx.h""
 #include "Animater.h"
 
-bool CAnimater::Begin(){
-	m_vpAnimationInfos.clear();
+bool CAnimater::Begin() {
+	m_vpAnimationInfos.RemoveAll();
 
 	return true;
 }
 
-bool CAnimater::End(){
-	for (auto data : m_vpAnimationInfos) {
+bool CAnimater::End() {
+
+	size_t iVecSize = m_vpAnimationInfos.GetCount();
+	for (size_t i = 0; i < iVecSize; ++i) {
+		m_vpAnimationInfos[i]->End();
+		delete m_vpAnimationInfos[i];
+	}
+	/*for (auto data : m_vpAnimationInfos) {
 		data->End();
 		delete data;
-	}
-	m_vpAnimationInfos.clear();
+	}*/
+	m_vpAnimationInfos.RemoveAll();
 
 	if (m_pMainBoundingBox) {
 		m_pMainBoundingBox->End();
@@ -30,24 +36,24 @@ bool CAnimater::End(){
 	return true;
 }
 
-void CAnimater::SetShaderState(){
-	if (m_vpAnimationInfos.empty()) {
+void CAnimater::SetShaderState() {
+	if (m_vpAnimationInfos.IsEmpty()) {
 		m_pAnimBuffer->SetShaderState();
 		return;
 	}
 	m_vpAnimationInfos[m_CurAnimationIndex]->SetShaderState();
 }
 
-void CAnimater::CleanShaderState(){
-	if (m_vpAnimationInfos.empty()) {
+void CAnimater::CleanShaderState() {
+	if (m_vpAnimationInfos.IsEmpty()) {
 
 		return;
 	}
 	m_vpAnimationInfos[m_CurAnimationIndex]->CleanShaderState();
 }
 
-void CAnimater::Update(float fTimeElapsed){
-	if (m_vpAnimationInfos.empty()) {
+void CAnimater::Update(float fTimeElapsed) {
+	if (m_vpAnimationInfos.IsEmpty()) {
 		void* pData = m_pAnimBuffer->Map();
 		XMMATRIX* pAnimationData = static_cast<XMMATRIX*>(pData);
 
@@ -60,15 +66,15 @@ void CAnimater::Update(float fTimeElapsed){
 	m_vpAnimationInfos[m_CurAnimationIndex]->Update(fTimeElapsed);
 }
 
-void CAnimater::AddAnimationInfo(CAnimationInfo * pAnimationInfo){
+void CAnimater::AddAnimationInfo(CAnimationInfo * pAnimationInfo) {
 	//1. 넣고
-	m_vpAnimationInfos.push_back(pAnimationInfo);
-	
-//	//2. 모든 anim info를 가지고. 전체적인 Joint tree를 제작한다.
-//	CreateJointTree();
-//
-//	//3. 모든 anim info에게 새로운 joint tree를 가지고 자신의 joint를 재정렬 할 것을 요청
-//	ChangeAllAnimationInfoJointData();
+	m_vpAnimationInfos.Add(pAnimationInfo);
+
+	//	//2. 모든 anim info를 가지고. 전체적인 Joint tree를 제작한다.
+	//	CreateJointTree();
+	//
+	//	//3. 모든 anim info에게 새로운 joint tree를 가지고 자신의 joint를 재정렬 할 것을 요청
+	//	ChangeAllAnimationInfoJointData();
 }
 
 //void CAnimater::CreateJointTree() {
@@ -97,46 +103,50 @@ void CAnimater::AddAnimationInfo(CAnimationInfo * pAnimationInfo){
 //	}
 //}
 
-void CAnimater::DeleteAnimationInfo(UINT AnimationIndex){
-	vector<CAnimationInfo*>::iterator iter;
-	for (iter = m_vpAnimationInfos.begin(); iter != m_vpAnimationInfos.end(); ++iter) {
-		if ((*iter)->GetAnimationIndex() == AnimationIndex) break;
-	}
-	if (iter != m_vpAnimationInfos.end()) {
-		delete (*iter);
-		m_vpAnimationInfos.erase(iter);
-		m_CurAnimationIndex = 0;
-		UINT index{ 0 };
-		//animation info 재정렬
-		for (auto pAnimationInfo : m_vpAnimationInfos) {
-			pAnimationInfo->SetAnimationIndex(index++);
-		}
-	}
-}
+//void CAnimater::DeleteAnimationInfo(UINT AnimationIndex) {
+//	vector<CAnimationInfo*>::iterator iter;
+//	for (iter = m_vpAnimationInfos.begin(); iter != m_vpAnimationInfos.end(); ++iter) {
+//		if ((*iter)->GetAnimationIndex() == AnimationIndex) break;
+//	}
+//	if (iter != m_vpAnimationInfos.end()) {
+//		delete (*iter);
+//		m_vpAnimationInfos.erase(iter);
+//		m_CurAnimationIndex = 0;
+//		UINT index{ 0 };
+//		//animation info 재정렬
+//		for (auto pAnimationInfo : m_vpAnimationInfos) {
+//			pAnimationInfo->SetAnimationIndex(index++);
+//		}
+//	}
+//}
 
-void CAnimater::SetCurAnimationIndex(UINT AnimationIndex) { 
+void CAnimater::SetCurAnimationIndex(UINT AnimationIndex) {
 	if (m_CurAnimationIndex == AnimationIndex) return;
-	m_CurAnimationIndex = AnimationIndex; 
+	m_CurAnimationIndex = AnimationIndex;
 	ResetAnimationInfos();
 }
 
-void CAnimater::ResetAnimationInfos(){
-	for (auto pAnimationInfo : m_vpAnimationInfos) {
-		pAnimationInfo->Reset();
+void CAnimater::ResetAnimationInfos() {
+	size_t iVecSize = m_vpAnimationInfos.GetCount();
+	for(size_t i = 0; i < iVecSize; ++i)
+	{
+	//for (auto pAnimationInfo : m_vpAnimationInfos) {
+		m_vpAnimationInfos[i]->Reset();
+		//pAnimationInfo->Reset();
 	}
 }
 
-UINT CAnimater::GetAnimaterJointCnt(){
+UINT CAnimater::GetAnimaterJointCnt() {
 	UINT JointCnt{ 0 };
 
-	if (false == m_vpAnimationInfos.empty()) {
+	if (false == m_vpAnimationInfos.IsEmpty()) {
 		JointCnt = m_pSkeletonData->GetJointCnt();
 	}
 
 	return JointCnt;
 }
 
-shared_ptr<CAnimater> CAnimater::CreateAnimaterFromFBXFile(bool bHasAnimation){
+shared_ptr<CAnimater> CAnimater::CreateAnimaterFromFBXFile(bool bHasAnimation) {
 	//if (bHasAnimation) {
 	//	shared_ptr<CAnimater> pAnimater = make_shared<CAnimater>();
 	//	pAnimater->SetMeshOffsetMtx(XMMatrixIdentity());
@@ -159,14 +169,14 @@ shared_ptr<CAnimater> CAnimater::CreateAnimaterFromFBXFile(bool bHasAnimation){
 	return nullptr;
 }
 
-shared_ptr<CAnimater> CAnimater::CreateAnimaterFromGJMFile(bool bHasAnimation){
+shared_ptr<CAnimater> CAnimater::CreateAnimaterFromGJMFile(bool bHasAnimation) {
 
 	if (bHasAnimation) {
 		//animation data가 있으면
 		shared_ptr<CAnimater> pAnimater = make_shared<CAnimater>();
 		XMFLOAT4X4 xmf4x4MeshOffsetMtx = IMPORTER->ReadFloat4x4();
 		pAnimater->SetMeshOffsetMtx(xmf4x4MeshOffsetMtx);
-		
+
 		XMFLOAT3 xmf3Position;
 		xmf3Position.x = IMPORTER->ReadFloat();
 		xmf3Position.y = IMPORTER->ReadFloat();
@@ -194,6 +204,7 @@ shared_ptr<CAnimater> CAnimater::CreateAnimaterFromGJMFile(bool bHasAnimation){
 			jointData.SetMyIndex(IMPORTER->ReadUINT());
 			jointData.SetParentIndex(IMPORTER->ReadUINT());
 			jointData.SetOffsetMtx(IMPORTER->ReadXMMatrix());
+			//if (i == 0) continue;
 			pSkeletonData->GetJointDatas().push_back(jointData);
 		};
 		//set skeleton data
@@ -216,6 +227,6 @@ CAnimater::CAnimater() : DXObject("animater") {
 	XMStoreFloat4x4(&m_xmf4x4MeshOffsetMtx, XMMatrixIdentity());
 }
 
-CAnimater::~CAnimater(){
+CAnimater::~CAnimater() {
 
 }

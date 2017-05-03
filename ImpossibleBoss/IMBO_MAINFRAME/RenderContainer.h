@@ -35,7 +35,7 @@ public:
 	void RenderWithOutObject(shared_ptr<CCamera> pCamera);
 
 	shared_ptr<CMesh> GetMesh(UINT index = 0) { return m_vpMesh[index]; }
-	vector<shared_ptr<CMesh>>& GetvMesh() { return m_vpMesh; }
+	CAtlArray<shared_ptr<CMesh>>& GetvMesh() { return m_vpMesh; }
 	//set이 아니라이제 add다.
 	void ClearMesh();
 	void ClearBuffer();
@@ -63,27 +63,28 @@ public:
 	void SetObejcts(int n, CGameObject** ppObjects);
 	void AddObject(CGameObject* pObject);
 	//void RemoveObject(CGameObject* pObject);
-	void ClearObjectList() { m_lpObjects.clear(); }//그림 다 그리고 clear
-	vector<CGameObject*>& GetObjectList() { return m_lpObjects; }
+	void ClearObjectList() { m_lpObjects.RemoveAll(); }//그림 다 그리고 clear
+	CAtlArray<CGameObject*>& GetObjectList() { return m_lpObjects; }
 
-	void ClearTextures() { m_vpTexture.clear(); }
+	void ClearTextures() { m_vpTexture.RemoveAll(); }
 	//--------------------------container---------------------------------
 protected:
 	//--------------------------관리 대상------------------------------
 	//컨테이너의 객체들은 동적으로 변할 것이다. 그러므로 리스트로 관리하는 것이 맞다
 //	int m_nInstance{ 0 };
-	vector<CGameObject*> m_lpObjects;
+	//vector<CGameObject*> m_lpObjects;
+	CAtlArray<CGameObject*>	m_lpObjects;
 	
 
-	vector<shared_ptr<CMesh>>		m_vpMesh;
+	CAtlArray<shared_ptr<CMesh>>	m_vpMesh;		//vector<shared_ptr<CMesh>>		m_vpMesh;
 	shared_ptr<CRenderShader>		m_pShader;
-	vector<shared_ptr<CTexture>>	m_vpTexture;
+	CAtlArray<shared_ptr<CTexture>>	m_vpTexture;	//vector<shared_ptr<CTexture>>	m_vpTexture;
 	//휘발성 texture 한번 랜더하면 사라진다. 
-	vector<shared_ptr<CTexture>>	m_vpVolatileTexture;
-	vector<shared_ptr<CBuffer>>		m_vpVolatileBuffer;
+	CAtlArray<shared_ptr<CTexture>>	m_vpVolatileTexture;	//vector<shared_ptr<CTexture>>	m_vpVolatileTexture;
+	CAtlArray<shared_ptr<CBuffer>>	m_vpVolatileBuffer;		//vector<shared_ptr<CBuffer>>	m_vpVolatileBuffer;
 
-	vector<shared_ptr<CBuffer>>		m_vpBuffer;
-	vector<shared_ptr<CMaterial>>	m_vpMaterial;
+	CAtlArray<shared_ptr<CBuffer>>	m_vpBuffer;			//vector<shared_ptr<CBuffer>>		m_vpBuffer;
+	CAtlArray<shared_ptr<CMaterial>>	m_vpMaterial;	//vector<shared_ptr<CMaterial>>	m_vpMaterial;
 	shared_ptr<CAnimater>			m_pAnimater{ nullptr };//animater
 
 	int m_nBuffer{ 0 };
@@ -94,10 +95,14 @@ protected:
 public:
 	CRenderContainer();
 	virtual ~CRenderContainer();
-
+	//CAtlString a;
+	//CString
 };
 
-typedef map<string, CRenderContainer*> mapRenderContainer;
-typedef map<tag, mapRenderContainer> mapTagRenderContainer;
-typedef pair<string, CRenderContainer*> pairRenderContainer;
-typedef pair<tag, pairRenderContainer> pairTagRenderContainer;
+
+typedef CAtlMap<tag, CAtlMap<CString, CRenderContainer*>> mapTagRenderContainer;
+typedef CAtlMap<CString, CRenderContainer*> mapRC;
+//typedef map<string, CRenderContainer*> mapRenderContainer;
+//typedef map<tag, mapRenderContainer> mapTagRenderContainer;
+//typedef pair<string, CRenderContainer*> pairRenderContainer;
+//typedef pair<tag, pairRenderContainer> pairTagRenderContainer;

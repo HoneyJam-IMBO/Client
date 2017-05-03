@@ -5,6 +5,7 @@
 
 class CDirectXFramework;
 
+
 class CScene{
 
 public:
@@ -33,6 +34,8 @@ public:
 	//load resource
 	void CScene::LoadResource(wstring wsMeshRoot);
 
+	//sel scene func
+	virtual void SetSelSceneInfo(int id, int character, bool is_ready) {};
 protected:
 	string m_sName;
 

@@ -4,15 +4,16 @@
 static bool gVerbose = true;
 
 bool CFileBasedMesh::End() {
-	if(m_pNormals) delete[] m_pNormals;
-	if(m_pUVs) delete[] m_pUVs;
+	if (m_pNormals) delete[] m_pNormals;
+	if (m_pUVs) delete[] m_pUVs;
+	if (m_pTs) delete[] m_pTs;
+	if (m_pBs) delete[] m_pBs;
 	//animation
-	if(m_pxmf4BoneIndex) delete[] m_pxmf4BoneIndex;
-	if(m_pxmf3Weight) delete[] m_pxmf3Weight;
+	if (m_pxmf4BoneIndex) delete[] m_pxmf4BoneIndex;
+	if (m_pxmf3Weight) delete[] m_pxmf3Weight;
 
 	return CMesh::End();
 }
-
 shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMesh(wstring path, string name, UINT index, bool bHasAnimation){
 	wstring extention{ PathFindExtension(path.c_str()) };
 	if (L".FBX" == extention || L".fbx" == extention) {
@@ -135,7 +136,7 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromFBXFile(string name, UI
 	return nullptr;
 }
 
-shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UINT index, bool bHasAnimation){
+shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UINT index, bool bHasAnimation) {
 	/*
 	test
 	*/
@@ -146,7 +147,7 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 	pFileBasedMesh->SetName(name);
 	//set mesh name, index
 	pFileBasedMesh->SetMeshIndex(index);
-	
+
 	//set vertex buffer info
 	if (bHasAnimation) {
 		//mesh texture
@@ -154,10 +155,11 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 		if (MeshTextureCnt <= 0) {//0이면 set
 			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULT"));
 			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
+			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
 		}
 		for (int i = 0; i < MeshTextureCnt; ++i) {//n 만큼 set
-			//char name[64];
-			//sprintf(name, "Test%d", index);
+												  //char name[64];
+												  //sprintf(name, "Test%d", index);
 			string path;
 			path = IMPORTER->Readstring();
 			wstring wPath{ L"" };
@@ -183,6 +185,8 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 		XMFLOAT3* pVertices = new XMFLOAT3[nVertices];
 		XMFLOAT3* pNormals = new XMFLOAT3[nVertices];
 		XMFLOAT2* pUVs = new XMFLOAT2[nVertices];
+		XMFLOAT3* pTs = new XMFLOAT3[nVertices];
+		XMFLOAT3* pBs = new XMFLOAT3[nVertices];
 		XMFLOAT3* pxmf3Weight = new XMFLOAT3[nVertices];
 		XMFLOAT4* pxmf4BoneIndex = new XMFLOAT4[nVertices];
 
@@ -207,6 +211,18 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 		}
 		nVertex = 0;
 		for (UINT j = 0; j < nVertices; ++j) {
+			pTs[nVertex].x = IMPORTER->ReadFloat();
+			pTs[nVertex].y = IMPORTER->ReadFloat();
+			pTs[nVertex++].z = IMPORTER->ReadFloat();
+		}
+		nVertex = 0;
+		for (UINT j = 0; j < nVertices; ++j) {
+			pBs[nVertex].x = IMPORTER->ReadFloat();
+			pBs[nVertex].y = IMPORTER->ReadFloat();
+			pBs[nVertex++].z = IMPORTER->ReadFloat();
+		}
+		nVertex = 0;
+		for (UINT j = 0; j < nVertices; ++j) {
 			pxmf3Weight[nVertex].x = IMPORTER->ReadFloat();
 			pxmf3Weight[nVertex].y = IMPORTER->ReadFloat();
 			pxmf3Weight[nVertex++].z = IMPORTER->ReadFloat();
@@ -222,6 +238,8 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 		pFileBasedMesh->SetpVertices(pVertices);
 		pFileBasedMesh->SetpNormals(pNormals);
 		pFileBasedMesh->SetpUVs(pUVs);
+		pFileBasedMesh->SetpTs(pTs);
+		pFileBasedMesh->SetpBs(pBs);
 		pFileBasedMesh->SetpWeights(pxmf3Weight);
 		pFileBasedMesh->SetpBoneIndex(pxmf4BoneIndex);
 
@@ -230,14 +248,15 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 	else {
 		//mesh texture
 		int MeshTextureCnt = IMPORTER->ReadInt();
+
 		if (MeshTextureCnt <= 0) {//0이면 set
 			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULT"));
 			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTSPEC"));
 			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
 		}
 		for (int i = 0; i < MeshTextureCnt; ++i) {//n 만큼 set
-			//char name[64];
-			//sprintf(name, "Test%d", index);
+												  //char name[64];
+												  //sprintf(name, "Test%d", index);
 			string path;
 			path = IMPORTER->Readstring();
 			wstring wPath{ L"" };
@@ -253,6 +272,7 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 		else if (MeshTextureCnt == 2) {//만약 1개면 spec map이 없는것 디폴트로 set
 			pFileBasedMesh->AddMeshTexture(RESOURCEMGR->GetTexture("DEFAULTCP"));
 		}
+		
 		//1. 전체 정점을 구한다.
 		UINT nVertices = IMPORTER->ReadUINT();
 		pFileBasedMesh->SetnVertices(nVertices);
@@ -261,6 +281,8 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 		XMFLOAT3* pVertices = new XMFLOAT3[nVertices];
 		XMFLOAT3* pNormals = new XMFLOAT3[nVertices];
 		XMFLOAT2* pUVs = new XMFLOAT2[nVertices];
+		XMFLOAT3* pTs = new XMFLOAT3[nVertices];
+		XMFLOAT3* pBs = new XMFLOAT3[nVertices];
 
 		//3. 저장
 		int nVertex{ 0 };
@@ -282,15 +304,29 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 			pUVs[nVertex].x = IMPORTER->ReadFloat();
 			pUVs[nVertex++].y = IMPORTER->ReadFloat();
 		}
+		nVertex = 0;
+		for (UINT j = 0; j < nVertices; ++j) {
+			pTs[nVertex].x = IMPORTER->ReadFloat();
+			pTs[nVertex].y = IMPORTER->ReadFloat();
+			pTs[nVertex++].z = IMPORTER->ReadFloat();
+		}
+		nVertex = 0;
+		for (UINT j = 0; j < nVertices; ++j) {
+			pBs[nVertex].x = IMPORTER->ReadFloat();
+			pBs[nVertex].y = IMPORTER->ReadFloat();
+			pBs[nVertex++].z = IMPORTER->ReadFloat();
+		}
 		//4. set
 		pFileBasedMesh->SetpVertices(pVertices);
 		pFileBasedMesh->SetpNormals(pNormals);
 		pFileBasedMesh->SetpUVs(pUVs);
+		pFileBasedMesh->SetpTs(pTs);
+		pFileBasedMesh->SetpBs(pBs);
 	}
 
 
 	//set index info
-	
+
 	//1. 모든 인덱스 정보 얻어옴
 	UINT nIndices = IMPORTER->ReadUINT();
 	if (nIndices > 0) {
@@ -299,20 +335,15 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 		//2. 할당
 		UINT* pnIndices = new UINT[nIndices];
 
-		//3. offset을 더해가며 index데이터 완성
-		//저장할 인덱스 
-		//		int nIndex{ 0 };
-		int offset{ 0 };
+		//3. 저장
 		for (UINT j = 0; j < nIndices; ++j) {
-			//mesh의 index가 0이 아닌 경우 offset을 더해간다.
-			//offset을 더한 index를 저장한다. offest은 0번mesh는 0/ 1번 mesh는 0번 mesh의 정점 수만큼 offset을 가진다.
-			//지금은 더하지 않는다.
 			pnIndices[j] = IMPORTER->ReadUINT();
 		}
 
 		pFileBasedMesh->SetpIndices(pnIndices);
 		//index
 	}
+	//다른 tool에 추가되야 할 부분
 	if (false == bHasAnimation) {
 		if (index == 0) {
 			XMFLOAT3 xmf3Pos;
@@ -351,11 +382,10 @@ shared_ptr<CFileBasedMesh> CFileBasedMesh::CreateMeshFromGJMFile(string name, UI
 				CBoundingBox obb;
 				obb.Begin(XMLoadFloat3(&xmf3Pos), XMVectorSet(xmf3Scale.x, xmf3Scale.y, xmf3Scale.z, 1.0f), XMLoadFloat4(&xmf4Quaternion));
 				obb.SetActive(true);
-				pFileBasedMesh->GetvOBBObject().push_back(obb);
+				pFileBasedMesh->GetvOBBObject().Add(obb);
 			}//end obb for 
 		}
 	}
-
 	pFileBasedMesh->Begin();
 	return pFileBasedMesh;
 
@@ -368,16 +398,11 @@ bool CFileBasedMesh::CreateVertexBuffer() {
 	UINT nVertexBuffer{ 0 };
 	ID3D11Buffer *pd3dBuffers[1];
 	UINT pnBufferStrides[1];
-	UINT pnBufferOffsets[1];	
+	UINT pnBufferOffsets[1];
 
 	//position/ aabb
 	if (m_pVertices) {
 		m_pd3dPositionBuffer = CreateBuffer(sizeof(XMFLOAT3), m_nVertices, m_pVertices, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DEFAULT, 0);
-		//create space mesh aabb
-		BoundingBox boundingBox;
-		BoundingBox::CreateFromPoints(boundingBox, (size_t)m_nVertices, m_pVertices, (size_t)sizeof(XMFLOAT3));
-		m_AABB.SetBoundingBoxInfo(boundingBox);
-
 		pd3dBuffers[0] = m_pd3dPositionBuffer;
 		pnBufferStrides[0] = sizeof(XMFLOAT3);
 		pnBufferOffsets[0] = 0;
@@ -386,7 +411,7 @@ bool CFileBasedMesh::CreateVertexBuffer() {
 	//normal
 	if (m_pNormals) {
 		m_pd3dNormalBuffer = CreateBuffer(sizeof(XMFLOAT3), m_nVertices, m_pNormals, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DEFAULT, 0);
-		
+
 		pd3dBuffers[0] = m_pd3dNormalBuffer;
 		pnBufferStrides[0] = sizeof(XMFLOAT3);
 		pnBufferOffsets[0] = 0;
@@ -395,9 +420,27 @@ bool CFileBasedMesh::CreateVertexBuffer() {
 	//uv
 	if (m_pUVs) {
 		m_pd3dUVBuffer = CreateBuffer(sizeof(XMFLOAT2), m_nVertices, m_pUVs, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DEFAULT, 0);
-		
+
 		pd3dBuffers[0] = m_pd3dUVBuffer;
 		pnBufferStrides[0] = sizeof(XMFLOAT2);
+		pnBufferOffsets[0] = 0;
+		AssembleToVertexBuffer(1, pd3dBuffers, pnBufferStrides, pnBufferOffsets);
+	}
+	//T
+	if (m_pTs) {
+		m_pd3dTBuffer = CreateBuffer(sizeof(XMFLOAT3), m_nVertices, m_pTs, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DEFAULT, 0);
+
+		pd3dBuffers[0] = m_pd3dTBuffer;
+		pnBufferStrides[0] = sizeof(XMFLOAT3);
+		pnBufferOffsets[0] = 0;
+		AssembleToVertexBuffer(1, pd3dBuffers, pnBufferStrides, pnBufferOffsets);
+	}
+	//B
+	if (m_pBs) {
+		m_pd3dBBuffer = CreateBuffer(sizeof(XMFLOAT3), m_nVertices, m_pBs, D3D11_BIND_VERTEX_BUFFER, D3D11_USAGE_DEFAULT, 0);
+
+		pd3dBuffers[0] = m_pd3dBBuffer;
+		pnBufferStrides[0] = sizeof(XMFLOAT3);
 		pnBufferOffsets[0] = 0;
 		AssembleToVertexBuffer(1, pd3dBuffers, pnBufferStrides, pnBufferOffsets);
 	}
@@ -420,7 +463,7 @@ bool CFileBasedMesh::CreateVertexBuffer() {
 		AssembleToVertexBuffer(1, pd3dBuffers, pnBufferStrides, pnBufferOffsets);
 	}
 
-	if (m_ppd3dVertexBuffers)	return true;
+	if (m_ppd3dVertexBuffers)   return true;
 
 	return false;
 }

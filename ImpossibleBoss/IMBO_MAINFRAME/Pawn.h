@@ -10,7 +10,7 @@ public:
 
 private:
 	void	KeyInput(float fDeltaTime);
-	void	GetServerData();
+	void	PushServerData();
 	void	SetupAnimation(DWORD dwDirection);
 	void	Jumping(float fDeltaTime);
 
@@ -20,6 +20,11 @@ private:
 	float	m_fJumpTime{ 0.f };
 
 	UINT	m_nAnimNum{ 0 };
+	float	m_fAngleY{ 0.f };
+
+	int		m_iPawnNum{ -1 };
+public:
+	void	SetPawNum(int iPawnNum) { m_iPawnNum = iPawnNum; }
 
 public:
 	CPawn(string name, tag t = tag::TAG_DEFAULT, bool bSprit = false);

@@ -12,7 +12,6 @@ public:
 	virtual bool End();
 
 	virtual void Animate(float fTimeElapsed);
-	virtual void PrepareRender(UINT renderFlag);
 	virtual void PrepareRender(shared_ptr<CCamera> pCamera, UINT renderFlag);
 	void SetObejcts(int n, CGameObject** ppObjects);
 	void AddObject(CGameObject* pObject);
@@ -25,7 +24,7 @@ public:
 
 	//해당 space안의 lay 충돌 검사된 객체 중 가장 가장 가까운 객체
 	CGameObject* PickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float& distance);
-	map<tag, list<CGameObject*>>& GetmlpObject() { return m_mlpObject; }
+	CAtlMap<tag, CAtlArray<CGameObject*>*>& GetmlpObject() { return m_mlpObject; }
 private:
 	//자식 space 4개
 	CSpace** m_ppChildSpace{ nullptr };
@@ -35,9 +34,13 @@ private:
 	//AABB aabb;
 
 	//객체들
-	map<tag, list<CGameObject*>> m_mlpObject;
+	//map<tag, list<CGameObject*>> m_mlpObject;
+	CAtlMap<tag, CAtlArray<CGameObject*>*> m_mlpObject;
 	//space container
 	CSpaceContainer* m_pSpaceContainer{ nullptr };
+
+private:
+	void OptimizePrepare(CAtlMap<tag, CAtlArray<CGameObject*>*>::CPair* pairGObj, UINT renderFlag, shared_ptr<CCamera> pCamera);
 public:
 	CSpace();
 	~CSpace();

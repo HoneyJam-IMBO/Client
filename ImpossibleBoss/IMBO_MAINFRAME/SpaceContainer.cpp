@@ -20,12 +20,23 @@ void CSpaceContainer::Begin(){
 }
 
 bool CSpaceContainer::End(){
-	for (auto pObject : m_lpBlockObject) {
-		pObject->End();
-		delete pObject;
-		pObject = nullptr;
+	
+	//POSITION pos = m_lpBlockObject.
+	size_t vecSize = m_lpBlockObject.GetCount();
+	for (size_t i = 0; i < vecSize; ++i)
+	{
+		m_lpBlockObject[i]->End();
+		delete m_lpBlockObject[i];
+		m_lpBlockObject[i] = nullptr;
 	}
-	m_lpBlockObject.clear();
+	m_lpBlockObject.RemoveAll();
+	//m_lpBlockObject.FreeExtra();
+	//for (auto pObject : m_lpBlockObject) {
+	//	pObject->End();
+	//	delete pObject;
+	//	pObject = nullptr;
+	//}
+	//m_lpBlockObject.clear();
 
 	//all space end
 	//+ delete space pointer
@@ -42,22 +53,30 @@ void CSpaceContainer::Animate(float fTimeElapsed){
 	m_pStartSpace->Animate(fTimeElapsed);
 	
 	//animate 이후에 분명히 block object가 등장한다.
-	if (false == m_lpBlockObject.empty()) {//block object list가 empty가 아니라면
-		for (auto pObject : m_lpBlockObject) {//객체 다시 배치
-			AddObject(pObject);
+	if (false == m_lpBlockObject.IsEmpty()) {//block object list가 empty가 아니라면
+		size_t vecSize = m_lpBlockObject.GetCount();
+		for (size_t i = 0; i < vecSize; ++i)
+		{
+			AddObject(m_lpBlockObject[i]);
 		}
-		m_lpBlockObject.clear();
+
+		//for (auto pObject : m_lpBlockObject) {//객체 다시 배치
+		//	AddObject(pObject);
+		//}
+		//m_lpBlockObject.clear();
+		m_lpBlockObject.RemoveAll();
+		//m_lpBlockObject.FreeExtra();
 	}
 }
 
 void CSpaceContainer::PrepareRenderOneSpace(shared_ptr<CCamera> pCamera, UINT renderFlag, int render_space){
-	if (render_space < 0) {
-		PrepareRender(pCamera, renderFlag);
-	}else{
-		for (int i = 0; i < m_nSpace; ++i) {
-			if(render_space == i) m_ppSpace[i]->PrepareRender(renderFlag);
-		}
-	}
+	//if (render_space < 0) {
+	//	PrepareRender(pCamera, renderFlag);
+	//}else{
+	//	for (int i = 0; i < m_nSpace; ++i) {
+	//		if(render_space == i) m_ppSpace[i]->PrepareRender(renderFlag);
+	//	}
+	//}
 }
 
 void CSpaceContainer::PrepareRender(shared_ptr<CCamera> pCamera, UINT renderFlag){
@@ -65,7 +84,8 @@ void CSpaceContainer::PrepareRender(shared_ptr<CCamera> pCamera, UINT renderFlag
 }
 
 void CSpaceContainer::AddBlockObjectList(CGameObject * pObject){
-	m_lpBlockObject.emplace_back(pObject);
+	//m_lpBlockObject.emplace_back(pObject);
+	m_lpBlockObject.Add(pObject);
 }
 
 void CSpaceContainer::AddObject(CGameObject * pObject){
@@ -96,7 +116,9 @@ void CSpaceContainer::RemoveObject(string name){
 }
 
 void CSpaceContainer::ClearBlockObjectList() {
-	m_lpBlockObject.clear();
+	//m_lpBlockObject.clear();
+	m_lpBlockObject.RemoveAll();
+	//m_lpBlockObject.FreeExtra();
 }
 
 int CSpaceContainer::SearchSpace(XMVECTOR xmvPos){
@@ -131,9 +153,15 @@ void CSpaceContainer::ChangeSpaceData(){
 	//1. space안의 모든 객체 임시 저장
 	vector<CGameObject*> m_vTempObjects;//임시 객체 벡터
 	for (int i = 0; i < m_nSpace; ++i) {//모든 space에 대해서
-		for (auto data : m_ppSpace[i]->GetmlpObject()) {//object map을 가져와서
-			for (auto pObject : data.second) {//해당 vector 안의 모든 object를
-				m_vTempObjects.push_back(pObject);//임시 저장
+		POSITION ContainerPos = m_ppSpace[i]->GetmlpObject().GetStartPosition();
+		CAtlMap<tag, CAtlArray<CGameObject*>*>::CPair*		pOutPair = NULL;
+		while (ContainerPos != NULL)
+		{
+			pOutPair = m_ppSpace[i]->GetmlpObject().GetNext(ContainerPos);
+			size_t iVecSize = pOutPair->m_value->GetCount();
+			for (size_t i = 0; i < iVecSize; ++i)
+			{
+				m_vTempObjects.push_back((*pOutPair->m_value)[i]);//임시 저장
 			}
 		}
 	}
@@ -192,14 +220,26 @@ CSpaceContainer * CSpaceContainer::CreateSpaceContainer(int size, int lv){
 
 void CSpaceContainer::ClearAllObjects(){
 	for (int i = 0; i < m_nSpace; ++i) {//모든 공간의
-		for (auto v : m_ppSpace[i]->GetmlpObject()) {//모든 map의
-			for (auto pObject : v.second) {//모든 vector
-				pObject->End();
-				delete pObject;
+		POSITION ContainerPos = m_ppSpace[i]->GetmlpObject().GetStartPosition();
+		CAtlMap<tag, CAtlArray<CGameObject*>*>::CPair*		pOutPair = NULL;
+		while (ContainerPos != NULL)
+		{
+			pOutPair = m_ppSpace[i]->GetmlpObject().GetNext(ContainerPos);
+			size_t iVecSize = pOutPair->m_value->GetCount();
+			for (size_t i = 0; i < iVecSize; ++i)
+			{
+				(*pOutPair->m_value)[i]->End();
+				delete (*pOutPair->m_value)[i];
 			}
-			v.second.clear();
 		}
-		m_ppSpace[i]->GetmlpObject().clear();
+		//for (auto v : m_ppSpace[i]->GetmlpObject()) {//모든 map의
+		//	for (auto pObject : v.second) {//모든 vector
+		//		pObject->End();
+		//		delete pObject;
+		//	}
+		//	v.second.clear();
+		//}
+		m_ppSpace[i]->GetmlpObject().RemoveAll();
 	}
 	DEBUGER->ClearDebuger();
 }

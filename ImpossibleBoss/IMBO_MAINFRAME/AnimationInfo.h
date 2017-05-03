@@ -34,7 +34,7 @@ public:
 	XMMATRIX GetCurFrameMtx(UINT JointIndex, UINT meshIndex = 0) { return m_pAnimationData->GetKeyFrames(JointIndex)[(int)m_CurFrame].GetKeyFrameTransformMtx(); };
 	CAnimationData* GetAnimationData() { return m_pAnimationData; }
 	//map<UINT, vector<CFbxJointData>>& GetAnimationInfos() { return m_mMeshIndexJoints; }
-	
+
 	vector<BoundingOrientedBox> GetvActiveOBBs() { return m_vActiveBoundingBox; }
 	vector<CBoundingBox>& GetTempOBB() { return m_vTempBoundingBox; }
 	list<CBoundingBox*>& GetActiveOBB() { return m_lActiveBoundingBox; }

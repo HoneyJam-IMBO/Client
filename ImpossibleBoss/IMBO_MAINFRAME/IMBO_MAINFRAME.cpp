@@ -142,8 +142,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if (NETWORKMGR->OnProcessingWindowMessage(hWnd, message, wParam, lParam))
-		return 0;
+	//if (NETWORKMGR->OnProcessingWindowMessage(hWnd, message, wParam, lParam))
+//		return 0;
 	framework.OnProcessingWindowMessage(hWnd, message, wParam, lParam);
 
 	switch (message)

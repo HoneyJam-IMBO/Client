@@ -16,7 +16,7 @@ CSCHeroSel::~CSCHeroSel()
 
 bool CSCHeroSel::Begin()
 {
-	NETWORKMGR->Connect("192.168.10.101");
+	//NETWORKMGR->Connect("192.168.10.101");
 	//NETWORKMGR->SendPacket();
 
 	UPDATER->GetSkyBoxContainer()->SetActive(false);
@@ -45,9 +45,16 @@ bool CSCHeroSel::Begin()
 	((CClickButton*)pUI)->SetID(1);
 	m_vecButtonUI.push_back(pUI);
 
+	for (int i = 0; i < 4; ++i)
+	{
+		strName = "Ready_0";
+		pUI = CImageUI::Create(XMLoadFloat2(&XMFLOAT2(WINSIZEX * 0.5f - 150.f + i * 100.f, WINSIZEY * 0.55f)),
+			XMLoadFloat2(&XMFLOAT2(20.f, 20.f)), StringToTCHAR(strName), 2.f);
+		m_vecReadyUI.push_back(pUI);
+	}
+
 	return CScene::Begin();
 }
-
 bool CSCHeroSel::End()
 {
 	RENDERER->GetUIRenderer()->ClearData();
@@ -61,28 +68,37 @@ bool CSCHeroSel::End()
 	{
 		delete m_vecButtonUI[i];
 	}
+	iVecSize = m_vecReadyUI.size();
+	for (size_t i = 0; i < iVecSize; ++i)
+	{
+		delete m_vecReadyUI[i];
+	}
 	return true;
 }
 
 void CSCHeroSel::Animate(float fTimeElapsed)
 {
 	size_t iVecSize = m_vecUI.size();
-	for (size_t i = 0; i < iVecSize; ++i)
-	{
+	for (size_t i = 0; i < iVecSize; ++i){
 		m_vecUI[i]->Update(fTimeElapsed);
 	}
 	iVecSize = m_vecButtonUI.size();
-	for (size_t i = 0; i < iVecSize; ++i)
-	{
+	for (size_t i = 0; i < iVecSize; ++i){
 		m_vecButtonUI[i]->Update(fTimeElapsed);
 	}
+	iVecSize = m_vecReadyUI.size();
+	for (size_t i = 0; i < iVecSize; ++i){
+		m_vecReadyUI[i]->Update(fTimeElapsed);
+	}
 	KeyInput();
+
+	//m_vecReadyUI[0]->SetImageName()
+
 
 	if (-1 != m_iHeroSelNum)
 	{
 		m_vecCharUI[m_iHeroSelNum]->Update(fTimeElapsed);
 	}
-
 
 	if (INPUTMGR->KeyDown(VK_1))
 	{
@@ -90,10 +106,19 @@ void CSCHeroSel::Animate(float fTimeElapsed)
 	}
 	if (INPUTMGR->KeyDown(VK_P))
 	{
-		cs_packet_create_room* pPacket = new cs_packet_create_room;
-		pPacket->Size = sizeof(cs_packet_create_room);
-		pPacket->Type = CS_CREATE_ROOM;
-		NETWORKMGR->SendPacket(pPacket, pPacket->Size);
+		//cs_packet_create_room* pPacket = new cs_packet_create_room;
+		//pPacket->Size = sizeof(cs_packet_create_room);
+		//pPacket->Type = CS_CREATE_ROOM;
+		//NETWORKMGR->SendPacket(pPacket, pPacket->Size);
+	}
+	if (INPUTMGR->KeyDown(VK_L))
+	{
+		//이건 Room Join
+		//cs_packet_join_room* pPacket = new cs_packet_join_room;
+		//pPacket->Size = sizeof(cs_packet_join_room);
+		//pPacket->Type = CS_JOIN_ROOM;
+		//pPacket->RoomNumber = 0;   // 0은 임시
+		//NETWORKMGR->SendPacket(pPacket, pPacket->Size);
 	}
 
 }
@@ -108,6 +133,15 @@ void CSCHeroSel::OnProcessingKeyboardMessage(HWND hWnd, UINT nMessageID, WPARAM 
 
 void CSCHeroSel::ProcessInput(float fTimeElapsed)
 {
+}
+
+void CSCHeroSel::SetSelSceneInfo(int slot_id, int character, bool is_ready){
+	if (is_ready) {
+		m_vecReadyUI[slot_id]->SetImageName(L"Ready_1");
+	}
+	else {
+		m_vecReadyUI[slot_id]->SetImageName(L"Ready_1");
+	}
 }
 
 void CSCHeroSel::KeyInput()
@@ -146,7 +180,7 @@ void CSCHeroSel::CheckCollisionButton()
 				if (m_iHeroSelNum == -1)
 					return;
 
-				m_bReady = (m_bReady + 1)%2;
+				m_bReady =( m_bReady + 1 )%2;
 				cs_packet_client_info_in_room* pPacket = new cs_packet_client_info_in_room;
 				pPacket->Character = m_iHeroSelNum;
 				pPacket->isReady = m_bReady;

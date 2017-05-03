@@ -16,24 +16,24 @@ bool CSampler::End() {
 
 void CSampler::SetShaderState() {
 
-	if (m_BindFlag & BIND_VS) {
+	//if (m_BindFlag & BIND_VS) {
 		GLOBALVALUEMGR->GetDeviceContext()->VSSetSamplers(m_SamplerStartSlot, 1, &m_pd3dSamplerState);
-	}
-	if (m_BindFlag & BIND_DS) {
+	//}
+	//if (m_BindFlag & BIND_DS) {
 		GLOBALVALUEMGR->GetDeviceContext()->DSSetSamplers(m_SamplerStartSlot, 1, &m_pd3dSamplerState);
-	}
-	if (m_BindFlag & BIND_HS) {
-		GLOBALVALUEMGR->GetDeviceContext()->HSSetSamplers(m_SamplerStartSlot, 1, &m_pd3dSamplerState);
-	}
-	if (m_BindFlag & BIND_GS) {
+	//}
+	//if (m_BindFlag & BIND_HS) {
+	//	GLOBALVALUEMGR->GetDeviceContext()->HSSetSamplers(m_SamplerStartSlot, 1, &m_pd3dSamplerState);
+	//}
+	//if (m_BindFlag & BIND_GS) {
 		GLOBALVALUEMGR->GetDeviceContext()->GSSetSamplers(m_SamplerStartSlot, 1, &m_pd3dSamplerState);
-	}
-	if (m_BindFlag & BIND_PS) {
+	//}
+	//if (m_BindFlag & BIND_PS) {
 		GLOBALVALUEMGR->GetDeviceContext()->PSSetSamplers(m_SamplerStartSlot, 1, &m_pd3dSamplerState);
-	}
-	if (m_BindFlag & BIND_CS) {
+	//}
+	//if (m_BindFlag & BIND_CS) {
 		GLOBALVALUEMGR->GetDeviceContext()->CSSetSamplers(m_SamplerStartSlot, 1, &m_pd3dSamplerState);
-	}
+	//}
 
 }
 void CSampler::CleanShaderState() {

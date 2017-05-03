@@ -126,8 +126,8 @@ bool CRenderShader::CreateVS(LPCTSTR name, UINT InputElementFlag){
 		if (InputElementFlag& IE_TANGENT) {
 			vDesc.push_back({ "TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, nElement++, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });
 		}
-		if (InputElementFlag& IE_BITANGENT) {
-			vDesc.push_back({ "BITANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, nElement++, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });
+		if (InputElementFlag& IE_BINORMAL) {
+			vDesc.push_back({ "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, nElement++, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });
 		}
 		if (InputElementFlag& IE_BONEWEIGHT) {
 			vDesc.push_back({ "BONE_WEIGHT", 0, DXGI_FORMAT_R32G32B32_FLOAT, nElement++, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 });

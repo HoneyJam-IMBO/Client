@@ -18,7 +18,7 @@ public:
 	void Excute(shared_ptr<CCamera> pCamera, CShadow* m_pShadow = nullptr);
 private:
 	//rendercontainer map!
-	mapRenderContainer m_mRenderContainer;
+	mapRC m_mRenderContainer;
 
 	//조명 계산을 위한 블랜드 state.
 	ID3D11BlendState* m_pLightBlendState{ nullptr };

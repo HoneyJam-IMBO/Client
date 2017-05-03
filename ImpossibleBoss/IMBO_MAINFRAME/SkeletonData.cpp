@@ -7,7 +7,12 @@ bool CSkeletonData::Begin(){
 }
 
 bool CSkeletonData::End(){
-	m_JointDatas.clear();
+	/*size_t iVecSize = m_JointDatas.GetCount();
+	for (size_t i = 1; i < iVecSize; ++i)
+	{
+		m_JointDatas.RemoveAt(i);
+	}*/
+	//m_JointDatas.RemoveAll();
 
 	return true;
 }
