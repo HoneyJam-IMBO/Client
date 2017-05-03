@@ -146,7 +146,7 @@ void CSCHeroSel::CheckCollisionButton()
 				if (m_iHeroSelNum == -1)
 					return;
 
-				m_bReady ^= true;
+				m_bReady = (m_bReady + 1)%2;
 				cs_packet_client_info_in_room* pPacket = new cs_packet_client_info_in_room;
 				pPacket->Character = m_iHeroSelNum;
 				pPacket->isReady = m_bReady;

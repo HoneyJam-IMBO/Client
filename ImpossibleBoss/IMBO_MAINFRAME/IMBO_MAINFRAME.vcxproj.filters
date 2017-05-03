@@ -695,7 +695,7 @@
     <ClInclude Include="ImageUI.h">
       <Filter>소스 파일\05. GameObject\-08. UI\00. ImageUI</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\Charactors.h">
+    <ClInclude Include="Charactors.h">
       <Filter>소스 파일\03. Scene\-02. SCHeroSel\Charactors</Filter>
     </ClInclude>
   </ItemGroup>
@@ -979,7 +979,7 @@
     <ClCompile Include="ImageUI.cpp">
       <Filter>소스 파일\05. GameObject\-08. UI\00. ImageUI</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\0. JH%27s Folder\Study\Client\Client\ImpossibleBoss\IMBO_MAINFRAME\Charactors.cpp">
+    <ClCompile Include="Charactors.cpp">
       <Filter>소스 파일\03. Scene\-02. SCHeroSel\Charactors</Filter>
     </ClCompile>
   </ItemGroup>
