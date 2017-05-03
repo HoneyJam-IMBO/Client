@@ -17,5 +17,5 @@ public:
 
 };
 
-typedef map<string, CRenderContainer*> mapRenderContainer;
-typedef pair<string, CRenderContainer*> pairRenderContainer;
+//typedef map<string, CRenderContainer*> mapRenderContainer;
+//typedef pair<string, CRenderContainer*> pairRenderContainer;

@@ -25,6 +25,8 @@ public:
 
 	XMFLOAT3* GetNormals() { return m_pNormals; }
 	XMFLOAT2* GetUVs() { return m_pUVs; }
+	XMFLOAT3* GetTs() { return m_pTs; }
+	XMFLOAT3* GetBs() { return m_pBs; }
 	//animation data
 	XMFLOAT4* GetJointIndices() { return m_pxmf4BoneIndex; }
 	XMFLOAT3* GetWeights() { return m_pxmf3Weight; }
@@ -34,6 +36,8 @@ public:
 	//vertex data
 	void SetpNormals(XMFLOAT3* pNormals) { m_pNormals = pNormals; }
 	void SetpUVs(XMFLOAT2* pUVs) { m_pUVs = pUVs; }
+	void SetpTs(XMFLOAT3* pTs) { m_pTs = pTs; }
+	void SetpBs(XMFLOAT3* pBs) { m_pBs = pBs; }
 	//animation
 	void SetpBoneIndex(XMFLOAT4* pxmf4BoneIndex) { m_pxmf4BoneIndex = pxmf4BoneIndex; }
 	void SetpWeights(XMFLOAT3* pxmf3Weight) { m_pxmf3Weight = pxmf3Weight; }
@@ -43,6 +47,8 @@ protected:
 	//vertex data
 	XMFLOAT3* m_pNormals{ nullptr };
 	XMFLOAT2* m_pUVs{ nullptr };
+	XMFLOAT3* m_pTs{ nullptr };
+	XMFLOAT3* m_pBs{ nullptr };
 	//animation
 	XMFLOAT4* m_pxmf4BoneIndex{ nullptr };
 	XMFLOAT3* m_pxmf3Weight{ nullptr };

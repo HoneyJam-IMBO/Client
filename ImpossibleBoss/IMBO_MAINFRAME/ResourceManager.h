@@ -67,18 +67,18 @@ public:
 	void CreateAnimater(string path, string animaterName);
 
 	//get resource func
-	shared_ptr<CTexture>		GetTexture(string name) { return m_mTexture[name]; }
-	shared_ptr<CSampler>		GetSampler(string name) { return m_mSampler[name]; }
-	shared_ptr<CRenderShader>	GetRenderShader(string name) { return m_mRenderShader[name]; }
+	shared_ptr<CTexture>		GetTexture(string name) { return m_mTexture[CA2CT(name.c_str())]; }
+	shared_ptr<CSampler>		GetSampler(string name) { return m_mSampler[CA2CT(name.c_str())]; }
+	shared_ptr<CRenderShader>	GetRenderShader(string name) { return m_mRenderShader[CA2CT(name.c_str())]; }
 	vector<shared_ptr<CMesh>>	GetvMesh(string name) { return m_mvMesh[name]; }
 	shared_ptr<CMesh>			GetMesh(string name, int index = 0) { return m_mvMesh[name][index]; }
 	map<string, vector<shared_ptr<CMesh>>> GetAllStempMesh() { return m_mvStempMesh; }
 	vector<shared_ptr<CMesh>>	GetvStempMesh(string name) { return m_mvStempMesh[name]; }
 	shared_ptr<CMesh>			GetStempMesh(string name, int index) { return m_mvStempMesh[name][index]; }
-	shared_ptr<CBuffer>			GetBuffer(string name) { return m_mBuffer[name]; }
-	shared_ptr<CBuffer>			GetGlobalBuffer(string name) { return m_mGlobalBuffer[name]; }
-	shared_ptr<CMaterial>		GetMaterial(string name) { return m_mMaterial[name]; }
-	shared_ptr<CAnimater>		GetAnimater(string name) { return m_mAnimater[name]; }
+	shared_ptr<CBuffer>			GetBuffer(string name) { return m_mBuffer[CA2CT(name.c_str())]; }
+	shared_ptr<CBuffer>			GetGlobalBuffer(string name) { return m_mGlobalBuffer[CA2CT(name.c_str())]; }
+	shared_ptr<CMaterial>		GetMaterial(string name) { return m_mMaterial[CA2CT(name.c_str())]; }
+	shared_ptr<CAnimater>		GetAnimater(string name) { return m_mAnimater[CA2CT(name.c_str())]; }
 
 private:
 	//begin func
@@ -114,15 +114,15 @@ private:
 	void ReleaseAnimaters();
 
 private:
-	using pairTexture	= pair<string, shared_ptr<CTexture>>;
-	using pairShader	= pair<string, shared_ptr<CRenderShader>>;
-	using pairMesh		= pair<string, shared_ptr<CMesh>>;
-	using pairBuffer	= pair<string, shared_ptr<CBuffer>>;
-	using pairMaterial	= pair<string, shared_ptr<CMaterial>>;
-	using pairSampler	= pair<string, shared_ptr<CSampler>>;
-	using pairAnimater	= pair<string, shared_ptr<CAnimater>>;
+	using pairTexture	= pair<CString, shared_ptr<CTexture>>;
+	using pairShader	= pair<CString, shared_ptr<CRenderShader>>;
+	using pairMesh		= pair<CString, shared_ptr<CMesh>>;
+	using pairBuffer	= pair<CString, shared_ptr<CBuffer>>;
+	using pairMaterial	= pair<CString, shared_ptr<CMaterial>>;
+	using pairSampler	= pair<CString, shared_ptr<CSampler>>;
+	using pairAnimater	= pair<CString, shared_ptr<CAnimater>>;
 
-	map<string, shared_ptr<CTexture>>		m_mTexture;
+	/*map<string, shared_ptr<CTexture>>		m_mTexture;
 	map<string, shared_ptr<CRenderShader>>	m_mRenderShader;
 	map<string, vector<shared_ptr<CMesh>>>	m_mvMesh;
 	map<string, vector<shared_ptr<CMesh>>>	m_mvStempMesh;
@@ -130,7 +130,16 @@ private:
 	map<string, shared_ptr<CBuffer>>		m_mGlobalBuffer;
 	map<string, shared_ptr<CMaterial>>		m_mMaterial;
 	map<string, shared_ptr<CSampler>>		m_mSampler;
-	map<string, shared_ptr<CAnimater>>		m_mAnimater;
+	map<string, shared_ptr<CAnimater>>		m_mAnimater;*/
+	CAtlMap<CString, shared_ptr<CTexture>>		m_mTexture;
+	CAtlMap<CString, shared_ptr<CRenderShader>>	m_mRenderShader;
+	map<string, vector<shared_ptr<CMesh>>>	m_mvMesh;
+	map<string, vector<shared_ptr<CMesh>>>	m_mvStempMesh;
+	CAtlMap<CString, shared_ptr<CBuffer>>		m_mBuffer;
+	CAtlMap<CString, shared_ptr<CBuffer>>		m_mGlobalBuffer;
+	CAtlMap<CString, shared_ptr<CMaterial>>		m_mMaterial;
+	CAtlMap<CString, shared_ptr<CAnimater>>		m_mAnimater;
+	CAtlMap<CString, shared_ptr<CSampler>>		m_mSampler;
 
 public:
 	CResourceManager();

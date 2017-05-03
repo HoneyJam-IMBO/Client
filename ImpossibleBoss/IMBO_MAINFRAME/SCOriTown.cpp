@@ -8,7 +8,7 @@ bool CSCOriTown::Begin() {
 	m_pCamera = m_pFrameWork->GetCamera();
 	ReadMapData();
 
-	m_pObject = new CPawn("new_elf10", TAG_DYNAMIC_OBJECT, true);
+	m_pObject = new CPawn("new_elf101", TAG_DYNAMIC_OBJECT, true);
 	m_pObject->Begin();
 	m_pObject->SetTerrainContainer(UPDATER->GetTerrainContainer());
 	m_pObject->SetPosition(XMVectorSet(500, 0, 500, 0));

@@ -9,7 +9,7 @@ bool CTexture::Begin() {
 bool CTexture::End() {
 	//sampler
 	//if (m_pSampler) {
-	//	m_pSampler->End();
+	//   m_pSampler->End();
 	//}
 	//constantbuffer
 	if (m_pConstantBuffer) {
@@ -240,7 +240,7 @@ ID3D11ShaderResourceView * CTexture::CreateTexture2DArraySRV(ID3D11ShaderResourc
 	//make textures
 	ID3D11Texture2D** ppd3dTextures = new ID3D11Texture2D*[nTextures];
 	ID3D11Resource* pResource;
-	for (UINT i = 0; i < nTextures; ++i) {
+	for (int i = 0; i < nTextures; ++i) {
 		ppd3dSRVs[i]->GetResource(&pResource);
 		ppd3dTextures[i] = (ID3D11Texture2D*)(pResource);
 	}
@@ -303,7 +303,7 @@ ID3D11ShaderResourceView * CTexture::CreateTexture2DArraySRV(ID3D11ShaderResourc
 	d3dTextureSRVDesc.Texture2DArray.MipLevels = d3dTexture2DArrayDesc.MipLevels;
 	d3dTextureSRVDesc.Texture2DArray.FirstArraySlice = 0;
 	d3dTextureSRVDesc.Texture2DArray.ArraySize = nTextures;
-	
+
 	ID3D11ShaderResourceView *pd3dsrvTextureArray;
 	GLOBALVALUEMGR->GetDevice()->CreateShaderResourceView(pd3dTexture2DArray, &d3dTextureSRVDesc, &pd3dsrvTextureArray);
 
@@ -329,17 +329,17 @@ shared_ptr<CTexture> CTexture::CreateTexture(UINT nTextures, _TCHAR(*ppstrFilePa
 }
 
 //shared_ptr<CTexture> CTexture::CreateTexture(UINT nTextures, WCHAR(*ppstrFilePaths)[128], shared_ptr<CSampler> pSampler, UINT Slot, UINT BindFlag, shared_ptr<CBuffer> pConstantBuffer){
-//	shared_ptr<CTexture> pTexture = make_shared<CTexture>();
-//	//sampler
-//	pTexture->SetSampler(pSampler);
-//	//constant buffer
-//	pTexture->SetConstantBuffer(pConstantBuffer);
-//	//texture
-//	pTexture->SetTextureSlot(Slot);
-//	pTexture->SetpTextureSRV(CreateTexture2DArraySRV(ppstrFilePaths, nTextures));
-//	pTexture->SetBindFlag(BindFlag);
+//   shared_ptr<CTexture> pTexture = make_shared<CTexture>();
+//   //sampler
+//   pTexture->SetSampler(pSampler);
+//   //constant buffer
+//   pTexture->SetConstantBuffer(pConstantBuffer);
+//   //texture
+//   pTexture->SetTextureSlot(Slot);
+//   pTexture->SetpTextureSRV(CreateTexture2DArraySRV(ppstrFilePaths, nTextures));
+//   pTexture->SetBindFlag(BindFlag);
 //
-//	return pTexture;
+//   return pTexture;
 //}
 
 shared_ptr<CTexture> CTexture::CreateTexture(UINT nTextures, ID3D11Texture2D ** ppd3dTextures, UINT Slot, UINT BindFlag, shared_ptr<CBuffer> pConstantBuffer) {
@@ -365,6 +365,7 @@ shared_ptr<CTexture> CTexture::CreateTexture(UINT nTextures, ID3D11ShaderResourc
 
 	return pTexture;
 }
+
 shared_ptr<CTexture> CTexture::CreateTexture(_TCHAR(pstrFilePath)[128], UINT Slot, UINT BindFlag, shared_ptr<CBuffer> pConstantBuffer) {
 	wstring wpath{ pstrFilePath };
 	wstring extention{ PathFindExtension(wpath.c_str()) };
@@ -380,7 +381,6 @@ shared_ptr<CTexture> CTexture::CreateTexture(_TCHAR(pstrFilePath)[128], UINT Slo
 	ID3D11ShaderResourceView* pd3dsrvTexture{ nullptr };
 	if (L".tga" == extention || L".TGA" == extention) {
 		ScratchImage image;
-
 		TexMetadata info;
 		info.format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		HRESULT hr = LoadFromTGAFile(pstrFilePath, &info, image);
@@ -396,8 +396,11 @@ shared_ptr<CTexture> CTexture::CreateTexture(_TCHAR(pstrFilePath)[128], UINT Slo
 
 	return pTexture;
 }
+
 shared_ptr<CTexture> CTexture::CreateTexture(wstring pstrFilePath, UINT Slot, UINT BindFlag, shared_ptr<CBuffer> pConstantBuffer) {
 	wstring wpath{ pstrFilePath };
+	wstring extention{ PathFindExtension(wpath.c_str()) };
+
 	string path; path.assign(wpath.cbegin(), wpath.cend());
 
 	shared_ptr<CTexture> pTexture = make_shared<CTexture>();
@@ -407,7 +410,18 @@ shared_ptr<CTexture> CTexture::CreateTexture(wstring pstrFilePath, UINT Slot, UI
 	//texture
 	pTexture->SetTextureSlot(Slot);
 	ID3D11ShaderResourceView* pd3dsrvTexture{ nullptr };
-	D3DX11CreateShaderResourceViewFromFile(GLOBALVALUEMGR->GetDevice(), pstrFilePath.c_str(), NULL, NULL, &pd3dsrvTexture, NULL);
+	if (L".tga" == extention || L".TGA" == extention) {
+		ScratchImage image;
+		TexMetadata info;
+		info.format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		HRESULT hr = LoadFromTGAFile(pstrFilePath.c_str(), &info, image);
+		CreateShaderResourceView(GLOBALVALUEMGR->GetDevice(), image.GetImages(), image.GetImageCount(), info, &pd3dsrvTexture);
+	}
+	else {
+		D3DX11CreateShaderResourceViewFromFile(GLOBALVALUEMGR->GetDevice(), pstrFilePath.c_str(), NULL, NULL, &pd3dsrvTexture, NULL);
+	}
+
+	if (nullptr == pd3dsrvTexture) return nullptr;
 	pTexture->SetpTextureSRV(pd3dsrvTexture);
 	pTexture->SetBindFlag(BindFlag);
 
@@ -429,4 +443,3 @@ shared_ptr<CTexture> CTexture::CreateTexture(ID3D11ShaderResourceView * pShaderR
 
 CTexture::CTexture() : DXObject("texture") { }
 CTexture::~CTexture() { };
-

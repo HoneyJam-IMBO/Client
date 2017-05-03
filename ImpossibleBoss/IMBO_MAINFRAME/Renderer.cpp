@@ -137,8 +137,13 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 
 	//SSAO
 	SetRenderTargetViews(1, &m_pd3drtvLight, m_pd3ddsvReadOnlyDepthStencil);
-	for (auto texture : m_vObjectLayerResultTexture) {
-		texture->SetShaderState();
+
+	size_t iVecSize = m_vObjectLayerResultTexture.GetCount();
+	for (size_t i = 0; i < iVecSize; ++i)
+	{
+		//for (auto texture : m_vObjectLayerResultTexture) {
+		//texture->SetShaderState();
+		m_vObjectLayerResultTexture[i]->SetShaderState();
 	}
 	float SSAO_OffsetRadius = m_fSSAOOffsetRadius;//m_pFramework->GetCurScene()->GetSSAOOffsetRadius();
 	float SSAO_Radius = m_fSSAORadius;//m_pFramework->GetCurScene()->GetSSAORadius();
@@ -149,8 +154,11 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	//LIGHT RENDER
 	//SetMainRenderTargetView();
 	m_pLightRenderer->Excute(pCamera, m_pShadow);
-	for (auto texture : m_vObjectLayerResultTexture) {
-		texture->CleanShaderState();
+	//for (auto texture : m_vObjectLayerResultTexture) {
+	for (size_t i = 0; i < iVecSize; ++i)
+	{
+		//texture->CleanShaderState();
+		m_vObjectLayerResultTexture[i]->CleanShaderState();
 	}
 
 	//SSLR
@@ -184,8 +192,13 @@ void CRenderer::Render(shared_ptr<CCamera> pCamera) {
 	SetMainRenderTargetView();
 	m_vLightLayerResultTexture[0]->SetShaderState();
 	PostProcessing(pCamera);
-	for (auto texture : m_vLightLayerResultTexture) {
-		texture->CleanShaderState();
+
+	size_t iLightVecSize = m_vLightLayerResultTexture.GetCount();
+	for (size_t i = 0; i < iLightVecSize; ++i)
+	{
+	//for (auto texture : m_vLightLayerResultTexture) {
+	//	texture->CleanShaderState();
+		m_vLightLayerResultTexture[i]->CleanShaderState();
 	}
 	pCamera->SetShaderState();
 	m_pObjectRenderer->RenderSkyBox();
@@ -351,25 +364,25 @@ bool CRenderer::CreateRenderTargetView() {
 		UINT Slot = { 0 };
 		UINT BindFlag = { BIND_PS | BIND_CS };
 		shared_ptr<CTexture> pTexture = CTexture::CreateTexture(pd3dSRV, Slot, BindFlag);
-		m_vObjectLayerResultTexture.push_back(pTexture);
+		m_vObjectLayerResultTexture.Add(pTexture);
 
 		pd3dSRV = { m_pd3dsrvColorSpecInt };
 		Slot = { 1 };
 		BindFlag = { BIND_PS | BIND_CS };
 		pTexture = CTexture::CreateTexture(pd3dSRV, Slot, BindFlag);
-		m_vObjectLayerResultTexture.push_back(pTexture);
+		m_vObjectLayerResultTexture.Add(pTexture);
 
 		pd3dSRV = { m_pd3dsrvNormal };
 		Slot = { 2 };
 		BindFlag = { BIND_PS | BIND_CS };
 		pTexture = CTexture::CreateTexture(pd3dSRV, Slot, BindFlag);
-		m_vObjectLayerResultTexture.push_back(pTexture);
+		m_vObjectLayerResultTexture.Add(pTexture);
 		
 		pd3dSRV = { m_pd3dsrvSpecPow };
 		Slot = { 3 };
 		BindFlag = { BIND_PS | BIND_CS };
 		pTexture = CTexture::CreateTexture(pd3dSRV, Slot, BindFlag);
-		m_vObjectLayerResultTexture.push_back(pTexture);
+		m_vObjectLayerResultTexture.Add(pTexture);
 		//---------------------make texture---------------------
 
 
@@ -382,7 +395,7 @@ bool CRenderer::CreateRenderTargetView() {
 		UINT LightTexSlot = { 0 };
 		UINT LightTexBindFlag = { BIND_PS | BIND_CS };
 		pTexture = CTexture::CreateTexture(m_pd3dsrvLight, LightTexSlot, LightTexBindFlag);
-		m_vLightLayerResultTexture.push_back(pTexture);
+		m_vLightLayerResultTexture.Add(pTexture);
 		//light textureÁ¦ÀÛ
 	}
 	m_pAORenderer->ResizeBuffer();
@@ -399,8 +412,8 @@ bool CRenderer::CreateRenderTargetView() {
 
 void CRenderer::ReleaseForwardRenderTargets() {
 	//texture end
-	m_vObjectLayerResultTexture.clear();
-	m_vLightLayerResultTexture.clear();
+	m_vObjectLayerResultTexture.RemoveAll();
+	m_vLightLayerResultTexture.RemoveAll();
 
 	if (m_pd3dtxtColorSpecInt) m_pd3dtxtColorSpecInt->Release();//0
 	m_pd3dtxtColorSpecInt = nullptr;

@@ -39,7 +39,8 @@ private:
 	//쿼드 트리의 루트노드에 해당하는 startSpace 관리
 	CSpace* m_pStartSpace{ nullptr };
 	//block object list
-	list<CGameObject*> m_lpBlockObject;
+	//list<CGameObject*> m_lpBlockObject;
+	CAtlArray <CGameObject*> m_lpBlockObject;
 
 	//전체 공간 크기
 	float m_size{ 0 };
@@ -58,7 +59,7 @@ public:
 
 	//set get
 	CSpace** GetAllSpace() { return m_ppSpace; }
-	list<CGameObject*>& GetBlockObjectList() { return m_lpBlockObject; }
+	CAtlArray <CGameObject*>& GetBlockObjectList() { return m_lpBlockObject; }
 	CSpace* GetStartSpace() { return m_pStartSpace; }
 	UINT GetSpaceNum() { return (UINT)m_nSpace; }
 	UINT GetSize() { return (UINT)m_size; }

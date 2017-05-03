@@ -33,7 +33,7 @@ void CTerrainContainer::Begin() {
 	for (UINT j = 0; j < m_pSpaceContainer->GetOneSideSpaceNum(); ++j) {
 		for (UINT i = 0; i < m_pSpaceContainer->GetOneSideSpaceNum(); ++i) {
 			pTerrain = CTerrain::CreateTerrain(this, i, j);
-			m_vpTerrain.push_back(pTerrain);
+			m_vpTerrain.Add(pTerrain);
 		}
 	}
 	//terrain
@@ -82,10 +82,10 @@ bool CTerrainContainer::End() {
 	}
 
 	//terrain object remove
-	for (auto pTerrain : m_vpTerrain) {
+	/*for (auto pTerrain : m_vpTerrain) {
 		m_pSpaceContainer->RemoveObject(pTerrain);
-	}
-	m_vpTerrain.clear();
+	}*/
+	m_vpTerrain.RemoveAll();
 
 	if(m_pd3dSpaceRSState)m_pd3dSpaceRSState->Release();
 	if(m_pd3dTempRSState)m_pd3dTempRSState->Release();
@@ -143,27 +143,6 @@ float CTerrainContainer::GetHeight(XMFLOAT2 xmf2Pos){
 	float fTopLeft = (float)m_pHeightData[x + ((z + 1)*m_nWidth)].r;
 	float fTopRight = (float)m_pHeightData[(x + 1) + ((z + 1)*m_nWidth)].r;
 
-	if (fzPercent < (1.0f - fxPercent))
-		fTopRight = fTopLeft + (fBottomRight - fBottomLeft);
-	else
-		fBottomLeft = fTopLeft + (fBottomRight - fTopRight);
-
-#ifdef _WITH_APPROXIMATE_OPPOSITE_CORNER
-	if (bReverseQuad)
-	{
-		if (fzPercent >= fxPercent)
-			fBottomRight = fBottomLeft + (fTopRight - fTopLeft);
-		else
-			fTopLeft = fTopRight + (fBottomLeft - fBottomRight);
-	}
-	else
-	{
-		if (fzPercent < (1.0f - fxPercent))
-			fTopRight = fTopLeft + (fBottomRight - fBottomLeft);
-		else
-			fBottomLeft = fTopLeft + (fBottomRight - fTopRight);
-	}
-#endif
 	float fTopHeight = fTopLeft * (1 - fxPercent) + fTopRight * fxPercent;
 	float fBottomHeight = fBottomLeft * (1 - fxPercent) + fBottomRight * fxPercent;
 	float fHeight = fBottomHeight * (1 - fzPercent) + fTopHeight * fzPercent;
@@ -188,15 +167,26 @@ CGameObject * CTerrainContainer::PickObjects(XMVECTOR xmvWorldCameraStartPos, XM
 	float fNearHitDistance = FLT_MAX;
 	CGameObject* pObj = nullptr;
 	//자신의 모든 객체에 대해서 검사
-	for (auto pObject : m_vpTerrain) {
-		if (pObject->CheckPickObject(xmvWorldCameraStartPos, xmvRayDir, fHitDistance)) {//ray와 충돌했다면
+	size_t iVecSize = m_vpTerrain.GetCount();
+	for (size_t i = 0; i < iVecSize; ++i)
+	{
+		if (m_vpTerrain[i]->CheckPickObject(xmvWorldCameraStartPos, xmvRayDir, fHitDistance)) {//ray와 충돌했다면
 			if (fNearHitDistance > fHitDistance) {//이전의 가장 가까운 녀석과 비교
 				distance = fHitDistance;//더 가까우면 가장 가까운 객체 변경
-				return pObject;
+				return m_vpTerrain[i];
 			}
 
 		}
 	}
+	//for (auto pObject : m_vpTerrain) {
+	//	if (pObject->CheckPickObject(xmvWorldCameraStartPos, xmvRayDir, fHitDistance)) {//ray와 충돌했다면
+	//		if (fNearHitDistance > fHitDistance) {//이전의 가장 가까운 녀석과 비교
+	//			distance = fHitDistance;//더 가까우면 가장 가까운 객체 변경
+	//			return pObject;
+	//		}
+
+	//	}
+	//}
 	//return pObj;
 }
 
@@ -464,10 +454,10 @@ void CTerrainContainer::ChangeSpaceData(){
 	//1. space안의 모든 terrain제거
 	//End();
 
-	for (auto pTerrain : m_vpTerrain) {
-		m_pSpaceContainer->RemoveObject(pTerrain);
-	}
-	m_vpTerrain.clear();
+	//for (auto pTerrain : m_vpTerrain) {
+	//	m_pSpaceContainer->RemoveObject(pTerrain);
+	//}
+	m_vpTerrain.RemoveAll();
 	RENDERER->GetTerrainRenderContainer()->ClearObjectList();
 	//2. mesh/ buffer새로 제작
 	//Begin();
@@ -490,7 +480,7 @@ void CTerrainContainer::ChangeSpaceData(){
 	for (int j = 0; j < m_pSpaceContainer->GetOneSideSpaceNum(); ++j) {
 		for (int i = 0; i < m_pSpaceContainer->GetOneSideSpaceNum(); ++i) {
 			pTerrain = CTerrain::CreateTerrain(this, i, j);
-			m_vpTerrain.push_back(pTerrain);
+			m_vpTerrain.Add(pTerrain);
 		}
 	}
 	//terrain
@@ -504,9 +494,14 @@ void CTerrainContainer::ChangeSpaceData(){
 
 }
 void CTerrainContainer::SetActive(bool b){
-	for (auto pTerrain : m_vpTerrain) {
-		pTerrain->SetActive(b);
+	size_t iVecSize = m_vpTerrain.GetCount();
+	for (size_t i = 0; i < iVecSize; ++i)
+	{
+		m_vpTerrain[i]->SetActive(b);
 	}
+	/*for (auto pTerrain : m_vpTerrain) {
+		pTerrain->SetActive(b);
+	}*/
 	m_bActive = b;
 }
 //추가 

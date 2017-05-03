@@ -26,7 +26,7 @@ public:
 	//	void SetBloomThreshold(float fBloomThreshold) { m_fBloomThreshold = fBloomThreshold; }
 private:
 	//rendercontainer map!
-	mapRenderContainer m_mRenderContainer;
+	mapRC m_mRenderContainer;
 	shared_ptr<CBuffer> m_pFinalPassCB{ nullptr };
 public:
 	CPostProcessingFinalPass();

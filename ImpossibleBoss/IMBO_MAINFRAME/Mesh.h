@@ -41,11 +41,11 @@ public:
 
 	//aabb 
 	BoundingBox GetAABB() { return m_AABB.GetAABB(); }
-	UINT GetOBBCnt() { return static_cast<UINT>(m_vOBB.size()); }
+	UINT GetOBBCnt() { return static_cast<UINT>(m_vOBB.GetCount()); }
 	BoundingOrientedBox& GetOBB(UINT index = 0) { return m_vOBB[index].GetOBB(); }
 	CBoundingBox& GetAABBObject(){ return m_AABB; }
 	CBoundingBox& GetOBBObject(UINT index = 0) { return m_vOBB[index]; }
-	vector<CBoundingBox>& GetvOBBObject() { return m_vOBB; }
+	CAtlArray<CBoundingBox>& GetvOBBObject() { return m_vOBB; }
 
 	void CMesh::CalculateVertexNormal(XMVECTOR *pxmvNormals);
 	void CMesh::SetTriAngleListVertexNormal(XMVECTOR *pxmvNormals);
@@ -86,7 +86,7 @@ public:
 	void ClearMeshResources();
 	void AddMeshTexture(shared_ptr<CTexture>);
 	void SetMeshTexture(UINT index, shared_ptr<CTexture>);
-	vector<shared_ptr<CTexture>>& GetvMeshTexture() { return m_vMeshTexture; }
+	CAtlArray<shared_ptr<CTexture>>& GetvMeshTexture() { return m_vMeshTexture; }
 	//setter
 	
 	//mesh data 를 export하기위한 함수 
@@ -103,16 +103,18 @@ public:
 
 	//instancing buffer set
 	void AddInstancingBuffer(CBuffer* pBuffer);
-	vector<CBuffer*> GetvInstancingBuffer() { return m_vInstancingBuffer; }
+	CAtlArray<CBuffer*>&	 GetvInstancingBuffer() { return m_vInstancingBuffer; }
 protected:
 	//CBoundingBox m_tmpBOUNDINGBOX;
 	//aabb
 	CBoundingBox m_AABB;
 	//obb
-	vector<CBoundingBox> m_vOBB;
+	//vector<CBoundingBox> m_vOBB;
+	CAtlArray<CBoundingBox>	m_vOBB;
 
 	//mesh texture
-	vector<shared_ptr<CTexture>> m_vMeshTexture;
+	//vector<shared_ptr<CTexture>> m_vMeshTexture;
+	CAtlArray<shared_ptr<CTexture>>	m_vMeshTexture;
 
 	//topology
 	D3D11_PRIMITIVE_TOPOLOGY m_d3dPrimitiveTopology{ D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST };
@@ -152,7 +154,8 @@ protected:
 	//---------------------------------index buffer-------------------------
 
 	//--------------------------------instancing buffer----------------------
-	vector<CBuffer*>					m_vInstancingBuffer;
+	//vector<CBuffer*>					m_vInstancingBuffer;
+	CAtlArray<CBuffer*>					m_vInstancingBuffer;
 	//--------------------------------instancing buffer----------------------
 
 public:

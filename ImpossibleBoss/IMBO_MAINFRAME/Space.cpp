@@ -13,7 +13,12 @@ void CSpace::Begin(CSpaceContainer * pSpaceContainer, UINT size, int lv, XMVECTO
 	m_size = size;
 	m_pSpaceContainer = pSpaceContainer;
 
-	//CAtlMap<string, int> a;
+	for (int i = 0; i < TAG_END; ++i)
+	{
+		CAtlArray<CGameObject*>* pObjectArray = new CAtlArray<CGameObject*>;
+		m_mlpObject[tag(i)] = pObjectArray;
+	}
+	//m_mlpObject
 
 	
 	//자신의 위치를 정해줌 
@@ -72,14 +77,34 @@ void CSpace::Begin(CSpaceContainer * pSpaceContainer, UINT size, int lv, XMVECTO
 }
 
 bool CSpace::End() {
-	for (auto mlp : m_mlpObject) {
-		for (auto pObject : mlp.second) {
-			pObject->End();
-			delete pObject;
+
+	POSITION ContainerPos = m_mlpObject.GetStartPosition();
+	CAtlMap<tag, CAtlArray<CGameObject*>*>::CPair*		pOutPair = NULL;
+	//CAtlArray<CGameObject*>::CPair*	pInPair = NULL;
+	while (ContainerPos != NULL)
+	{
+		pOutPair = m_mlpObject.GetNext(ContainerPos);
+		size_t lpSize = pOutPair->m_value->GetCount();
+		for (size_t i = 0; i < lpSize; ++i)
+		{
+			(*pOutPair->m_value)[i]->End();
+			delete (*pOutPair->m_value)[i];
 		}
-		mlp.second.clear();
 	}
-	m_mlpObject.clear();
+
+	for (int i = 0; i < TAG_END; ++i)
+	{
+		delete m_mlpObject[tag(i)];
+	}
+	m_mlpObject.RemoveAll();
+	//for (auto mlp : m_mlpObject) {
+	//	for (auto pObject : mlp.second) {
+	//		pObject->End();
+	//		delete pObject;
+	//	}
+	//	mlp.second.clear();
+	//}
+	//m_mlpObject.clear();
 
 	if (m_ppChildSpace) {
 		for (int i = 0; i < 4; ++i) {
@@ -88,6 +113,9 @@ bool CSpace::End() {
 		}
 	}
 	m_ppChildSpace = nullptr;
+
+
+
 
 	delete this;
 
@@ -103,22 +131,39 @@ void CSpace::Animate(float fTimeElapsed) {
 	else {//leaf space만 animate
 		int nObject = 0;
 
-		list<CGameObject*>::iterator iter = m_mlpObject[tag::TAG_DYNAMIC_OBJECT].begin();
-		list<CGameObject*>::iterator iter_end = m_mlpObject[tag::TAG_DYNAMIC_OBJECT].end();
-		for (; iter != iter_end; )
+		CAtlArray<CGameObject*>* lpDynObj;
+		m_mlpObject.Lookup(tag::TAG_DYNAMIC_OBJECT, lpDynObj);
+		size_t iDynObjSize = lpDynObj->GetCount();
+		for (size_t i = 0; i < iDynObjSize; ++i)
 		{
-			(*iter)->Animate(fTimeElapsed);
-			int current_index = m_pSpaceContainer->SearchSpace((*iter)->GetPosition());
-			if ((*iter)->GetSpaceIndex() != current_index)//이전 공간 index와 현재 index가 다르다면
+			(*lpDynObj)[i]->Animate(fTimeElapsed);
+			int current_index = m_pSpaceContainer->SearchSpace((*lpDynObj)[i]->GetPosition());
+			if ((*lpDynObj)[i]->GetSpaceIndex() != current_index)//이전 공간 index와 현재 index가 다르다면
 			{
-				m_pSpaceContainer->AddBlockObjectList((*iter));//block Object list에 등록
-				m_mlpObject[tag::TAG_DYNAMIC_OBJECT].erase(iter++);
-
+				m_pSpaceContainer->AddBlockObjectList((*lpDynObj)[i]);//block Object list에 등록
+				lpDynObj->RemoveAt(i);
+				//m_mlpObject[tag::TAG_DYNAMIC_OBJECT].erase(iter++);
 			}
-			else
-				++iter;
+			/*else
+				++i;*/
 			nObject++;
 		}
+
+		//list<CGameObject*>::iterator iter = m_mlpObject[tag::TAG_DYNAMIC_OBJECT].begin();
+		//list<CGameObject*>::iterator iter_end = m_mlpObject[tag::TAG_DYNAMIC_OBJECT].end();
+		//for (; iter != iter_end; )
+		//{
+		//	(*iter)->Animate(fTimeElapsed);
+		//	int current_index = m_pSpaceContainer->SearchSpace((*iter)->GetPosition());
+		//	if ((*iter)->GetSpaceIndex() != current_index)//이전 공간 index와 현재 index가 다르다면
+		//	{
+		//		m_pSpaceContainer->AddBlockObjectList((*iter));//block Object list에 등록
+		//		m_mlpObject[tag::TAG_DYNAMIC_OBJECT].erase(iter++);
+		//	}
+		//	else
+		//		++iter;
+		//	nObject++;
+		//}
 
 		if (INPUTMGR->GetDebugMode())
 			DEBUGER->AddText(20.0f, 800.0f, static_cast<float>(m_index * 15.f), YT_Color(255, 255, 255), L"space %d object_num : %d", m_index, nObject);
@@ -126,6 +171,17 @@ void CSpace::Animate(float fTimeElapsed) {
 	}
 }
 
+void CSpace::OptimizePrepare(CAtlMap<tag, CAtlArray<CGameObject*>*>::CPair* pairGObj, UINT renderFlag, shared_ptr<CCamera> pCamera)
+{
+	size_t lpSize = pairGObj->m_value->GetCount();
+	for (size_t i = 0; i < lpSize; ++i)
+	{
+		if ((*pairGObj->m_value)[i]->IsVisible(pCamera))
+		{
+			(*pairGObj->m_value)[i]->RegistToContainer();
+		}
+	}
+}
 void CSpace::PrepareRender(shared_ptr<CCamera> pCamera, UINT renderFlag) {
 
 	if (IsVisible(pCamera))
@@ -135,49 +191,65 @@ void CSpace::PrepareRender(shared_ptr<CCamera> pCamera, UINT renderFlag) {
 
 			if (INPUTMGR->GetDebugMode())
 				this->RegistToDebuger();
-			for (auto mlp : m_mlpObject) {		//모든 객체에 대해서
-				for (auto pObject : mlp.second) {
 
-					//	pObject->RegistToContainer();
-					if (renderFlag & RTAG_TERRAIN) {
-						if (pObject->GetTag() == TAG_TERRAIN)
-						{
-							if (pObject->IsVisible(pCamera))
-							{
-								pObject->RegistToContainer();
-							}
-						}
-					}
-					if (renderFlag & RTAG_STATIC_OBJECT) {
-						if (pObject->GetTag() == TAG_STATIC_OBJECT)
-						{
-							if (pObject->IsVisible(pCamera))
-							{
-								pObject->RegistToContainer();
-							}
-						}
-					}
-					if (renderFlag & RTAG_DYNAMIC_OBJECT) {
-						if (pObject->GetTag() == TAG_DYNAMIC_OBJECT)
-						{
-							if (pObject->IsVisible(pCamera))
-							{
-								pObject->RegistToContainer();
-							}
-						}
-					}
-					if (renderFlag & RTAG_LIGHT) {
-						if (pObject->GetTag() == TAG_LIGHT)
-						{
-							if (pObject->IsVisible(pCamera))
-							{
-								pObject->RegistToContainer();
-							}
-						}
-					}
-				}
+			POSITION ContainerPos = m_mlpObject.GetStartPosition();
+			CAtlMap<tag, CAtlArray<CGameObject*>*>::CPair*		pOutPair = NULL;
+			while (ContainerPos != NULL)
+			{
+				pOutPair = m_mlpObject.GetNext(ContainerPos);
+				if(pOutPair->m_key == TAG_TERRAIN && (renderFlag & RTAG_TERRAIN))
+					OptimizePrepare(pOutPair, renderFlag, pCamera);
+				else if (pOutPair->m_key == TAG_STATIC_OBJECT && (renderFlag & RTAG_STATIC_OBJECT))
+					OptimizePrepare(pOutPair, renderFlag, pCamera);
+				else if (pOutPair->m_key == TAG_DYNAMIC_OBJECT && (renderFlag & RTAG_DYNAMIC_OBJECT))
+					OptimizePrepare(pOutPair, renderFlag, pCamera);
+				else if (pOutPair->m_key == TAG_LIGHT && (renderFlag & RTAG_LIGHT))
+					OptimizePrepare(pOutPair, renderFlag, pCamera);
+			}
 
-			}//end for
+			//for (auto mlp : m_mlpObject) {		//모든 객체에 대해서
+			//	for (auto pObject : mlp.second) {
+
+			//		//	pObject->RegistToContainer();
+			//		if (renderFlag & RTAG_TERRAIN) {
+			//			if (pObject->GetTag() == TAG_TERRAIN)
+			//			{
+			//				if (pObject->IsVisible(pCamera))
+			//				{
+			//					pObject->RegistToContainer();
+			//				}
+			//			}
+			//		}
+			//		if (renderFlag & RTAG_STATIC_OBJECT) {
+			//			if (pObject->GetTag() == TAG_STATIC_OBJECT)
+			//			{
+			//				if (pObject->IsVisible(pCamera))
+			//				{
+			//					pObject->RegistToContainer();
+			//				}
+			//			}
+			//		}
+			//		if (renderFlag & RTAG_DYNAMIC_OBJECT) {
+			//			if (pObject->GetTag() == TAG_DYNAMIC_OBJECT)
+			//			{
+			//				if (pObject->IsVisible(pCamera))
+			//				{
+			//					pObject->RegistToContainer();
+			//				}
+			//			}
+			//		}
+			//		if (renderFlag & RTAG_LIGHT) {
+			//			if (pObject->GetTag() == TAG_LIGHT)
+			//			{
+			//				if (pObject->IsVisible(pCamera))
+			//				{
+			//					pObject->RegistToContainer();
+			//				}
+			//			}
+			//		}
+			//	}
+
+			//}//end for
 		}//end if
 		else {//leaf가 아니라면
 			for (int i = 0; i < 4; ++i) {
@@ -190,30 +262,6 @@ void CSpace::PrepareRender(shared_ptr<CCamera> pCamera, UINT renderFlag) {
 }
 
 
-void CSpace::PrepareRender(UINT renderFlag) {
-	//나는 그리는 space다.
-	SetbRender(true);
-	this->RegistToDebuger();
-	//RegistToContainer();
-	//			DEBUGER->RegistToDebugRenderContainer(this);
-	for (auto mlp : m_mlpObject) {//모든 객체에 대해서
-								  //자신이 속한 rendercontainer에 등록
-		for (auto pObject : mlp.second) {
-			if (renderFlag & RTAG_TERRAIN) {
-				if (pObject->GetTag() == TAG_TERRAIN) pObject->RegistToContainer();
-			}
-			if (renderFlag & RTAG_STATIC_OBJECT) {
-				if (pObject->GetTag() == TAG_STATIC_OBJECT) pObject->RegistToContainer();
-			}
-			if (renderFlag & RTAG_DYNAMIC_OBJECT) {
-				if (pObject->GetTag() == TAG_DYNAMIC_OBJECT) pObject->RegistToContainer();
-			}
-			if (renderFlag & RTAG_LIGHT) {
-				if (pObject->GetTag() == TAG_LIGHT) pObject->RegistToContainer();
-			}
-		}
-	}//end for
-}
 
 void CSpace::SetObejcts(int n, CGameObject** ppObjects) {
 	if (!ppObjects) return;
@@ -221,7 +269,33 @@ void CSpace::SetObejcts(int n, CGameObject** ppObjects) {
 	for (int i = 0; i < n; ++i) {
 		//객체에 자신 번호 등록
 		ppObjects[i]->SetSpaceIndex(m_index);
-		m_mlpObject[ppObjects[i]->GetTag()].emplace_back(ppObjects[i]);
+
+		//bool bHaveList = m_mlpObject.Lookup(ppObjects[i]->GetTag());
+		//if (false == bHaveList)
+		//{
+		//	CAtlArray<CGameObject*> aryTemp;
+		//	aryTemp.Add(ppObjects[i]);
+		//	m_mlpObject.SetAt(ppObjects[i]->GetTag(), &aryTemp);
+		//	//m_mapObjlist.insert(map<const TCHAR*, list<CGameObject*>>::value_type(pObjectTag, NewObjectList));
+		//	//m_mlpObject[ppObjects[i]->GetTag()]->SetCount(1);
+		//}
+		//else
+			m_mlpObject[ppObjects[i]->GetTag()]->Add(ppObjects[i]);
+		/*CAtlArray<CGameObject*>* lpDynObj;
+		bool bHaveList = m_mlpObject.Lookup(ppObjects[i]->GetTag(), lpDynObj);
+		if (true == bHaveList)
+		{
+			lpDynObj->Add(ppObjects[i]);
+		}
+		else
+		{
+			CAtlArray<CGameObject*> lpCreateDynObj;
+			lpCreateDynObj.Add(ppObjects[i]);
+			m_mlpObject[ppObjects[i]->GetTag()] = lpCreateDynObj;
+		}
+*/
+		//m_mlpObject.Lookup(ppObjects[i]->GetTag(), lpDynObj);
+		//m_mlpObject[ppObjects[i]->GetTag()].emplace_back(ppObjects[i]);
 	}
 }
 
@@ -229,20 +303,64 @@ void CSpace::AddObject(CGameObject* pObject) {
 	if (!pObject) return;
 	//객체에 자신 번호 등록
 	pObject->SetSpaceIndex(m_index);
-	m_mlpObject[pObject->GetTag()].emplace_back(pObject);
+
+
+	//bool bHaveList = m_mlpObject.Lookup(pObject->GetTag());
+	//if (false == bHaveList)
+	//{
+	//	CAtlArray<CGameObject*> aryTemp;
+	//	aryTemp.Add(pObject);
+	//	m_mlpObject.SetAt(pObject->GetTag(), &aryTemp);
+	//	//m_mapObjlist.insert(map<const TCHAR*, list<CGameObject*>>::value_type(pObjectTag, NewObjectList));
+	//	//m_mlpObject[ppObjects[i]->GetTag()]->SetCount(1);
+	//}
+	//else
+		m_mlpObject[pObject->GetTag()]->Add(pObject);
+	//bool bHaveList = m_mlpObject.Lookup(pObject->GetTag());
+	//if (false == bHaveList)
+	//{
+	//	m_mlpObject[pObject->GetTag()]->SetCount(1);
+	//}
+	//m_mlpObject[pObject->GetTag()]->Add(pObject);
+	//m_mlpObject[pObject->GetTag()].emplace_back(pObject);
 }
 void CSpace::RemoveObject(CGameObject* pObject) {
 	if (!pObject) return;
 	//if (0 == m_lpObjects.size()) return;
 
-	m_mlpObject[pObject->GetTag()].remove_if([&pObject](CGameObject* pO) {
+
+	size_t iVecSize = m_mlpObject[pObject->GetTag()]->GetCount();
+	for (size_t i = 0; i < iVecSize; ++i)
+	{
+		if ((*m_mlpObject[pObject->GetTag()])[i] == pObject)
+		{
+			m_mlpObject[pObject->GetTag()]->RemoveAt(i);
+			return;
+		}
+	}
+
+	/*m_mlpObject[pObject->GetTag()].remove_if([&pObject](CGameObject* pO) {
 		return pObject == pO;
-	});
+	});*/
 
 }
 
 void CSpace::RemoveObject(string name) {
-	for (auto data : m_mlpObject) {
+	POSITION ContainerPos = m_mlpObject.GetStartPosition();
+	CAtlMap<tag, CAtlArray<CGameObject*>*>::CPair*		pOutPair = NULL;
+	while (ContainerPos != NULL)
+	{
+		pOutPair = m_mlpObject.GetNext(ContainerPos);
+		size_t iVecSize = pOutPair->m_value->GetCount();
+		for (size_t i = 0; i < iVecSize; ++i)
+		{
+			if ((*pOutPair->m_value)[i]->GetName() == name)
+			{
+				m_mlpObject[(*pOutPair->m_value)[i]->GetTag()]->RemoveAt(i);
+			}
+		}
+	}
+	/*for (auto data : m_mlpObject) {
 		for (auto pObject : data.second) {
 			if (pObject->GetName() == name) {
 				m_mlpObject[pObject->GetTag()].remove_if([&pObject](CGameObject* pO) {
@@ -250,7 +368,7 @@ void CSpace::RemoveObject(string name) {
 				});
 			}
 		}
-	}
+	}*/
 }
 
 CGameObject * CSpace::PickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRayDir, float& distance) {
@@ -259,18 +377,36 @@ CGameObject * CSpace::PickObject(XMVECTOR xmvWorldCameraStartPos, XMVECTOR xmvRa
 	float fNearHitDistance = FLT_MAX;
 	CGameObject* pObj = nullptr;
 	//자신의 모든 객체에 대해서 검사
-	for (auto Objects : m_mlpObject) {
-		for (auto pObject : Objects.second) {
-			if (pObject->CheckPickObject(xmvWorldCameraStartPos, xmvRayDir, fHitDistance)) {//ray와 충돌했다면
-				if (fNearHitDistance > fHitDistance) {//이전의 가장 가까운 녀석과 비교
-					distance = fHitDistance;//더 가까우면 가장 가까운 객체 변경
-					pObj = pObject;
+
+	POSITION ContainerPos = m_mlpObject.GetStartPosition();
+	CAtlMap<tag, CAtlArray<CGameObject*>*>::CPair*		pOutPair = NULL;
+	while (ContainerPos != NULL)
+	{
+		pOutPair = m_mlpObject.GetNext(ContainerPos);
+		size_t iVecSize = pOutPair->m_value->GetCount();
+		for (size_t i = 0; i < iVecSize; ++i)
+		{
+			if ((*pOutPair->m_value)[i]->CheckPickObject(xmvWorldCameraStartPos, xmvRayDir, fHitDistance)) {
+				if (fNearHitDistance > fHitDistance) {
+					distance = fHitDistance;//더 가까우
+					pObj = (*pOutPair->m_value)[i];
 				}
 			}
 		}
 	}
+	//for (auto Objects : m_mlpObject) {
+	//	for (auto pObject : Objects.second) {
+	//		if (pObject->CheckPickObject(xmvWorldCameraStartPos, xmvRayDir, fHitDistance)) {//ray와 충돌했다면
+	//			if (fNearHitDistance > fHitDistance) {//이전의 가장 가까운 녀석과 비교
+	//				distance = fHitDistance;//더 가까우면 가장 가까운 객체 변경
+	//				pObj = pObject;
+	//			}
+	//		}
+	//	}
+	//}
 	return pObj;//해당 객체 return
 }
+
 
 
 CSpace::CSpace() : CGameObject("space", tag::TAG_SPACE) {

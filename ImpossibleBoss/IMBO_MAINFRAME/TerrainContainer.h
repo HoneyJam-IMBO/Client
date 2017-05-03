@@ -125,7 +125,8 @@ private:
 	shared_ptr<CTexture> m_pBaseTexture{ nullptr };
 	shared_ptr<CTexture> m_pHeightMapTexture{ nullptr };
 	shared_ptr<CTexture> m_pNormalTexture{ nullptr };
-	vector<CTerrain*> m_vpTerrain;//pick object를 위한 녀석
+	//vector<CTerrain*> m_vpTerrain;//pick object를 위한 녀석
+	CAtlArray<CTerrain*> m_vpTerrain;//pick object를 위한 녀석
 	//안의 terrain들은 space에서 관리되고 사라지니까 end 및 delete할 필요가 없다.
 
 	//splatting infos

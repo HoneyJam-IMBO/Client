@@ -48,7 +48,7 @@ public:
 	int DebugGMessageBox(TCHAR* title, TCHAR* message, ...);
 
 private:
-	mapRenderContainer m_mDebugRenderContainer;
+	mapRC m_mDebugRenderContainer;
 	
 	ID3D11RasterizerState* m_pRasterizerState{ nullptr };
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "AnimationInfo.h"
 #include "Animater.h"
-bool CAnimationInfo::Begin(shared_ptr<CAnimater> pAnimater){
+bool CAnimationInfo::Begin(shared_ptr<CAnimater> pAnimater) {
 	int nJoint{ 0 };
 
 	nJoint = m_pAnimater->GetSkeletonData()->GetJointDatas().size();
@@ -14,25 +14,25 @@ bool CAnimationInfo::Begin(shared_ptr<CAnimater> pAnimater){
 		m_vTempBoundingBox.push_back(boundingBox);
 	}
 
-//	for (int MeshIndex = 0; MeshIndex < FBXIMPORTER->GetAnimationDatas().size(); ++MeshIndex) {
-//		nJoint = static_cast<int>(FBXIMPORTER->GetAnimationDatas()[MeshIndex].GetJointCnt());
-//
-//		for (int j = 0; j < nJoint; ++j) {
-//			XMMATRIX FrameTransform;
-//			m_mMeshIndexJoints[MeshIndex].push_back(FBXIMPORTER->GetAnimationDatas()[MeshIndex].GetJointDatas()[j]);
-//			CBoundingBox boundingBox;
-//			boundingBox.Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(2.f, 2.f, 2.f, 1.f));
-//			boundingBox.SetActive(false);
-//			m_vTempBoundingBox.push_back(boundingBox);
-//		}
-//	}
+	//	for (int MeshIndex = 0; MeshIndex < FBXIMPORTER->GetAnimationDatas().size(); ++MeshIndex) {
+	//		nJoint = static_cast<int>(FBXIMPORTER->GetAnimationDatas()[MeshIndex].GetJointCnt());
+	//
+	//		for (int j = 0; j < nJoint; ++j) {
+	//			XMMATRIX FrameTransform;
+	//			m_mMeshIndexJoints[MeshIndex].push_back(FBXIMPORTER->GetAnimationDatas()[MeshIndex].GetJointDatas()[j]);
+	//			CBoundingBox boundingBox;
+	//			boundingBox.Begin(XMVectorSet(0.f, 0.f, 0.f, 0.f), XMVectorSet(2.f, 2.f, 2.f, 1.f));
+	//			boundingBox.SetActive(false);
+	//			m_vTempBoundingBox.push_back(boundingBox);
+	//		}
+	//	}
 	m_pAnimBuffer = CBuffer::CreateConstantBuffer(256, sizeof(XMMATRIX), 10, BIND_VS, 0);
 
 	m_pAnimater->AddAnimationInfo(this);
 	return true;
 }
 
-bool CAnimationInfo::End(){
+bool CAnimationInfo::End() {
 	m_pAnimationData->End();
 	delete m_pAnimationData;
 	m_pAnimationData = nullptr;
@@ -55,14 +55,14 @@ bool CAnimationInfo::End(){
 
 }
 
-void CAnimationInfo::SetShaderState(){
+void CAnimationInfo::SetShaderState() {
 	void* pData = m_pAnimBuffer->Map();
 	XMMATRIX* pAnimationData = static_cast<XMMATRIX*>(pData);
+	size_t iVecSize = m_pAnimater->GetSkeletonData()->GetJointDatas().size();
+	for (int j = 0; j < iVecSize; ++j) {
 
-	for (int j = 0; j < m_pAnimater->GetSkeletonData()->GetJointDatas().size(); ++j) {
-		
 		//pAnimationData[j] = XMMatrixIdentity();
-		if (m_pAnimationData->GetKeyFrames(j).empty()) {
+		if (m_pAnimationData->GetKeyFrames(j).IsEmpty()) {
 			continue;
 		}
 		XMMATRIX offsetMtx = m_pAnimater->GetSkeletonData()->GetJointDatas()[j].GetOffsetMtx();
@@ -79,17 +79,17 @@ void CAnimationInfo::SetShaderState(){
 	m_pAnimBuffer->SetShaderState();
 }
 
-void CAnimationInfo::CleanShaderState(){
+void CAnimationInfo::CleanShaderState() {
 	m_pAnimBuffer->CleanShaderState();
 }
 
-void CAnimationInfo::Update(float fTimeElapsed){
+void CAnimationInfo::Update(float fTimeElapsed) {
 	vector<CBoundingBox*> vDeleteBoundingBox;
 	int DeleteBoxCnt{ 0 };
 	//debug
 	for (int tempOBBCnt = 0; tempOBBCnt < m_vTempBoundingBox.size(); ++tempOBBCnt) {
 		if (m_vTempBoundingBox[tempOBBCnt].GetActive()) {
-			if(false == m_pAnimationData->GetKeyFrames(tempOBBCnt).empty())
+			if (false == m_pAnimationData->GetKeyFrames(tempOBBCnt).IsEmpty())
 				DEBUGER->RegistCoordinateSys(m_pAnimationData->GetKeyFrames(tempOBBCnt)[m_CurFrame].GetKeyFrameTransformMtx());
 		}
 	}
@@ -101,12 +101,12 @@ void CAnimationInfo::Update(float fTimeElapsed){
 		float fMax = data->GetMax();
 		if (fMin <= m_CurFrame && m_CurFrame <= fMax) data->SetActive(true);
 		else data->SetActive(false);
-		
+
 		if (data->GetToolActive()) {//ui 삭제 로직 
-			
+
 			if (data->GetActive()) {
 				BoundingOrientedBox originObb = data->GetOBB();
-				if (false == m_pAnimationData->GetKeyFrames(data->GetMyJointIndex()).empty()) {
+				if (false == m_pAnimationData->GetKeyFrames(data->GetMyJointIndex()).IsEmpty()) {
 					originObb.Transform(originObb, m_pAnimationData->GetKeyFrames(data->GetMyJointIndex())[m_CurFrame].GetKeyFrameTransformMtx());
 					m_vActiveBoundingBox.push_back(originObb);
 					//originObb.Transform(originObb, data->GetWorldMtx());
@@ -137,16 +137,16 @@ void CAnimationInfo::Update(float fTimeElapsed){
 	}
 }
 
-void CAnimationInfo::Reset(){
+void CAnimationInfo::Reset() {
 	m_CurFrame = 0;
 }
 
 
-CAnimationInfo* CAnimationInfo::CreateAnimationInfoFromFBXFile(shared_ptr<CAnimater>  pAnimater){
+CAnimationInfo* CAnimationInfo::CreateAnimationInfoFromFBXFile(shared_ptr<CAnimater>  pAnimater) {
 	return nullptr;
 }
 
-CAnimationInfo* CAnimationInfo::CreateAnimationInfoFromGJMFile(shared_ptr<CAnimater>  pAnimater){
+CAnimationInfo* CAnimationInfo::CreateAnimationInfoFromGJMFile(shared_ptr<CAnimater>  pAnimater) {
 	CAnimationInfo* pAnimationInfo = new CAnimationInfo();
 	pAnimationInfo->SetAnimationIndex(pAnimater->GetAnimationCnt());
 	pAnimationInfo->SetAnimater(pAnimater);
@@ -193,12 +193,12 @@ CAnimationInfo* CAnimationInfo::CreateAnimationInfoFromGJMFile(shared_ptr<CAnima
 
 	for (int j = 0; j < jointCnt; ++j) {
 		int curJointFrameCnt = IMPORTER->ReadInt();
-		pAnimationData->GetAllKeyFrame().resize(jointCnt);
+		pAnimationData->GetAllKeyFrame().SetCount(jointCnt);
 		if (curJointFrameCnt <= 0) continue;
 		for (int k = 0; k < frameCnt; ++k) {
 			CKeyFrame keyFrame;
 			keyFrame.SetKeyFrameTransformMtx(IMPORTER->ReadXMMatrix());
-			pAnimationData->GetAllKeyFrame()[j].push_back(keyFrame);
+			pAnimationData->GetAllKeyFrame()[j].Add(keyFrame);
 		}//end frame for
 	}//end joint for
 
@@ -207,7 +207,7 @@ CAnimationInfo* CAnimationInfo::CreateAnimationInfoFromGJMFile(shared_ptr<CAnima
 	return pAnimationInfo;
 }
 
-CAnimationInfo::CAnimationInfo() : DXObject("animationinfo"){
+CAnimationInfo::CAnimationInfo() : DXObject("animationinfo") {
 
 }
 
